@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+<EditText
+    android:id="@+id/edtWebsite"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtUserName"
+    android:layout_below="@+id/edtUserName"
+    android:ems="10"
+    android:hint="Website"
+    android:inputType="textPersonName" />
+
+<EditText
+    android:id="@+id/edtEmail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtUserName"
+    android:layout_below="@+id/edtUserName"
+    android:layout_marginTop="36dp"
+    android:ems="10"
+    android:hint="Email"
+    android:inputType="textPersonName" />
+
+<EditText
+    android:id="@+id/edtCity"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtEmail"
+    android:layout_below="@+id/edtPhone"
+    android:ems="10"
+    android:hint="City"
+    android:inputType="textPersonName" />
+
+<EditText
+    android:id="@+id/edtPhone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtEmail"
+    android:layout_below="@+id/edtEmail"
+    android:ems="10"
+    android:hint="Phone No"
+    android:inputType="textPersonName" />
+
+<EditText
+    android:id="@+id/edtState"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtCountry"
+    android:layout_below="@+id/edtCity"
+    android:ems="10"
+    android:hint="State"
+    android:inputType="textPersonName" />
+
+<EditText
+    android:id="@+id/edtCountry"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtCity"
+    android:layout_below="@+id/edtState"
+    android:ems="10"
+    android:hint="Country"
+    android:inputType="textPersonName" />
+
+<Button
+    android:id="@+id/btnCreateStore"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/edtCountry"
+    android:layout_below="@+id/edtCountry"
+    android:layout_marginLeft="31dp"
+    android:layout_marginTop="20dp"
+    android:text="Create Store" />
+
+<EditText
+    android:id="@+id/edtUserName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/btnTakePicture"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="33dp"
+    android:ems="10"
+    android:hint="Name"
+    android:inputType="textPersonName" />
+
+<ImageView
+    android:id="@+id/imageView1"
+    android:layout_width="60dip"
+    android:layout_height="60dip"
+    android:layout_alignLeft="@+id/edtUserName"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="19dp"
+    android:src="@drawable/ic_launcher" />
+
+<Button
+    android:id="@+id/btnTakePicture"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignRight="@+id/edtUserName"
+    android:layout_alignTop="@+id/imageView1"
+    android:text="Upload Photo" />
+
+</RelativeLayout>

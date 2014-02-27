@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txt_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+       
+        android:layout_marginTop="20dip"
+        android:gravity="center_horizontal"
+        android:text=" Register :"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_2"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="20dip" >
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/fristName_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="First Name :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/fristName_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/lastName_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="Last Name :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/lastName_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/email_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="Email :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/email_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/password_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="password :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/password_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/city_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="city :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/city_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/State_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="State :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/state_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/country_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="Country :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/country_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:stretchColumns="0,1" >
+
+            <TextView
+                android:id="@+id/mobile_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="Mobile :"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/mobile_edt_lg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/input"
+                android:paddingLeft="5dip"
+                android:singleLine="true"
+                android:textColor="#000000" >
+            </EditText>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/register_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tableLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="Register" />
+
+</RelativeLayout>
