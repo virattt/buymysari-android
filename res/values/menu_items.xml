@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menu_items">
+        <item >My Profile</item>
+        <item >My Closet</item>
+        <item >My Stores</item>
+        <item >Create New Store</item>
+    </string-array>
+    <string-array name="store_items">
+        <item >Store Profile</item>
+        <item >Store Gallery</item>
+        <item >Add a Picture</item>
+    </string-array>
+</resources>
