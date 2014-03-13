@@ -1,31 +1,36 @@
 package com.marketplacestore.fragment;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.marketplacestore.Base64;
-import com.marketplacestore.DBAdpter;
-import com.marketplacestore.R;
-import com.marketplacestore.dto.All_list_home_dto;
-
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.marketplacestore.Base64;
+import com.marketplacestore.DBAdpter;
+import com.marketplacestore.R;
+import com.marketplacestore.dto.All_list_home_dto;
 
 public class HomeFragment extends Fragment {
 	
@@ -34,12 +39,20 @@ public class HomeFragment extends Fragment {
 	MyListAdapter adt;
 	All_list_home_dto list_home;
 	String cityName;
+	View rootView;
+	//private ProgressDialog progressDialog; 
+	
+	private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
+	private long lastPressTime;
+	boolean mHasDoubleClicked;
+	private ProgressBar spinner;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.home, container, false);
+		rootView = inflater.inflate(R.layout.home, container, false);
+		lv = (ListView)	rootView.findViewById(R.id.home_listview);
 		
 		cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
 		
@@ -48,16 +61,36 @@ public class HomeFragment extends Fragment {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-		lv = (ListView) rootView.findViewById(R.id.home_listview);
 	
 		list = DBAdpter.getNewsData(cityName);
-		Log.v("log_tag","list_size :: "+ list.size());
-		
-		adt = new MyListAdapter(getActivity());
+        Log.v("log_tag","list_size :: "+ list.size());
+        adt = new MyListAdapter(getActivity());
 		lv.setAdapter(adt);
-		
+    	
+		//new JSONTask(getActivity()).execute("Home");
 		return rootView;
+	}
+
+	public class JSONTask extends AsyncTask<String, Void, String> {
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String retorno = "";
+	        
+	     //   mDialog = ProgressDialog.show(getActivity(), "Homeview", "Loading...", true);
+	        
+	        return retorno; // This value will be returned to your onPostExecute(result) method
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	
+	    	
+	    	
+	    }
+
+	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
+	   
 	}
 	
 	public class MyListAdapter extends BaseAdapter {
@@ -80,76 +113,126 @@ public class HomeFragment extends Fragment {
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			   // if (convertView == null) {
-			   convertView = mInflater.inflate(R.layout.custom_home_list, null);
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			convertView = mInflater.inflate(R.layout.custom_home_list, null);
 
-			   ImageButton home_ic_img = (ImageButton) convertView
-			     .findViewById(R.id.list_home_logo_image);
-			   ImageButton home_big_img = (ImageButton) convertView
-			     .findViewById(R.id.sarees_big_img);
-			   TextView home_username_txt = (TextView) convertView
-			     .findViewById(R.id.home_list_username);
-			   TextView home_view_txt = (TextView) convertView
-			     .findViewById(R.id.home_view_txt_view);
-			   Button close_btn = (Button) convertView
-			     .findViewById(R.id.close_home_btn);
-			   home_username_txt.setText(list.get(position).store_name.toString());
-			   home_view_txt.setText("Views: "+list.get(position).views.toString());
-			   Log.v("log_tag", "image :::: " + list.get(position).image);
-			   if (list.get(position).image != null) {
-			   byte[] Image_getByte;
-			   try {
-			    Image_getByte = Base64.decode(list.get(position).image);
-			    ByteArrayInputStream bytes = new ByteArrayInputStream(
-			      Image_getByte);
-			    BitmapDrawable bmd = new BitmapDrawable(bytes);
-			    Bitmap bm = bmd.getBitmap();
-			    home_big_img.setImageBitmap(bm);
-			    
-			   } catch (IOException e) {
-			    // TODO Auto-generated catch block
-			    e.printStackTrace();
-			   }
-			   }
+			ImageButton home_ic_img = (ImageButton) convertView
+					.findViewById(R.id.list_home_logo_image);
+			ImageButton home_big_img = (ImageButton) convertView
+					.findViewById(R.id.sarees_big_img);
+			TextView home_username_txt = (TextView) convertView
+					.findViewById(R.id.home_list_username);
+			TextView home_view_txt = (TextView) convertView
+					.findViewById(R.id.home_view_txt_view);
 
-			   Log.v("log_tag", "picture :::: " + list.get(position).picture);
+			TextView itemName_txt = (TextView) convertView
+					.findViewById(R.id.itemName_txt);
 
-			   if (list.get(position).picture != null) {
-			    byte[] Image_getByte1;
-			    try {
-			     Image_getByte1 = Base64.decode(list.get(position).picture);
-			     ByteArrayInputStream bytes1 = new ByteArrayInputStream(
-			       Image_getByte1);
-			     BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
-			     Bitmap bm1 = bmd1.getBitmap();
-			     home_ic_img.setImageBitmap(bm1);
-			    } catch (IOException e) {
-			     // TODO Auto-generated catch block
-			     e.printStackTrace();
-			    }
-			   }
-			   
-			   
-			   /*home_big_img.setOnClickListener(new View.OnClickListener() {
-			    
-			    @Override
-			    public void onClick(View v) {
-			     // TODO Auto-generated method stub
-			    
-			     Intent myIntent = new Intent((MarketPlaceActivity)getActivity(), HomeFullImageActivity.class);
-			     ((MarketPlaceActivity)getActivity()).startActivity(myIntent);
-			     
-			             
-			    }
-			   });*/
+			Button close_btn = (Button) convertView
+					.findViewById(R.id.close_home_btn);
 
-			   // }
-			   
-			   
-			   return convertView;
-			  }
+			home_username_txt.setText(list.get(position).store_name.toString());
+			home_view_txt.setText("Views: "
+					+ list.get(position).views.toString());
+			itemName_txt.setText(list.get(position).name.toString());
 
+			Log.v("log_tag", "image :::: " + list.get(position).image);
+			if (list.get(position).image != null) {
+				byte[] Image_getByte;
+				try {
+					Image_getByte = Base64.decode(list.get(position).image);
+					ByteArrayInputStream bytes = new ByteArrayInputStream(
+							Image_getByte);
+					BitmapDrawable bmd = new BitmapDrawable(bytes);
+					Bitmap bm = bmd.getBitmap();
+					home_big_img.setImageBitmap(bm);
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			Log.v("log_tag", "picture :::: " + list.get(position).picture);
+
+			if (list.get(position).picture != null) {
+				byte[] Image_getByte1;
+				try {
+					Image_getByte1 = Base64.decode(list.get(position).picture);
+					ByteArrayInputStream bytes1 = new ByteArrayInputStream(
+							Image_getByte1);
+					BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
+					Bitmap bm1 = bmd1.getBitmap();
+					home_ic_img.setImageBitmap(bm1);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			home_big_img.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+					findDoubleClick(list.get(position).store_id);
+
+					if (mHasDoubleClicked) {
+						DBAdpter.userClosestStore(list.get(position).item_id,
+								list.get(position).store_id);
+					}
+
+				}
+			});
+			close_btn.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					DBAdpter.userClosestStore(list.get(position).item_id,
+							list.get(position).store_id);
+				}
+			});
+
+			return convertView;
+		}
 	}
 
+	private boolean findDoubleClick(final String str_id) {
+		// Get current time in nano seconds.
+		long pressTime = System.currentTimeMillis();
+		// If double click...
+		if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+			mHasDoubleClicked = true;
+
+			// double click event....
+		} else { // If not double click....
+			mHasDoubleClicked = false;
+			Handler myHandler = new Handler() {
+				public void handleMessage(Message m) {
+
+					if (!mHasDoubleClicked) {
+						// single click event
+						FragmentManager fm = getFragmentManager();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
+						StoreDetailFragment fm2 = new StoreDetailFragment();
+						fragmentTransaction.replace(R.id.rela_home_fragment,
+								fm2, "HELLO");
+						fragmentTransaction.addToBackStack(null);
+						fragmentTransaction.commit();
+						Bundle bundle = new Bundle();
+						bundle.putString("position", str_id);
+						fm2.setArguments(bundle);
+					}
+				}
+			};
+			Message m = new Message();
+			myHandler.sendMessageDelayed(m, DOUBLE_PRESS_INTERVAL);
+		}
+		lastPressTime = pressTime;
+		return mHasDoubleClicked;
+	}
 }

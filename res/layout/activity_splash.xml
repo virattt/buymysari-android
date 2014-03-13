@@ -3,22 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="240px"
-        android:layout_height="220px"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/splash" />
-
     <Button
         android:id="@+id/login_home_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imgLogo"
         android:layout_below="@+id/imgLogo"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="10dp"
         android:text="Login" />
 
     <Button
@@ -29,5 +20,13 @@
         android:layout_alignBottom="@+id/login_home_btn"
         android:layout_alignRight="@+id/imgLogo"
         android:text="Register" />
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/splash" />
 
 </RelativeLayout>

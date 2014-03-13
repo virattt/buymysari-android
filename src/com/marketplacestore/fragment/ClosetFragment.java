@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,24 +86,23 @@ public class ClosetFragment extends Fragment {
 				convertView = mInflater.inflate(R.layout.custom_home_list,
 						null);
 				
-						ImageView logo_icon = (ImageView) convertView
-								.findViewById(R.id.imgLogo);
-						ImageView home_big_img = (ImageView) convertView
-								.findViewById(R.id.sarees_big_img);
-						TextView home_username_txt = (TextView) convertView
-								.findViewById(R.id.home_list_username);
-						TextView home_view_txt = (TextView) convertView
-								.findViewById(R.id.home_view_txt_view);
+						ImageButton home_ic_img = (ImageButton) convertView.findViewById(R.id.list_home_logo_image);
+						ImageButton home_big_img = (ImageButton) convertView.findViewById(R.id.sarees_big_img);
+						TextView home_username_txt = (TextView) convertView.findViewById(R.id.home_list_username);
+						TextView home_view_txt = (TextView) convertView.findViewById(R.id.home_view_txt_view);
+						TextView itemName_txt = (TextView) convertView.findViewById(R.id.itemName_txt);
 						
 						Button close_btn =(Button) convertView.findViewById(R.id.close_home_btn);
-						close_btn.setVisibility(View.GONE);
 						
-						Log.v("log"," Closet Item NAme IN Adater " + list.get(position).getName());
-						
-						home_username_txt.setText(list.get(position).getName());
+						close_btn.setVisibility(View.INVISIBLE);
+						home_username_txt.setText(list.get(position).getStore_name());
+						Log.v("log"," Closet Item NAme IN Adater " + list.get(position).getStore_name());
 						
 						Log.v("log_tag","image :::: " +list.get(position).getImage());
+						home_view_txt.setText("Closeted "+list.get(position).getCloseted_item_track());
 						
+						itemName_txt.setText(list.get(position).getName());
+						  
 						byte[] Image_getByte;
 						try {
 							Image_getByte = Base64.decode(list.get(position).getImage());
@@ -115,6 +115,20 @@ public class ClosetFragment extends Fragment {
 							e.printStackTrace();
 						}
 						  
+						if (list.get(position).getStore_image() != null) {
+							    byte[] Image_getByte1;
+							    try {
+							     Image_getByte1 = Base64.decode(list.get(position).getStore_image());
+							     ByteArrayInputStream bytes1 = new ByteArrayInputStream(
+							       Image_getByte1);
+							     BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
+							     Bitmap bm1 = bmd1.getBitmap();
+							     home_ic_img.setImageBitmap(bm1);
+							    } catch (IOException e) {
+							     // TODO Auto-generated catch block
+							     e.printStackTrace();
+							    }
+							   }
 			//}
 			return convertView;
 		}

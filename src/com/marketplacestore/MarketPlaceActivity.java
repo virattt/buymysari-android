@@ -4,11 +4,13 @@ import com.marketplacestore.fragment.ClosetFragment;
 import com.marketplacestore.fragment.CreateStoreFragment;
 import com.marketplacestore.fragment.HomeFragment;
 import com.marketplacestore.fragment.ProfileFragment;
+import com.marketplacestore.fragment.StoreProfileFragment;
 import com.marketplacestore.layout.MainLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,8 +40,7 @@ public class MarketPlaceActivity extends FragmentActivity{
         setContentView(mainLayout);
 		
         cityName = getIntent().getExtras().getString("cityName").toString();
-        DBAdpter.getNewsData(cityName);
-        
+              
         Log.v("log", " cityName in MarketActivity " + cityName);
         
         lvMenuItems = getResources().getStringArray(R.array.menu_items);
@@ -66,7 +67,7 @@ public class MarketPlaceActivity extends FragmentActivity{
         tvTitle = (TextView) findViewById(R.id.activity_main_content_title);
         
 		FragmentManager fm = this.getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = fm.beginTransaction();
         
         HomeFragment fragment = new HomeFragment();
         ft.add(R.id.activity_main_content_fragment, fragment);
@@ -147,11 +148,14 @@ public class MarketPlaceActivity extends FragmentActivity{
 		    android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 	        Fragment fragment = null;
 	        
-	        if(selectedItem.compareTo("My Profile") == 0) {
+	        if(selectedItem.compareTo("Home") == 0) {
+	            fragment = new HomeFragment();
+	        } 
+	        else if(selectedItem.compareTo("My Profile") == 0) {
 	            fragment = new ProfileFragment();
 	        } 
 	        else if(selectedItem.compareTo("My Stores") == 0){ 
-	        	fragment = new HomeFragment();
+	        	fragment = new StoreProfileFragment();
 	        }
 	        else if(selectedItem.compareTo("My Closet") == 0){
 	        	fragment = new ClosetFragment();

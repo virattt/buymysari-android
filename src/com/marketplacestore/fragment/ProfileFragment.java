@@ -8,9 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.marketplacestore.DBAdpter;
 import com.marketplacestore.R;
+
 public class ProfileFragment extends Fragment{
-	
-	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

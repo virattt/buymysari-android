@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+    <ImageButton
+        android:id="@+id/store_big_img"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/store_closet_txt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/store_big_img"
+        android:layout_marginTop="24dp"
+        android:text="" />
+
+    <Button
+        android:id="@+id/close_home_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/store_big_img"
+        android:layout_below="@+id/store_big_img"
+        android:text="Closed it" />
+
+    <TextView
+        android:id="@+id/itemName_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/close_home_btn"
+        android:layout_alignBottom="@+id/close_home_btn"
+        android:layout_marginRight="54dp"
+        android:layout_toLeftOf="@+id/close_home_btn"
+        android:text="" />
+
+</RelativeLayout>

@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rela_store_fragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white" >
+
+    <RelativeLayout
+        android:id="@+id/thumbnail_relative"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <LinearLayout
+            android:id="@+id/thumbnail_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dip"
+            android:padding="3dip" >
+
+            <ImageButton
+                android:id="@+id/list_Store_logo_image"
+                android:layout_width="40dip"
+                android:layout_height="40dip" />
+        </LinearLayout>
+
+        <!-- Title Of Song -->
+
+        <TextView
+            android:id="@+id/store_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/thumbnail_linear"
+            android:text=""
+            android:textColor="#040404"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <Button
+            android:id="@+id/store_subscribe_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:text="Subscribe"
+            android:textColor="#040404"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:typeface="sans" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/store_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/thumbnail_relative"
+        android:layout_marginTop="5dp"
+        android:cacheColorHint="#00000000"
+        android:divider="#000000"
+        android:dividerHeight="0dip"
+        android:fadingEdge="none"
+        android:focusable="false"
+        android:scrollbars="none" >
+    </ListView>
+
+</RelativeLayout>
