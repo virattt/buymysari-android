@@ -19,6 +19,8 @@ import org.json.JSONObject;
 import com.marketplacestore.dto.All_list_Store_dto;
 import com.marketplacestore.dto.All_list_home_dto;
 import com.marketplacestore.dto.Closet_dto;
+import com.marketplacestore.dto.MyStore_list_dto;
+import com.marketplacestore.dto.Mystore_Item_dto;
 import com.marketplacestore.dto.UserInfo_dto;
 
 import android.content.Context;
@@ -252,10 +254,12 @@ public class DBAdpter {
 			JSONObject jObj = new JSONObject(result);
 			msg = jObj.getString("message");
 			
+			Log.v("log"," sUCCESS --> " + jObj.getString("success"));
+			Log.v("log"," MessaGE --> " + msg);
 			
-			if(jObj.getString("success").equals(true))
+			if(jObj.getString("success").equals("true"))
 			{
-				
+				Log.v("log", "if login " );
 			JSONArray j_Array = jObj.getJSONArray("user_info");
 
 			for (int i = 0; i < j_Array.length(); i++) {
@@ -275,9 +279,11 @@ public class DBAdpter {
 				user_info_list.setMsg(msg);
 				fetch_UserDetail_data.add(user_info_list);
 			}
-			}
+				}
 			else
 			{
+				Log.v("log", "else login " );
+				
 				UserInfo_dto user_info_list = new UserInfo_dto();
 				user_info_list.setMsg(msg);
 				fetch_UserDetail_data.add(user_info_list);
@@ -491,23 +497,23 @@ public class DBAdpter {
 		 try {
 		   JSONObject jObj = new JSONObject(result);
 		   
-		   JSONObject j_StoreObj = jObj.getJSONObject("store_Info");
-		   
-		    Log.v("log", " json_objs StoreInfo " + j_StoreObj);
-		    
-		     JSONArray itemArray = j_StoreObj.getJSONArray("Item_info");
+		   JSONArray j_Array = jObj.getJSONArray("store_Info");
 		     
-		     for (int j = 0; j < itemArray.length(); j++) {
+		     for (int i = 0; i < j_Array.length(); i++) {
+		      JSONObject json_objs = j_Array.getJSONObject(i);
+		      JSONArray itemInfo = json_objs.getJSONArray("Item_info");
+		      
+		      for (int j = 0; j < itemInfo.length(); j++) {
 		    
 	    	 Closet_dto list_closet_data = new Closet_dto();
 		    	 
-	    	 list_closet_data.setStore_id(j_StoreObj.getString("store_id"));
-	    	 list_closet_data.setStore_name(j_StoreObj.getString("store_name"));
-	    	 list_closet_data.setStore_image(j_StoreObj.getString("store_image"));
+	    	 list_closet_data.setStore_id(json_objs.getString("store_id"));
+	    	 list_closet_data.setStore_name(json_objs.getString("store_name"));
+	    	 list_closet_data.setStore_image(json_objs.getString("store_image"));
 		
-	    	 Log.v("log"," store_name " + j_StoreObj.getString("store_name"));
+	    	 Log.v("log"," store_name " + json_objs.getString("store_name"));
 	    	 
-		     JSONObject jsonitem = itemArray.getJSONObject(j);
+		     JSONObject jsonitem = itemInfo.getJSONObject(j);
 		     
 		     list_closet_data.setItem_id(jsonitem.getString("item_id"));
 		     list_closet_data.setCategory_name(jsonitem.getString("category_name"));
@@ -519,13 +525,14 @@ public class DBAdpter {
 		     Log.v("log"," store_name " + jsonitem.getString("item_name"));
 		     
 		     Closet_list__data.add(list_closet_data);
+		     }
 		    }
-		   
 		  } catch (JSONException e) {
 		   e.printStackTrace();
 		  }
 		  return Closet_list__data;
 		 }
+	
 	public static ArrayList<All_list_Store_dto> getStoreData(String Id) {
 		  ArrayList<All_list_Store_dto> fetch_list_store_data = new ArrayList<All_list_Store_dto>();
 		  String result = "";
@@ -607,26 +614,82 @@ public class DBAdpter {
 		  return fetch_list_store_data;
 
 		 }
-	public static String userClosestStore(String item_id, String store_id) {
-		  Log.v("log_tag","item_id"+item_id);
-		  Log.v("log_tag","store_id"+store_id);
+	
+	public static String userClosestStore(String item_id, String store_id,
+			String user_id) {
+
+		String status = "";
+		String result = "";
+		String msg = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("item_id", item_id));
+		nameValuePairs.add(new BasicNameValuePair("store_id", store_id));
+		nameValuePairs.add(new BasicNameValuePair("user_id", user_id));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"http://imprintingdesign.com/Indian_Stores/users/userClosetedItems");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result Create Store :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			Log.v("log_tag", "Result DBADPTER 196 :" + result);
+			msg = jObj.getString("message");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	public static String updateUserInfo(String fname, String lname ,String email,String password,String id) {
+		  Log.v("log_tag","fname update "+fname);
+		  Log.v("log_tag","lname update "+lname);
+		  Log.v("log_tag","email update "+email);
+		  Log.v("log_tag","password update "+password);
 		  
-		  String status = "";
 		  String result = "";
 		  String msg = "";
 		  InputStream is = null;
-		  String user_id = "1";
+		//  String user_id = "1";
 
 		  ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		  nameValuePairs.add(new BasicNameValuePair("item_id", item_id));
-		  nameValuePairs.add(new BasicNameValuePair("store_id", store_id));
-		  nameValuePairs.add(new BasicNameValuePair("user_id", user_id));
+		  nameValuePairs.add(new BasicNameValuePair("id", id));
+		  nameValuePairs.add(new BasicNameValuePair("fname", fname));
+		  nameValuePairs.add(new BasicNameValuePair("lname", lname));
+		  nameValuePairs.add(new BasicNameValuePair("email", email));
+		  nameValuePairs.add(new BasicNameValuePair("password", password));
 
 		  // http post
 		  try {
 		   HttpClient httpclient = new DefaultHttpClient();
 		   HttpPost httppost = new HttpPost(
-		     "http://imprintingdesign.com/Indian_Stores/users/userClosetedItems");
+		     "http://imprintingdesign.com/Indian_Stores/users/updateUserInfo");
 		   httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		   HttpResponse response = httpclient.execute(httppost);
 		   HttpEntity entity = response.getEntity();
@@ -646,20 +709,205 @@ public class DBAdpter {
 		   }
 		   is.close();
 		   result = sb.toString();
-		   Log.v("log", "Result Create Store :" + result);
+		   Log.v("log", "Result Update User INfo :" + result);
 		  } catch (Exception e) {
 		   Log.e("log_tag", "Error converting result " + e.toString());
 		  }
 
 		  try {
-		   JSONObject jObj = new JSONObject(result);
-		   Log.v("log_tag", "Result :" + result);
+			  JSONObject jObj = new JSONObject(result);
+		   	Log.v("log_tag", "Result updated Profile MSg :" + jObj.getString("message"));
+		   	
+		   	msg = jObj.getString("message");
+		   	
 		  } catch (JSONException e) {
 		   e.printStackTrace();
 		  }
-		  return result;
+		  
+		  return msg;
 		 }
+
+	public static ArrayList<MyStore_list_dto> getMyStoreData(String Id) {
+		ArrayList<MyStore_list_dto> fetch_list_Mystore_data = new ArrayList<MyStore_list_dto>();
+		String result = "";
+
+		// String success_txt = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("user_id", Id));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"http://imprintingdesign.com/Indian_Stores/users/viewUserSubscribedStore");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result ListMyStoreData :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+
+			JSONArray j_Array = jObj.getJSONArray("store_info");
+
+			
+
+			for (int j = 0; j < j_Array.length(); j++) {
+				JSONObject json_objs = j_Array.getJSONObject(j);
+				MyStore_list_dto list_mystore_data = new MyStore_list_dto();
+
+				list_mystore_data.store_id = json_objs.getString("store_id");
+				list_mystore_data.name = json_objs.getString("name");
+				list_mystore_data.image = json_objs.getString("image");
+				
+
+				fetch_list_Mystore_data.add(list_mystore_data);
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return fetch_list_Mystore_data;
+
+	}
+	public static ArrayList<Mystore_Item_dto> getMyStoreItemData(String Id) {
+		ArrayList<Mystore_Item_dto> fetch_listItem_Mystore_data = new ArrayList<Mystore_Item_dto>();
+		String result = "";
+
+		// String success_txt = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("store_id", Id));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"http://imprintingdesign.com/Indian_Stores/users/viewStoreItems");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result ListMyStoreData :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+
+			JSONArray j_Array = jObj.getJSONArray("itemInfo");
+
+			
+
+			for (int j = 0; j < j_Array.length(); j++) {
+				JSONObject json_objs = j_Array.getJSONObject(j);
+				Mystore_Item_dto listitem_mystore_data = new Mystore_Item_dto();
+
+				listitem_mystore_data.item_id = json_objs.getString("item_id");
+				listitem_mystore_data.name = json_objs.getString("name");
+				listitem_mystore_data.image = json_objs.getString("image");
+				listitem_mystore_data.Closeted_item_track = json_objs.getString("Closeted_item_track");
+				
+
+				fetch_listItem_Mystore_data.add(listitem_mystore_data);
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return fetch_listItem_Mystore_data;
+
+	}
 	
+	public static String storeSubscribeData(String user_id, String store_id) {
+		// String city, String state,String country, String mobile
+		String result = "";
+		String msg = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("user_id", user_id));
+		nameValuePairs.add(new BasicNameValuePair("store_id", store_id));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url + "userSubscribedStore");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log_tag", "Result :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			msg = jObj.getString("message");
+			Log.v("log_tag", "RegisterMsg " + msg);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return msg;
+
+	}
 	// http://imprintingdesign.com/Indian_Stores/store/viewStoreClosetedItems
 	
 }

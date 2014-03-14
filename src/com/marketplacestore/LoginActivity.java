@@ -31,10 +31,12 @@ public class LoginActivity extends Activity {
 	ArrayList<UserInfo_dto> list = new ArrayList<UserInfo_dto>();
 	GPSTracker gps;
 	String cityName;
-	
+	MyApplication app;
 	private ProgressBar spinner;
 	ConnectionDetector cd;
 	Boolean isInternetPresent = false;
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,10 @@ public class LoginActivity extends Activity {
 
 		spinner = (ProgressBar)findViewById(R.id.progressBar1);
 	    spinner.setVisibility(View.GONE);
+	    
+	    app = (MyApplication) LoginActivity.this.getApplicationContext();
 		
-		if (android.os.Build.VERSION.SDK_INT > 9) {
+	    if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
@@ -69,7 +73,9 @@ public class LoginActivity extends Activity {
 
 					list = DBAdpter.getAllUserInfo(strUname, strPass);
 					String result = list.get(0).msg;
-
+					String user_id = list.get(0).user_id;
+				    app.setUserID(user_id);
+					
 					if (result.equals("success fully login")) {
 						Toast.makeText(LoginActivity.this, result, 1).show();
 						gps = new GPSTracker(LoginActivity.this);
@@ -115,7 +121,6 @@ public class LoginActivity extends Activity {
 			   }
 			  });
 	}
-	
 	
 	private void updateTableList() {
         // TODO Auto-generated method stub

@@ -4,9 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,8 @@ import com.marketplacestore.DBAdpter;
 import com.marketplacestore.R;
 import com.marketplacestore.dto.All_list_home_dto;
 import com.marketplacestore.dto.Closet_dto;
+import com.marketplacestore.fragment.HomeFragment.JSONTask;
+import com.marketplacestore.fragment.HomeFragment.MyListAdapter;
 
 public class ClosetFragment extends Fragment {
 	
@@ -35,13 +39,14 @@ public class ClosetFragment extends Fragment {
 	MyListAdapter adt;
 	All_list_home_dto list_home;
 	String cityName;
+	private ProgressDialog progress;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.closet, container, false);
-	
+		lv = (ListView) rootView.findViewById(R.id.closet_listview);
 		cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -50,15 +55,51 @@ public class ClosetFragment extends Fragment {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
-		lv = (ListView) rootView.findViewById(R.id.closet_listview);
-	
-		list = DBAdpter.getClosetData("1");
-		Log.v("log_tag","list_size ClosetItems :: "+ list.size());
 		
-		adt = new MyListAdapter(getActivity());
-		lv.setAdapter(adt);
+		progress = new ProgressDialog(getActivity());
+		progress.setMessage("Loading...");
+		
+		new JSONTask(progress).execute("Home");
 		
 		return rootView;
+	}
+	
+public class JSONTask extends AsyncTask<String, Void, String> {
+		
+		public JSONTask(ProgressDialog progress) {
+			   progress = progress;
+		}
+		
+		public void onPreExecute() {
+		    progress.show();
+		}
+		
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String listSize = "";
+	        Log.v("log_tag","list DoinBaCK ");
+	        
+	        list = DBAdpter.getClosetData("1");
+			Log.v("log_tag","list_size ClosetItems :: "+ list.size());
+	        
+	        listSize = list.size() +"";
+	        return listSize; // This value will be returned to your onPostExecute(result) method
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	Log.v("log_tag","list ON Post");
+	    		
+	    	adt = new MyListAdapter(getActivity());
+			lv.setAdapter(adt);
+	    	
+			 progress.dismiss();
+			
+	    }
+
+	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
+	   
 	}
 	
 	public class MyListAdapter extends BaseAdapter {

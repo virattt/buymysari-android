@@ -4,6 +4,7 @@ package com.marketplacestore.fragment;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,11 +25,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marketplacestore.Base64;
 import com.marketplacestore.DBAdpter;
+import com.marketplacestore.MyApplication;
 import com.marketplacestore.R;
 import com.marketplacestore.dto.All_list_home_dto;
 
@@ -40,18 +42,18 @@ public class HomeFragment extends Fragment {
 	All_list_home_dto list_home;
 	String cityName;
 	View rootView;
-	//private ProgressDialog progressDialog; 
-	
 	private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
 	private long lastPressTime;
 	boolean mHasDoubleClicked;
-	private ProgressBar spinner;
+	private ProgressDialog progress;
+	MyApplication app;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.home, container, false);
+		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView)	rootView.findViewById(R.id.home_listview);
 		
 		cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
@@ -62,31 +64,47 @@ public class HomeFragment extends Fragment {
 			StrictMode.setThreadPolicy(policy);
 		}
 	
-		list = DBAdpter.getNewsData(cityName);
-        Log.v("log_tag","list_size :: "+ list.size());
-        adt = new MyListAdapter(getActivity());
-		lv.setAdapter(adt);
-    	
-		//new JSONTask(getActivity()).execute("Home");
+		
+		progress = new ProgressDialog(getActivity());
+		progress.setMessage("Loading...");
+		
+		new JSONTask(progress).execute("Home");
+		
 		return rootView;
 	}
 
 	public class JSONTask extends AsyncTask<String, Void, String> {
+		
+		public JSONTask(ProgressDialog progress) {
+			   progress = progress;
+		}
+		
+		public void onPreExecute() {
+		    progress.show();
+		}
+		
 	    @Override
 	    protected String doInBackground(String... arg) {
-	        String retorno = "";
+	        String listSize = "";
+	        Log.v("log_tag","list DoinBaCK ");
 	        
-	     //   mDialog = ProgressDialog.show(getActivity(), "Homeview", "Loading...", true);
+	        list = DBAdpter.getNewsData(cityName);
 	        
-	        return retorno; // This value will be returned to your onPostExecute(result) method
+	        Log.v("log_tag","list_size :: "+ list.size());
+	        listSize = list.size() +"";
+	        return listSize; // This value will be returned to your onPostExecute(result) method
 	    }
 
 	    @Override
 	    protected void onPostExecute(String result) {
 	        // Create here your JSONObject...
+	    	Log.v("log_tag","list ON Post");
+	    		
+	    	adt = new MyListAdapter(getActivity());
+			lv.setAdapter(adt);
 	    	
-	    	
-	    	
+			 progress.dismiss();
+			
 	    }
 
 	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
@@ -136,7 +154,7 @@ public class HomeFragment extends Fragment {
 			home_view_txt.setText("Views: "
 					+ list.get(position).views.toString());
 			itemName_txt.setText(list.get(position).name.toString());
-
+			final String uid= app.getUserID();
 			Log.v("log_tag", "image :::: " + list.get(position).image);
 			if (list.get(position).image != null) {
 				byte[] Image_getByte;
@@ -180,8 +198,9 @@ public class HomeFragment extends Fragment {
 					findDoubleClick(list.get(position).store_id);
 
 					if (mHasDoubleClicked) {
-						DBAdpter.userClosestStore(list.get(position).item_id,
-								list.get(position).store_id);
+						String msg = DBAdpter.userClosestStore(list.get(position).item_id,
+								list.get(position).store_id,uid);
+						Toast.makeText(getActivity().getApplicationContext(), msg, 1).show();
 					}
 
 				}
@@ -191,11 +210,14 @@ public class HomeFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					DBAdpter.userClosestStore(list.get(position).item_id,
-							list.get(position).store_id);
+					
+					
+					String msg = DBAdpter.userClosestStore(list.get(position).item_id,
+							list.get(position).store_id,uid);
+					Toast.makeText(getActivity().getApplicationContext(), msg, 1).show();
 				}
 			});
-
+			
 			return convertView;
 		}
 	}
