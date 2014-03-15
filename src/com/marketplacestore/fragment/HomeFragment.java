@@ -195,8 +195,9 @@ public class HomeFragment extends Fragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					findDoubleClick(list.get(position).store_id);
-
+					findDoubleClick(list.get(position).store_id,
+							list.get(position).item_id);
+					
 					if (mHasDoubleClicked) {
 						String msg = DBAdpter.userClosestStore(list.get(position).item_id,
 								list.get(position).store_id,uid);
@@ -222,7 +223,7 @@ public class HomeFragment extends Fragment {
 		}
 	}
 
-	private boolean findDoubleClick(final String str_id) {
+	private boolean findDoubleClick(final String str_id, final String itemId) {
 		// Get current time in nano seconds.
 		long pressTime = System.currentTimeMillis();
 		// If double click...
@@ -248,6 +249,8 @@ public class HomeFragment extends Fragment {
 						Bundle bundle = new Bundle();
 						bundle.putString("position", str_id);
 						fm2.setArguments(bundle);
+						
+						DBAdpter.updateItemView(itemId);
 					}
 				}
 			};

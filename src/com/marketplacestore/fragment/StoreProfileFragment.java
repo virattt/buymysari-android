@@ -9,8 +9,6 @@ import com.marketplacestore.DBAdpter;
 import com.marketplacestore.MyApplication;
 import com.marketplacestore.R;
 import com.marketplacestore.dto.MyStore_list_dto;
-import com.marketplacestore.fragment.ClosetFragment.JSONTask;
-import com.marketplacestore.fragment.ClosetFragment.MyListAdapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,79 +30,88 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
-public class StoreProfileFragment extends Fragment{
+public class StoreProfileFragment extends Fragment {
 	ListView lv;
 	ArrayList<MyStore_list_dto> list = new ArrayList<MyStore_list_dto>();
 	MyApplication app;
 	MyListAdapter adtstore;
 	View rootView;
 	private ProgressDialog progress;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_store_profile, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_store_profile,
+				container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView) rootView.findViewById(R.id.myStore_listview);
-		
+
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
-		
-		new JSONTask(progress).execute("Home");
-		
-		/*lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3) {
-				// TODO Auto-generated method stub
-				Log.v("log_tag", "listOnItemTap");
+		new JSONTask(progress).execute("Home");
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> a, View v, int position,
+					long id) {
+				FragmentManager fm = getFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				MyStoreItemFragment fm2 = new MyStoreItemFragment();
+				fragmentTransaction.replace(R.id.rela_myStore_fragment, fm2,"HELLO");
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+				Bundle bundle = new Bundle();
+				bundle.putString("position", list.get(position).store_id);
+				fm2.setArguments(bundle);
 			}
-		});*/
-		
+		});
+
 		return rootView;
 	}
-	
-public class JSONTask extends AsyncTask<String, Void, String> {
-		
+
+	public class JSONTask extends AsyncTask<String, Void, String> {
+
 		public JSONTask(ProgressDialog progress) {
-			   progress = progress;
+			progress = progress;
 		}
-		
+
 		public void onPreExecute() {
-		    progress.show();
+			progress.show();
 		}
-		
-	    @Override
-	    protected String doInBackground(String... arg) {
-	        String listSize = "";
-	        Log.v("log_tag","list DoinBaCK ");
-	        
-	        list = DBAdpter.getMyStoreData(app.getUserID());
-	       
-			Log.v("log_tag","list_size ClosetItems :: "+ list.size());
-	        
-	        listSize = list.size() +"";
-	        return listSize; // This value will be returned to your onPostExecute(result) method
-	    }
 
-	    @Override
-	    protected void onPostExecute(String result) {
-	        // Create here your JSONObject...
-	    	Log.v("log_tag","list ON Post");
-	    		
-	    	adtstore = new MyListAdapter(getActivity().getApplicationContext());
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+			Log.v("log_tag", "list DoinBaCK ");
+
+			list = DBAdpter.getMyStoreData(app.getUserID());
+
+			Log.v("log_tag", "list_size ClosetItems :: " + list.size());
+
+			listSize = list.size() + "";
+			return listSize; // This value will be returned to your
+								// onPostExecute(result) method
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "list ON Post");
+
+			adtstore = new MyListAdapter(getActivity().getApplicationContext());
 			lv.setAdapter(adtstore);
-	    	
-			progress.dismiss();
-			
-	    }
 
-	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
-	   
+			progress.dismiss();
+
+		}
+
+		// You'll have to override this method on your other tasks that extend
+		// from this one and use your JSONObject as needed
+
 	}
-	
+
 	public class MyListAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
@@ -127,18 +134,14 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			convertView = mInflater.inflate(R.layout.custome_mystorelist,
-					null);
+			convertView = mInflater.inflate(R.layout.custome_mystorelist, null);
 			ImageButton store_Name_img = (ImageButton) convertView
 					.findViewById(R.id.my_Store_logo_image);
 
 			TextView store_Name_txt = (TextView) convertView
 					.findViewById(R.id.mystore_list_name);
-			
 
-			store_Name_txt.setText( list.get(position).name);
-			
-			
+			store_Name_txt.setText(list.get(position).name);
 
 			if (list.get(position).image != null) {
 				byte[] Image_getByte;
@@ -156,28 +159,15 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 				}
 			}
 			store_Name_img.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					FragmentManager fm = getFragmentManager();
-					FragmentTransaction fragmentTransaction = fm
-							.beginTransaction();
-					MyStoreItemFragment fm2 = new MyStoreItemFragment();
-					fragmentTransaction.replace(R.id.rela_myStore_fragment,
-							fm2, "HELLO");
-					fragmentTransaction.addToBackStack(null);
-					fragmentTransaction.commit();
-					Bundle bundle = new Bundle();
-					bundle.putString("position", list.get(position).store_id);
-					fm2.setArguments(bundle);
-					
-					
+
 				}
 			});
-			
+
 			return convertView;
 		}
 	}
 }
-

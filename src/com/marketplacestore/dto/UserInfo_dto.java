@@ -8,6 +8,7 @@ public class UserInfo_dto {
 	public String last_name;
 	public String mobile;
 	public String msg;
+	public String store_id;
 	
 	public String getUser_id() {
 		return user_id;
@@ -46,6 +47,12 @@ public class UserInfo_dto {
 		this.msg = msg;
 	}
 	
+	public String getStoreId() {
+		return store_id;
+	}
+	public void setStoreId(String store_Id) {
+		this.store_id = store_Id;
+	}
 	
 	/*private String user_id;
 	private String email;

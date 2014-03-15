@@ -1,37 +1,60 @@
 package com.marketplacestore;
 
-import com.marketplacestore.fragment.ClosetFragment;
-import com.marketplacestore.fragment.CreateStoreFragment;
-import com.marketplacestore.fragment.HomeFragment;
-import com.marketplacestore.fragment.ProfileFragment;
-import com.marketplacestore.fragment.StoreProfileFragment;
-import com.marketplacestore.layout.MainLayout;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+
+import com.marketplacestore.dto.CateDto;
+import com.marketplacestore.fragment.ClosetFragment;
+import com.marketplacestore.fragment.CreateStoreFragment;
+import com.marketplacestore.fragment.HomeFragment;
+import com.marketplacestore.fragment.ProfileFragment;
+import com.marketplacestore.fragment.SearchItemsFragment;
+import com.marketplacestore.fragment.StoreProfileFragment;
+import com.marketplacestore.fragment.StoreProfileGridFragment;
+import com.marketplacestore.layout.MainLayout;
 
 
-public class MarketPlaceActivity extends FragmentActivity{
+public class MarketPlaceActivity extends FragmentActivity implements View.OnClickListener{
 	
 	MainLayout mainLayout;
 	Button btMenu;	
 	private ListView lvMenu , StoreMenu;
 	private String[] lvMenuItems;
 	private String[] StoreMenuItems;
-	TextView tvTitle;
+	public static TextView tvTitle;
 	String cityName;
+	List<Button> buttons = new ArrayList<Button>();
 	
+	ArrayAdapter<String> adapter;
+	ArrayList<CateDto> CategoryNames;
+	EditText edtSearchText;
+	String searchText;
+	TableRow tr;
+	
+	int cateIdSelected;
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +62,29 @@ public class MarketPlaceActivity extends FragmentActivity{
 		mainLayout = (MainLayout)this.getLayoutInflater().inflate(R.layout.activity_market_place, null);
         setContentView(mainLayout);
 		
+        edtSearchText = (EditText) findViewById(R.id.edtSearchText);
+        
+		TableLayout layout = (TableLayout)findViewById(R.id.tab_layout);
+        layout.setLayoutParams( new TableLayout.LayoutParams(60,40));
+        layout.setPadding(1,1,1,1);
+        
+        CategoryNames = DBAdpter.fetchCategoryNames();
+        Log.v("log"," CategoryNames ---> " + CategoryNames);
+        Log.v("log"," Category Names ---> " + CategoryNames.get(0).getCategory_name() + " CateId ==> " + CategoryNames.get(0).getCate_id());
+        // .charAt(0)
+       // for (int f=0; f<=13; f++) {
+           tr = (TableRow)findViewById(R.id.tableRow1);
+            for (int c=0; c < CategoryNames.size() ; c++) {
+                Button b = new Button (this);
+                b.setId(Integer.parseInt(CategoryNames.get(c).getCate_id()));
+                b.setText(CategoryNames.get(c).getCategory_name());
+                b.setTextSize(15.0f);
+                b.setTextColor(Color.BLACK);
+                b.setOnClickListener(this);
+                buttons.add(b);
+                tr.addView(b, 30,30);
+           } // for
+        
         cityName = getIntent().getExtras().getString("cityName").toString();
               
         Log.v("log", " cityName in MarketActivity " + cityName);
@@ -73,6 +119,40 @@ public class MarketPlaceActivity extends FragmentActivity{
         ft.add(R.id.activity_main_content_fragment, fragment);
         ft.commit();
 		
+        edtSearchText.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// TODO Auto-generated method stub
+				
+				if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+			            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+			          // Perform action on key press
+			          Toast.makeText(MarketPlaceActivity.this," SearchText --> " + edtSearchText.getText().toString(), Toast.LENGTH_SHORT).show();
+			          
+			          	tvTitle.setText("Search Reuslts View");
+			          
+			          	FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
+						SearchItemsFragment fm2 = new SearchItemsFragment();
+						fragmentTransaction.replace(R.id.rela_home_fragment,
+								fm2, "HELLO");
+						fragmentTransaction.addToBackStack(null);
+						fragmentTransaction.commit();
+						Bundle bundle = new Bundle();
+						bundle.putString("searchText", edtSearchText.getText().toString());
+					//	bundle.putString("searchCateId", cateIdSelected +"");
+						fm2.setArguments(bundle);
+			          
+			          return true;
+			        }
+				
+				return false;
+			}
+		});
+        
+        
 	//	activity_main_content_button_menu
 		 btMenu = (Button) findViewById(R.id.activity_main_content_button_menu);
 	        btMenu.setOnClickListener(new OnClickListener() {
@@ -109,7 +189,7 @@ public class MarketPlaceActivity extends FragmentActivity{
         	fragment = new HomeFragment();
         }
         else if(selectedItem.compareTo("Store Gallery") == 0){
-        	
+        	fragment = new StoreProfileGridFragment();
         }
         else if(selectedItem.compareTo("Add a Picture") == 0){
         	
@@ -179,5 +259,44 @@ public class MarketPlaceActivity extends FragmentActivity{
 	        // Hide menu anyway
 	        mainLayout.toggleMenu();
 	}
-	
+
+	@Override
+	public void onClick(View view) {
+		// TODO Auto-generated method stub
+		// Cate_
+		Log.v("log", " Id --> " + view.getId());
+	/*	cateIdSelected  = view.getId();
+		
+		  for (int c=0; c < CategoryNames.size() ; c++) {
+			  if((Integer.parseInt(CategoryNames.get(c).getCate_id()) != view.getId()))
+			  {
+				  Log.v("log"," For Cate ID --> " + CategoryNames.get(c).getCate_id());
+				  
+				  for(Button b: buttons) {
+					     if(b.getId() != Integer.parseInt(CategoryNames.get(c).getCate_id())) {
+					    	 b.setEnabled(true); 
+					     } 
+				  }
+			  }
+		  }
+		  
+		  	tvTitle.setText("Search Reuslts View");
+          
+        	FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fm
+					.beginTransaction();
+			SearchItemsFragment fm2 = new SearchItemsFragment();
+			fragmentTransaction.replace(R.id.rela_home_fragment,
+					fm2, "HELLO");
+			fragmentTransaction.addToBackStack(null);
+			fragmentTransaction.commit();
+			Bundle bundle = new Bundle();
+			bundle.putString("searchText", edtSearchText.getText().toString());
+			bundle.putString("searchCateId", view.getId() +"");
+			fm2.setArguments(bundle);
+		
+	//	((Button) view).setText("*");
+        ((Button) view).setEnabled(false);
+      */  
+	}
 }

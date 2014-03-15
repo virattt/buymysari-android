@@ -4,9 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -25,9 +27,10 @@ import com.marketplacestore.Base64;
 import com.marketplacestore.DBAdpter;
 import com.marketplacestore.MyApplication;
 import com.marketplacestore.R;
-import com.marketplacestore.dto.All_list_Store_dto;
 import com.marketplacestore.dto.Mystore_Item_dto;
 import com.marketplacestore.dto.UserInfo_dto;
+import com.marketplacestore.fragment.StoreProfileGridFragment.CustomGridViewAdapter;
+import com.marketplacestore.fragment.StoreProfileGridFragment.JSONTask;
 
 public class MyStoreItemFragment extends Fragment {
 
@@ -35,23 +38,26 @@ public class MyStoreItemFragment extends Fragment {
 	ArrayList<Mystore_Item_dto> list = new ArrayList<Mystore_Item_dto>();
 	MyListAdapter adt;
 	View rootView;
+	private ProgressDialog progress;
 	ImageButton store_icon;
 	TextView storeName;
 	Button subscribe, store_subscr_btn;
 	UserInfo_dto usdt;
 	MyApplication app;
+	Bundle bundle;
+	String myInt;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		rootView = inflater.inflate(R.layout.mystoreitemlist, container,
-				false);
+		rootView = inflater.inflate(R.layout.mystoreitemlist, container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
-		
-		Bundle bundle = this.getArguments();
-		String myInt = bundle.getString("position");
-		Log.v("log_tag", "myInt" + myInt);
+		progress = new ProgressDialog(getActivity());
+		progress.setMessage("Loading...");
+		bundle = this.getArguments();
+		myInt = bundle.getString("position");
+		new JSONTask(progress).execute("Home");
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -59,14 +65,52 @@ public class MyStoreItemFragment extends Fragment {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		list = DBAdpter.getMyStoreItemData(myInt);
-		
-		
+		// list = DBAdpter.getMyStoreItemData(myInt);
+
 		lv = (ListView) rootView.findViewById(R.id.mystoreitem_listview);
-		adt = new MyListAdapter(getActivity());
-		lv.setAdapter(adt);
 
 		return rootView;
+	}
+
+	public class JSONTask extends AsyncTask<String, Void, String> {
+
+		public JSONTask(ProgressDialog progress) {
+			progress = progress;
+		}
+
+		public void onPreExecute() {
+			progress.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+			Log.v("log_tag", "list DoinBaCK ");
+
+			list = DBAdpter.getMyStoreItemData(myInt);
+
+			Log.v("log_tag", "list_size ClosetItems :: " + list.size());
+
+			listSize = list.size() + "";
+			return listSize; // This value will be returned to your
+								// onPostExecute(result) method
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "list ON Post");
+
+			adt = new MyListAdapter(getActivity());
+			lv.setAdapter(adt);
+
+			progress.dismiss();
+
+		}
+
+		// You'll have to override this method on your other tasks that extend
+		// from this one and use your JSONObject as needed
+
 	}
 
 	public class MyListAdapter extends BaseAdapter {
@@ -91,8 +135,7 @@ public class MyStoreItemFragment extends Fragment {
 
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			convertView = mInflater.inflate(R.layout.custommystoreitem,
-					null);
+			convertView = mInflater.inflate(R.layout.custommystoreitem, null);
 			ImageButton store_item_img = (ImageButton) convertView
 					.findViewById(R.id.mystoreitem_big_img);
 
@@ -107,7 +150,6 @@ public class MyStoreItemFragment extends Fragment {
 			store_closet_txt.setText("Closeted : "
 					+ list.get(position).Closeted_item_track);
 			store_item_name_txt.setText(list.get(position).name);
-			final String uid = app.getUserID();
 
 			if (list.get(position).image != null) {
 				byte[] Image_getByte;
@@ -129,18 +171,15 @@ public class MyStoreItemFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-
-					/*String msg = DBAdpter.userClosestStore(
-							list.get(position).item_id,
-							list.get(position).store_id, uid);
+					final String uid = app.getUserID();
+					String msg = DBAdpter.userClosestStore(
+							list.get(position).item_id, myInt, uid);
 					Toast.makeText(getActivity().getApplicationContext(), msg,
-							1).show();*/
+							1).show();
 				}
 			});
 			return convertView;
 		}
 	}
-
-
 
 }
