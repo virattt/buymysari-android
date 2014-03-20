@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.marketplacestore.dto.All_list_Store_dto;
 import com.marketplacestore.dto.All_list_home_dto;
 import com.marketplacestore.dto.CateDto;
@@ -25,10 +28,6 @@ import com.marketplacestore.dto.Mystore_Item_dto;
 import com.marketplacestore.dto.UserInfo_dto;
 import com.marketplacestore.dto.search_items_dto;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
-
 public class DBAdpter {
 	public static String url = "http://imprintingdesign.com/Indian_Stores/users/";
 	// public static String loginInUser(String username, String password) {
@@ -36,8 +35,7 @@ public class DBAdpter {
 	public static ArrayList<Closet_dto> Closet_list__data;
 	public static String storeId;
 	
-	public static String registerInUser(String firstname, String password,
-			String lastname, String email) {
+	public static String registerInUser(String firstname, String password,String lastname, String email) {
 		// String city, String state,String country, String mobile
 		String result = "";
 		String msg = "";
@@ -94,14 +92,14 @@ public class DBAdpter {
 	
 	public static String createUserStore(String name, String email,
 			String website, String phone, String city, String state,
-			String country) {
+			String country ,String user_id) {
 		
 		String status = "";
 		String result = "";
 		String msg = "";
 		InputStream is = null;
 		
-		Log.v("log"," getUserID  " + fetch_UserDetail_data.get(0).getUser_id().toString());
+		Log.v("log"," getUserID  " + user_id);
 
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("name", name));
@@ -111,7 +109,7 @@ public class DBAdpter {
 		nameValuePairs.add(new BasicNameValuePair("city", city));
 		nameValuePairs.add(new BasicNameValuePair("state", state));
 		nameValuePairs.add(new BasicNameValuePair("country", country));
-		nameValuePairs.add(new BasicNameValuePair("user_id", "1"));
+		nameValuePairs.add(new BasicNameValuePair("user_id", user_id));
 
 		// http post
 		try {
@@ -148,12 +146,10 @@ public class DBAdpter {
 			storeId = jObj.getString("store_id");
 			
 			Log.v("login Object", msg + " Store_ID " + storeId);
-			//
-
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return status;
+		return msg;
 	}
 	
 	public static String uploadStorePhoto(String base64String) {
@@ -259,7 +255,9 @@ public class DBAdpter {
 			Log.v("log"," sUCCESS --> " + jObj.getString("success"));
 			Log.v("log"," MessaGE --> " + msg);
 			
-			if (jObj.getString("success").equals("true")) {
+			Boolean success_con = jObj.getBoolean("success");
+			
+			if (success_con == true) {
 				Log.v("log", "if login ");
 				JSONArray j_Array = jObj.getJSONArray("user_info");
 
@@ -273,10 +271,35 @@ public class DBAdpter {
 					user_info_list.setFirst_name(json_objs
 							.getString("first_name"));
 					user_info_list.setLast_name(json_objs
-							.getString("last_name"));
+							.getString("first_name"));
 					user_info_list.setMobile(json_objs.getString("mobile"));
-					user_info_list.setStoreId(json_objs.getString("store_id"));
 					user_info_list.setMsg(msg);
+					
+						if(!json_objs.getString("store_id").equals(""))
+						{
+							user_info_list.setStoreId(json_objs.getString("store_id"));
+							user_info_list.setStoreName(json_objs
+									.getString("store_name"));
+							user_info_list.setStoreEmail(json_objs
+									.getString("store_email"));
+							user_info_list.setStoreCity(json_objs
+									.getString("store_city"));
+							user_info_list.setStoreState(json_objs
+									.getString("store_state"));
+							user_info_list.setStoreCountry(json_objs
+									.getString("store_country"));
+							user_info_list.setStoreImage(json_objs
+									.getString("store_image"));
+							user_info_list.setStoreMobile(json_objs
+									.getString("store_mobile"));
+							user_info_list.setStoreWebsite(json_objs
+									.getString("website"));
+						}
+						else
+						{
+							user_info_list.setStoreId(json_objs.getString("store_id"));
+						}
+						
 					fetch_UserDetail_data.add(user_info_list);
 				}
 			} else {
@@ -286,6 +309,7 @@ public class DBAdpter {
 				user_info_list.setMsg(msg);
 				fetch_UserDetail_data.add(user_info_list);
 			}
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -294,7 +318,7 @@ public class DBAdpter {
 
 	}
 
-	public static ArrayList<search_items_dto> getSearchItemsData(String searchText) {
+	public static ArrayList<search_items_dto> getSearchItemsData(String searchText , String searchCateId) {
 	    ArrayList<search_items_dto> fetch_search_items_data = new ArrayList<search_items_dto>();
 	    String result = "";
 	    String msg = "";
@@ -303,7 +327,7 @@ public class DBAdpter {
 
 	    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	    nameValuePairs.add(new BasicNameValuePair("search", searchText));
-	   // nameValuePairs.add(new BasicNameValuePair("cat_id", searchCateId));
+	    nameValuePairs.add(new BasicNameValuePair("cat_id", searchCateId));
 	    
 	    // http post
 	    try {
@@ -412,34 +436,34 @@ public class DBAdpter {
 	     JSONObject jObj = new JSONObject(result);
 	     JSONArray j_Array = jObj.getJSONArray("store_info");
 	     
-	     for (int i = 0; i < j_Array.length(); i++) {
-	      JSONObject json_objs = j_Array.getJSONObject(i);
-	      JSONArray itemInfo = json_objs.getJSONArray("item_info");
-	      
-	      for (int j = 0; j < itemInfo.length(); j++) {
-	       All_list_home_dto list_home_data = new All_list_home_dto();
-	       Log.v("log_tag","Storename ::000  "+json_objs.getString("store_name"));
-	       list_home_data.store_id = json_objs.getString("id");
-	       list_home_data.store_name = json_objs.getString("store_name");
-	       list_home_data.city = json_objs.getString("city");
-	       list_home_data.website = json_objs.getString("website");
-	       list_home_data.state = json_objs.getString("state");
-	       list_home_data.picture = json_objs.getString("picture");
-	       
-	       JSONObject json_objs_items = itemInfo.getJSONObject(j);
-	       Log.v("log_tag","json_objs_items "+json_objs_items.getString("name"));
-	       list_home_data.item_id=json_objs_items.getString("item_id");
-	       list_home_data.name= json_objs_items.getString("name");
-	       list_home_data.gender= json_objs_items.getString("gender");
-	       list_home_data.category_name= json_objs_items.getString("category_name");
-	       list_home_data.image= json_objs_items.getString("image");
-	       list_home_data.views=json_objs_items.getString("views");
-	       fetch_list_home_data.add(list_home_data);
-	      }
-	      
-
+	   //  if(j_Array.length() > 0)
+	    // {
+	    	 for (int i = 0; i < j_Array.length(); i++) {
+	   	      JSONObject json_objs = j_Array.getJSONObject(i);
+	   	      JSONArray itemInfo = json_objs.getJSONArray("item_Info");
+	   	      
+	   	      for (int j = 0; j < itemInfo.length(); j++) {
+	   	       All_list_home_dto list_home_data = new All_list_home_dto();
+	   	       Log.v("log_tag","Storename ::000  "+json_objs.getString("store_name"));
+	   	       list_home_data.store_id = json_objs.getString("id");
+	   	       list_home_data.store_name = json_objs.getString("store_name");
+	   	       list_home_data.city = json_objs.getString("city");
+	   	       list_home_data.website = json_objs.getString("website");
+	   	       list_home_data.state = json_objs.getString("state");
+	   	       list_home_data.picture = json_objs.getString("picture");
+	   	       
+	   	       JSONObject json_objs_items = itemInfo.getJSONObject(j);
+	   	       Log.v("log_tag","json_objs_items "+json_objs_items.getString("name"));
+	   	       list_home_data.item_id=json_objs_items.getString("item_id");
+	   	       list_home_data.name= json_objs_items.getString("name");
+	   	       list_home_data.gender= json_objs_items.getString("gender");
+	   	       list_home_data.category_name= json_objs_items.getString("category_name");
+	   	       list_home_data.image= json_objs_items.getString("image");
+	   	       list_home_data.views=json_objs_items.getString("views");
+	   	       fetch_list_home_data.add(list_home_data);
+	   	      }
+	   	 //    }
 	     }
-	     
 	    } catch (JSONException e) {
 	     e.printStackTrace();
 	    }
@@ -526,7 +550,7 @@ public class DBAdpter {
 		  return Closet_list__data;
 		 }
 	
-	public static ArrayList<All_list_Store_dto> getStoreData(String Id) {
+	/*public static ArrayList<All_list_Store_dto> getStoreData(String Id) {
 		  ArrayList<All_list_Store_dto> fetch_list_store_data = new ArrayList<All_list_Store_dto>();
 		  String result = "";
 
@@ -583,10 +607,8 @@ public class DBAdpter {
 		    list_store_data.country = j_Array.getString("country");
 		    list_store_data.mobile = j_Array.getString("mobile");
 		    list_store_data.website = j_Array.getString("website");
-		    list_store_data.closeted_item_count = j_Array
-		      .getString("closeted_item_count");
-		    list_store_data.subscribed_store_count = j_Array
-		      .getString("subscribed_store_count");
+		    list_store_data.closeted_item_count = j_Array.getString("closeted_item_count");
+		    list_store_data.subscribed_store_count = j_Array.getString("subscribed_store_count");
 		    list_store_data.store_image = j_Array.getString("store_image");
 
 		    JSONObject json_objs_items = itemInfo.getJSONObject(j);
@@ -594,10 +616,126 @@ public class DBAdpter {
 		    list_store_data.item_id = json_objs_items.getString("item_id");
 		    list_store_data.name = json_objs_items.getString("name");
 		    list_store_data.gender = json_objs_items.getString("gender");
-
 		    list_store_data.image = json_objs_items.getString("image");
 
 		    fetch_list_store_data.add(list_store_data);
+
+		   }
+
+		  } catch (JSONException e) {
+		   e.printStackTrace();
+		  }
+		  return fetch_list_store_data;
+
+		 }*/
+	
+	public static ArrayList<All_list_Store_dto> getStoreData(String Id) {
+		  ArrayList<All_list_Store_dto> fetch_list_store_data = new ArrayList<All_list_Store_dto>();
+		  String result = "";
+
+		  // String success_txt = "";
+		  InputStream is = null;
+
+		  ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		  nameValuePairs.add(new BasicNameValuePair("id", Id));
+
+		  // http post
+		  try {
+		   HttpClient httpclient = new DefaultHttpClient();
+		   HttpPost httppost = new HttpPost(
+		     "http://imprintingdesign.com/Indian_Stores/store/viewStoreInformation");
+		   httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		   HttpResponse response = httpclient.execute(httppost);
+		   HttpEntity entity = response.getEntity();
+
+		   is = entity.getContent();
+		  } catch (Exception e) {
+		   Log.e("log_tag", "Error in http connection " + e.toString());
+		  }
+		  // convert response to string
+		  try {
+		   BufferedReader reader = new BufferedReader(new InputStreamReader(
+		     is, "iso-8859-1"), 8);
+		   StringBuilder sb = new StringBuilder();
+		   String line = null;
+		   while ((line = reader.readLine()) != null) {
+		    sb.append(line + "\n");
+		   }
+		   is.close();
+		   result = sb.toString();
+		   Log.v("log", "Result :" + result);
+		  } catch (Exception e) {
+		   Log.e("log_tag", "Error converting result " + e.toString());
+		  }
+
+		  try {
+		   JSONObject jObj = new JSONObject(result);
+
+		   JSONObject j_Array = jObj.getJSONObject("store_info");
+
+		   for (int i = 0; i < j_Array.length(); i++) {
+
+		    JSONArray itemInfo = j_Array.getJSONArray("Item_info");
+		    All_list_Store_dto list_store_data = new All_list_Store_dto();
+
+		    if (itemInfo.length() > 0) {
+		     for (int j = 0; j < itemInfo.length(); j++) {
+
+		      JSONObject json_objs_items = itemInfo.getJSONObject(j);
+
+		      list_store_data.store_id = j_Array
+		        .getString("store_id");
+		      list_store_data.store_name = j_Array
+		        .getString("store_name");
+		      list_store_data.email = j_Array.getString("email");
+		      list_store_data.city = j_Array.getString("city");
+		      list_store_data.state = j_Array.getString("state");
+		      list_store_data.country = j_Array.getString("country");
+		      list_store_data.mobile = j_Array.getString("mobile");
+		      list_store_data.website = j_Array.getString("website");
+		      list_store_data.closeted_item_count = j_Array
+		        .getString("closeted_item_count");
+		      list_store_data.subscribed_store_count = j_Array
+		        .getString("subscribed_store_count");
+		      list_store_data.store_image = j_Array
+		        .getString("store_image");
+
+		      list_store_data.item_id = json_objs_items
+		        .getString("item_id");
+		      list_store_data.name = json_objs_items
+		        .getString("name");
+		      list_store_data.gender = json_objs_items
+		        .getString("gender");
+		      list_store_data.image = json_objs_items
+		        .getString("image");
+
+		      fetch_list_store_data.add(list_store_data);
+
+		     }
+		    } else {
+
+		     list_store_data.store_id = j_Array.getString("store_id");
+		     list_store_data.store_name = j_Array
+		       .getString("store_name");
+		     list_store_data.email = j_Array.getString("email");
+		     list_store_data.city = j_Array.getString("city");
+		     list_store_data.state = j_Array.getString("state");
+		     list_store_data.country = j_Array.getString("country");
+		     list_store_data.mobile = j_Array.getString("mobile");
+		     list_store_data.website = j_Array.getString("website");
+		     list_store_data.closeted_item_count = j_Array
+		       .getString("closeted_item_count");
+		     list_store_data.subscribed_store_count = j_Array
+		       .getString("subscribed_store_count");
+		     list_store_data.store_image = j_Array
+		       .getString("store_image");
+
+		     list_store_data.item_id = "";
+		     list_store_data.name = "";
+		     list_store_data.gender = "";
+		     list_store_data.image = "";
+		     fetch_list_store_data.add(list_store_data);
+		    }
 
 		   }
 
@@ -710,7 +848,7 @@ public class DBAdpter {
 		return msg;
 	}
 	
-	public static String updateUserInfo(String fname, String lname ,String email,String password,String id) {
+	public static String updateUserInfo(String id,String fname, String lname ,String email,String password) {
 		  Log.v("log_tag","fname update "+fname);
 		  Log.v("log_tag","lname update "+lname);
 		  Log.v("log_tag","email update "+email);
@@ -1015,6 +1153,72 @@ public class DBAdpter {
 		
 		return fetch_cate_data;
 	}
+	
+	public static String updateUserStore(String str_user_id,String str_name, String str_email,
+			String str_website,String str_mobile,String str_city,String base64string) {
+
+		String status = "";
+		String result = "";
+		String msg = "";
+		InputStream is = null;
+
+		Log.v("log", " getUserID  "	+ fetch_UserDetail_data.get(0).getUser_id().toString());
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("id", str_user_id));
+		nameValuePairs.add(new BasicNameValuePair("name", str_name));
+		nameValuePairs.add(new BasicNameValuePair("email", str_email));
+		nameValuePairs.add(new BasicNameValuePair("website", str_website));
+		nameValuePairs.add(new BasicNameValuePair("city",str_city ));
+		nameValuePairs.add(new BasicNameValuePair("phone", str_mobile));
+		nameValuePairs.add(new BasicNameValuePair("img", base64string));
+		
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"http://imprintingdesign.com/Indian_Stores/store/updateStoreInfo");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result Create Store :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			//status = jObj.getString("success");
+			msg = jObj.getString("message");
+			
+
+			Log.v("login Updated", result);
+			//
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	
 	// http://imprintingdesign.com/Indian_Stores/store/viewStoreClosetedItems
 	// http://imprintingdesign.com/Indian_Stores/store/category
 }

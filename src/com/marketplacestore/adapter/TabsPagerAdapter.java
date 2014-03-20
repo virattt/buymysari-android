@@ -1,6 +1,5 @@
 package com.marketplacestore.adapter;
 
-import com.marketplacestore.fragment.FavouriteFragment;
 import com.marketplacestore.fragment.SubscribeFragment;
 
 import android.support.v4.app.Fragment;
@@ -23,11 +22,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		case 1:
 			// Games fragment activity
 			return new SubscribeFragment();
-		case 2:
-			// Movies fragment activity
-			return new FavouriteFragment();
 		}
-
 		return null;
 	}
 

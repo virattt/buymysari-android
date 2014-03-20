@@ -92,8 +92,13 @@ public class ProfileFragment extends Fragment{
 				{
 					Toast.makeText(getActivity(), result_message , 1).show();
 					
-					Intent i = new Intent(getActivity(),MarketPlaceActivity.class);
-					startActivity(i);
+					FragmentManager fm = getFragmentManager();
+					FragmentTransaction fragmentTransaction = fm
+							.beginTransaction();
+					HomeFragment fm2 = new HomeFragment();
+					fragmentTransaction.replace(R.id.relProfileFraLayout,fm2, "HELLO");
+					fragmentTransaction.addToBackStack(null);
+					fragmentTransaction.commit();
 					
 				}
 			}

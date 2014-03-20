@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -67,53 +68,8 @@ public class LoginActivity extends Activity {
 					strUname = uname.getText().toString().trim();
 					strPass = pass.getText().toString().trim();
 
-					list = DBAdpter.getAllUserInfo(strUname, strPass);
-					String result = list.get(0).msg;
-					String user_id = list.get(0).user_id;
-					String store_id = list.get(0).store_id;
-			        app.setUserID(user_id);
-			        app.setStoreId(store_id);
-			        
-					if (result.equals("success fully login")) {
-						
-						gps = new GPSTracker(LoginActivity.this);
-
-						// check if GPS enabled
-						if (gps.canGetLocation()) {
-
-							double latitude = gps.getLatitude();
-							double longitude = gps.getLongitude();
-
-							Geocoder geocoder = new Geocoder(LoginActivity.this,
-									Locale.ENGLISH);
-							List<Address> addresses;
-							try {
-
-								addresses = geocoder.getFromLocation(latitude,
-										longitude, 1);
-								Log.v("log_tag", "cityName ::: " + addresses);
-
-								cityName = addresses.get(0).getLocality();
-								Log.v("log_tag", "cityName ::: " + cityName);
-
-								Intent i = new Intent(LoginActivity.this, MarketPlaceActivity.class);
-								i.putExtra("cityName", cityName);
-								startActivity(i);
-								
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						} else {
-
-							gps.showSettingsAlert();
-						}
-
-					} else {
-						Toast.makeText(LoginActivity.this, result, 1).show();
-					}
-
+					new JSONTask(progress).execute("Home");
+					
 				} else {
 					Toast.makeText(LoginActivity.this, "No Internet Available ", 1)
 							.show();
@@ -121,5 +77,85 @@ public class LoginActivity extends Activity {
 
 			}
 		});
+	}
+	
+	
+public class JSONTask extends AsyncTask<String, Void, String> {
+		
+		public JSONTask(ProgressDialog progress) {
+			   progress = progress;
+		}
+		
+		public void onPreExecute() {
+		    progress.show();
+		}
+		
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String listSize = "";
+	        Log.v("log_tag","list DoinBaCK ");
+	        
+	        list = DBAdpter.getAllUserInfo(strUname, strPass);
+	        
+	        return listSize; // This value will be returned to your onPostExecute(result) method
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	Log.v("log_tag","list ON Post");
+	    		
+	    	String resultNew = list.get(0).msg;
+			String user_id = list.get(0).user_id;
+			
+			if(list.get(0).store_id != null )
+			{
+				String store_id = list.get(0).store_id;
+		        app.setUserID(user_id);
+		        app.setStoreId(store_id);	
+			}
+			
+	        if (resultNew.equals("success fully login")) {
+				
+	        	Toast.makeText(LoginActivity.this, resultNew, Toast.LENGTH_LONG).show();
+	        	
+				gps = new GPSTracker(LoginActivity.this);
+
+				// check if GPS enabled
+				if (gps.canGetLocation()) {
+
+					double latitude = gps.getLatitude();
+					double longitude = gps.getLongitude();
+
+					Geocoder geocoder = new Geocoder(LoginActivity.this,Locale.ENGLISH);
+					List<Address> addresses;
+					try {
+
+						addresses = geocoder.getFromLocation(latitude,longitude, 1);
+						Log.v("log_tag", "cityName ::: " + addresses);
+
+						cityName = addresses.get(0).getLocality();
+						Log.v("log_tag", "cityName ::: " + cityName);
+
+						Intent inew = new Intent(LoginActivity.this, MarketPlaceActivity.class);
+						inew.putExtra("cityName", cityName);
+						startActivity(inew);
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} else {
+
+					gps.showSettingsAlert();
+				}
+
+			} else {
+				Toast.makeText(LoginActivity.this, resultNew, Toast.LENGTH_LONG).show();
+			}
+			 progress.dismiss();
+			
+	    }
 	}
 }

@@ -62,7 +62,7 @@ public class SearchItemsFragment extends Fragment {
 		
 		Bundle bundle = this.getArguments();
 		searchText = bundle.getString("searchText");
-		//searchCateId = bundle.getString("searchCateId");
+		searchCateId = bundle.getString("searchCateId");
 		Log.v("log_tag", "searchText SearchItemsFragment --> " + searchText + " searchCateId -- > " + searchCateId );
 		
 		new JSONTask(progress).execute("Home");
@@ -89,9 +89,17 @@ public class SearchItemsFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... arg) {
 			String listSize = "";
-			Log.v("log_tag", "list DoinBaCK SearchItemsFragment ---> "  + searchText);
+			Log.v("log_tag", "list DoinBaCK SearchItemsFragment ---> "  + searchText  + " searchCateId " + searchCateId);
 			
-			list = DBAdpter.getSearchItemsData(searchText);
+			if(searchCateId != null)
+			{
+				list = DBAdpter.getSearchItemsData(searchText , null);
+			}
+			else
+			{
+				list = DBAdpter.getSearchItemsData(searchText , searchCateId);
+			}
+			
 			// item_id item_name gender category_name item_image store_id store_name store_image
 			
 			Log.v("log_tag","list_size --> SearchItemsFragment -->  "+ list.size());
@@ -249,7 +257,7 @@ public class SearchItemsFragment extends Fragment {
 						FragmentTransaction fragmentTransaction = fm
 								.beginTransaction();
 						StoreDetailFragment fm2 = new StoreDetailFragment();
-						fragmentTransaction.replace(R.id.rela_home_fragment,
+						fragmentTransaction.replace(R.id.rela_search_fragment,
 								fm2, "HELLO");
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();

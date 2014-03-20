@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;

@@ -3,6 +3,7 @@ package com.marketplacestore;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -47,12 +50,16 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 	String cityName;
 	List<Button> buttons = new ArrayList<Button>();
 	
+ 	public static LinearLayout storeOptions;
+ 	public static Button btnCreateStore;
+ 	
 	ArrayAdapter<String> adapter;
 	ArrayList<CateDto> CategoryNames;
 	EditText edtSearchText;
 	String searchText;
 	TableRow tr;
 	
+	MyApplication app;
 	int cateIdSelected;
 	 
 	@Override
@@ -62,10 +69,11 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 		mainLayout = (MainLayout)this.getLayoutInflater().inflate(R.layout.activity_market_place, null);
         setContentView(mainLayout);
 		
+        app = (MyApplication) this.getApplicationContext();
         edtSearchText = (EditText) findViewById(R.id.edtSearchText);
         
 		TableLayout layout = (TableLayout)findViewById(R.id.tab_layout);
-        layout.setLayoutParams( new TableLayout.LayoutParams(60,40));
+        layout.setLayoutParams( new TableLayout.LayoutParams(210,50));
         layout.setPadding(1,1,1,1);
         
         CategoryNames = DBAdpter.fetchCategoryNames();
@@ -82,7 +90,7 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
                 b.setTextColor(Color.BLACK);
                 b.setOnClickListener(this);
                 buttons.add(b);
-                tr.addView(b, 30,30);
+                tr.addView(b, 60,60);
            } // for
         
         cityName = getIntent().getExtras().getString("cityName").toString();
@@ -111,6 +119,37 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
         });
         
         tvTitle = (TextView) findViewById(R.id.activity_main_content_title);
+        storeOptions = (LinearLayout)findViewById(R.id.StoreProfileOptions);
+        
+        Log.v("log"," Marketplace activty storeId --> " + app.getStoreId());
+        
+        btnCreateStore  = (Button)findViewById(R.id.btnCrStore);
+        if(!app.getStoreId().equals(""))
+        {
+        	storeOptions.setVisibility(View.VISIBLE);
+        	btnCreateStore.setVisibility(View.GONE);
+        }
+        else
+        {
+        	storeOptions.setVisibility(View.GONE);
+        	btnCreateStore.setVisibility(View.VISIBLE);
+        }
+        
+        btnCreateStore.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+			
+				FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				CreateStoreFragment fm2 = new CreateStoreFragment();
+				fragmentTransaction.replace(R.id.activity_main_content_fragment,fm2, "HELLO");
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+				
+			}
+		});
         
 		FragmentManager fm = this.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -128,21 +167,22 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 				if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
 			            (keyCode == KeyEvent.KEYCODE_ENTER)) {
 			          // Perform action on key press
-			          Toast.makeText(MarketPlaceActivity.this," SearchText --> " + edtSearchText.getText().toString(), Toast.LENGTH_SHORT).show();
-			          
+			          	Toast.makeText(MarketPlaceActivity.this," SearchText --> " + edtSearchText.getText().toString(), Toast.LENGTH_SHORT).show();
+			          	
+			          	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			            imm.hideSoftInputFromWindow(edtSearchText.getWindowToken(), 0);
+			          	
 			          	tvTitle.setText("Search Reuslts View");
 			          
 			          	FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
-						FragmentTransaction fragmentTransaction = fm
-								.beginTransaction();
+						FragmentTransaction fragmentTransaction = fm.beginTransaction();
 						SearchItemsFragment fm2 = new SearchItemsFragment();
-						fragmentTransaction.replace(R.id.rela_home_fragment,
-								fm2, "HELLO");
+						fragmentTransaction.replace(R.id.activity_main_content_fragment,fm2, "HELLO");
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();
 						Bundle bundle = new Bundle();
 						bundle.putString("searchText", edtSearchText.getText().toString());
-					//	bundle.putString("searchCateId", cateIdSelected +"");
+						bundle.putString("searchCateId", cateIdSelected +"");
 						fm2.setArguments(bundle);
 			          
 			          return true;
@@ -186,7 +226,7 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
         Fragment fragment = null;
         
         if(selectedItem.compareTo("Store Profile") == 0){
-        	fragment = new HomeFragment();
+        	fragment = new CreateStoreFragment();
         }
         else if(selectedItem.compareTo("Store Gallery") == 0){
         	fragment = new StoreProfileGridFragment();
@@ -240,9 +280,6 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 	        else if(selectedItem.compareTo("My Closet") == 0){
 	        	fragment = new ClosetFragment();
 	        }
-	        else if(selectedItem.compareTo("Create New Store") == 0){
-	        	fragment = new CreateStoreFragment();
-	        }
 	        else {
 	        	fragment = new HomeFragment();
 	        }
@@ -265,7 +302,7 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 		// TODO Auto-generated method stub
 		// Cate_
 		Log.v("log", " Id --> " + view.getId());
-	/*	cateIdSelected  = view.getId();
+			cateIdSelected  = view.getId();
 		
 		  for (int c=0; c < CategoryNames.size() ; c++) {
 			  if((Integer.parseInt(CategoryNames.get(c).getCate_id()) != view.getId()))
@@ -281,13 +318,13 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 		  }
 		  
 		  	tvTitle.setText("Search Reuslts View");
-          
+		  	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSearchText.getWindowToken(), 0);
+            
         	FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
-			FragmentTransaction fragmentTransaction = fm
-					.beginTransaction();
+			FragmentTransaction fragmentTransaction = fm.beginTransaction();
 			SearchItemsFragment fm2 = new SearchItemsFragment();
-			fragmentTransaction.replace(R.id.rela_home_fragment,
-					fm2, "HELLO");
+			fragmentTransaction.replace(R.id.activity_main_content_fragment,fm2, "HELLO");
 			fragmentTransaction.addToBackStack(null);
 			fragmentTransaction.commit();
 			Bundle bundle = new Bundle();
@@ -297,6 +334,6 @@ public class MarketPlaceActivity extends FragmentActivity implements View.OnClic
 		
 	//	((Button) view).setText("*");
         ((Button) view).setEnabled(false);
-      */  
+        
 	}
 }

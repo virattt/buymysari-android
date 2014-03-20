@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/store_big_img"
         android:layout_below="@+id/store_big_img"
-        android:text="Closed it" />
+        android:text="Closet It" />
 
     <TextView
         android:id="@+id/itemName_txt"

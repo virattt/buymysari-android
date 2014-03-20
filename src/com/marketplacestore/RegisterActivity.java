@@ -1,11 +1,14 @@
 package com.marketplacestore;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +20,7 @@ public class RegisterActivity extends Activity {
 	String str_first_name, str_last_name, str_email_edt, str_password_edt,
 			str_city_edt, str_mobile_edt, str_state_edt, str_country_edt;
 	String result;
+	private ProgressDialog progress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +35,7 @@ public class RegisterActivity extends Activity {
 		last_name = (EditText) findViewById(R.id.lastName_edt_lg);
 		email_edt = (EditText) findViewById(R.id.email_edt_lg);
 		password_edt = (EditText) findViewById(R.id.password_edt_lg);
-		//city_edt = (EditText) findViewById(R.id.city_edt_lg);
-		//mobile_edt = (EditText) findViewById(R.id.mobile_edt_lg);
-		//state_edt = (EditText) findViewById(R.id.state_edt_lg);
-		//country_edt = (EditText) findViewById(R.id.country_edt_lg);
+
 		register = (Button) findViewById(R.id.register_btn);
 
 		register.setOnClickListener(new View.OnClickListener() {
@@ -46,27 +47,63 @@ public class RegisterActivity extends Activity {
 				str_last_name = last_name.getText().toString().trim();
 				str_email_edt = email_edt.getText().toString().trim();
 				str_password_edt = password_edt.getText().toString().trim();
-				//str_city_edt = city_edt.getText().toString().trim();
-				//str_mobile_edt = mobile_edt.getText().toString().trim();
-				//str_state_edt = state_edt.getText().toString().trim();
-				//str_country_edt = country_edt.getText().toString().trim();
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			    imm.hideSoftInputFromWindow(register.getWindowToken(), 0);
 				
-				result = DBAdpter.registerInUser(str_first_name,
-						str_password_edt, str_last_name, str_email_edt);
-				
-				//str_city_edt, str_state_edt, str_country_edt,str_mobile_edt
-				//Log.v("log_tag","result register activity :: "+ result);
-				
-				if (result.equals("success fully Registered")) {
-					Toast.makeText(RegisterActivity.this, result, 1).show();
-					Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-					startActivity(i);
+				if (str_first_name.trim().equals("") && str_last_name.trim().equals("")
+						&& str_email_edt.trim().equals("") && str_password_edt.trim().equals("")) {
+
+					Toast.makeText(RegisterActivity.this, "Please Fill All Value", Toast.LENGTH_LONG)
+					.show();
 
 				} else {
-					Toast.makeText(RegisterActivity.this, result, 1).show();
+
+					
+					progress = new ProgressDialog(RegisterActivity.this);
+					progress.setMessage("Loading...");
+
+					new PostTask(progress).execute("Home");
 				}
-				Toast.makeText(RegisterActivity.this, result, 1).show();
+
 			}
 		});
+	}
+
+	private class PostTask extends AsyncTask<String, Integer, String> {
+
+		public PostTask(ProgressDialog progress) {
+			progress = progress;
+		}
+
+		public void onPreExecute() {
+			progress.show();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String result = "";
+
+			result = DBAdpter.registerInUser(str_first_name, str_password_edt,
+					str_last_name, str_email_edt);
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+
+			if (result.equals("success fully Registered")) {
+				Toast.makeText(RegisterActivity.this, result, Toast.LENGTH_LONG)
+						.show();
+				Intent i = new Intent(RegisterActivity.this,
+						LoginActivity.class);
+				startActivity(i);
+
+			} else {
+				Toast.makeText(RegisterActivity.this, result, Toast.LENGTH_LONG)
+						.show();
+			}
+			progress.dismiss();
+		}
 	}
 }

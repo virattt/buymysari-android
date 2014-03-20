@@ -65,8 +65,6 @@ public class MyStoreItemFragment extends Fragment {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		// list = DBAdpter.getMyStoreItemData(myInt);
-
 		lv = (ListView) rootView.findViewById(R.id.mystoreitem_listview);
 
 		return rootView;

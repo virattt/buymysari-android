@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +64,6 @@ public class HomeFragment extends Fragment {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-	
 		
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -156,7 +156,7 @@ public class HomeFragment extends Fragment {
 			itemName_txt.setText(list.get(position).name.toString());
 			final String uid= app.getUserID();
 			Log.v("log_tag", "image :::: " + list.get(position).image);
-			if (list.get(position).image != null) {
+			if (list.get(position).image.equals("")) {
 				byte[] Image_getByte;
 				try {
 					Image_getByte = Base64.decode(list.get(position).image);
@@ -164,6 +164,11 @@ public class HomeFragment extends Fragment {
 							Image_getByte);
 					BitmapDrawable bmd = new BitmapDrawable(bytes);
 					Bitmap bm = bmd.getBitmap();
+					
+					/*	Bitmap bm = BitmapFactory.decodeByteArray(
+							Image_getByte, 0,
+							Image_getByte.length); */
+					
 					home_big_img.setImageBitmap(bm);
 
 				} catch (IOException e) {
@@ -172,16 +177,23 @@ public class HomeFragment extends Fragment {
 				}
 			}
 
+			Log.v("log_tag", "picture : position --> " + position);
 			Log.v("log_tag", "picture :::: " + list.get(position).picture);
 
-			if (list.get(position).picture != null) {
+			if (list.get(position).picture.equals("")) {
 				byte[] Image_getByte1;
 				try {
 					Image_getByte1 = Base64.decode(list.get(position).picture);
+					
 					ByteArrayInputStream bytes1 = new ByteArrayInputStream(
 							Image_getByte1);
 					BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
 					Bitmap bm1 = bmd1.getBitmap();
+					
+			/*		Bitmap bm1 = BitmapFactory.decodeByteArray(
+							Image_getByte1, 0,
+							Image_getByte1.length);*/
+					
 					home_ic_img.setImageBitmap(bm1);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -260,4 +272,5 @@ public class HomeFragment extends Fragment {
 		lastPressTime = pressTime;
 		return mHasDoubleClicked;
 	}
+	
 }

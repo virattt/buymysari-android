@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.marketplacestore.Base64;
 import com.marketplacestore.DBAdpter;
+import com.marketplacestore.MyApplication;
 import com.marketplacestore.R;
 import com.marketplacestore.dto.All_list_home_dto;
 import com.marketplacestore.dto.Closet_dto;
@@ -40,6 +41,7 @@ public class ClosetFragment extends Fragment {
 	All_list_home_dto list_home;
 	String cityName;
 	private ProgressDialog progress;
+	MyApplication app;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +50,7 @@ public class ClosetFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.closet, container, false);
 		lv = (ListView) rootView.findViewById(R.id.closet_listview);
 		cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
+		app = (MyApplication) getActivity().getApplicationContext();
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -77,9 +80,9 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 	    @Override
 	    protected String doInBackground(String... arg) {
 	        String listSize = "";
-	        Log.v("log_tag","list DoinBaCK ");
+	        Log.v("log_tag"," DoinBaCK Closet UserID " + app.getUserID());
 	        
-	        list = DBAdpter.getClosetData("1");
+	        list = DBAdpter.getClosetData(app.getStoreId());
 			Log.v("log_tag","list_size ClosetItems :: "+ list.size());
 	        
 	        listSize = list.size() +"";

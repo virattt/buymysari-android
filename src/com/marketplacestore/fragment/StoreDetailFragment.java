@@ -13,7 +13,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,6 +31,7 @@ import com.marketplacestore.DBAdpter;
 import com.marketplacestore.MyApplication;
 import com.marketplacestore.R;
 import com.marketplacestore.dto.All_list_Store_dto;
+import com.marketplacestore.fragment.HomeFragment.MyListAdapter;
 import com.marketplacestore.fragment.StoreProfileGridFragment.CustomGridViewAdapter;
 import com.marketplacestore.fragment.StoreProfileGridFragment.JSONTask;
 
@@ -39,7 +43,7 @@ public class StoreDetailFragment extends Fragment {
 	View rootView;
 	ImageButton store_icon;
 	TextView storeName;
-	Button subscribe;
+	Button store_subscribe_btn;
 	MyApplication app;
 	private ProgressDialog progress;
 	Bundle bundle;
@@ -53,11 +57,33 @@ public class StoreDetailFragment extends Fragment {
 				false);
 		app = (MyApplication) getActivity().getApplicationContext();
 
+		store_subscribe_btn = (Button) rootView
+				.findViewById(R.id.store_subscribe_btn);
 		store_icon = (ImageButton) rootView
 				.findViewById(R.id.list_Store_logo_image);
 		storeName = (TextView) rootView.findViewById(R.id.store_list_name);
 		bundle = this.getArguments();
 		myInt = bundle.getString("position");
+		lv = (ListView) rootView.findViewById(R.id.store_listview);
+		Log.v("log_tag", "myInt " + myInt);
+
+		if (myInt.trim().equals("")) {
+
+			store_icon.setVisibility(View.INVISIBLE);
+			store_subscribe_btn.setVisibility(View.INVISIBLE);
+			store_icon.setVisibility(View.INVISIBLE);
+			Toast.makeText(getActivity().getApplicationContext(), "No Store Detail Available",
+					Toast.LENGTH_LONG).show();
+			
+		} else {
+			store_icon.setVisibility(View.VISIBLE);
+			store_subscribe_btn.setVisibility(View.VISIBLE);
+			store_icon.setVisibility(View.VISIBLE);
+			progress = new ProgressDialog(getActivity());
+			progress.setMessage("Loading...");
+			new JSONTask(progress).execute("Home");
+			
+		}
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -65,14 +91,18 @@ public class StoreDetailFragment extends Fragment {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		progress = new ProgressDialog(getActivity());
-		progress.setMessage("Loading...");
+		store_subscribe_btn.setOnClickListener(new View.OnClickListener() {
 
-		new JSONTask(progress).execute("Home");
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				String msg = DBAdpter.storeSubscribeData(app.getUserID(), myInt);
+				Toast.makeText(getActivity().getApplicationContext(), msg,
+						Toast.LENGTH_LONG).show();
+			}
+		});
 		
-
-		lv = (ListView) rootView.findViewById(R.id.store_listview);
-
 		return rootView;
 	}
 
@@ -92,9 +122,6 @@ public class StoreDetailFragment extends Fragment {
 			Log.v("log_tag", "list DoinBaCK ");
 
 			list = DBAdpter.getStoreData(myInt);
-
-			Log.v("log_tag", "list_size ClosetItems :: " + list.size());
-
 			listSize = list.size() + "";
 			return listSize; // This value will be returned to your
 								// onPostExecute(result) method
@@ -104,19 +131,24 @@ public class StoreDetailFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			// Create here your JSONObject...
 			Log.v("log_tag", "list ON Post");
+			
+			
+			
+			if (Integer.parseInt(result) > 0) {
+				storeName.setText(list.get(0).store_name);
+				updateTableList(list.get(0).store_image);
+				adt = new MyListAdapter(getActivity());
+				lv.setAdapter(adt);
+			} else {
 
-			storeName.setText(list.get(0).store_name);
-			adt = new MyListAdapter(getActivity());
-			lv.setAdapter(adt);
-
-			updateTableList(list.get(0).store_image);
-
+				Toast.makeText(getActivity().getApplicationContext(),
+						" No Stroe Items Available ", Toast.LENGTH_LONG).show();
+			}
 			progress.dismiss();
 
 		}
 
-		// You'll have to override this method on your other tasks that extend
-		// from this one and use your JSONObject as needed
+	
 
 	}
 
@@ -159,7 +191,7 @@ public class StoreDetailFragment extends Fragment {
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custom_store_detail_list,
 					null);
-			ImageButton store_item_img = (ImageButton) convertView
+			final ImageButton store_item_img = (ImageButton) convertView
 					.findViewById(R.id.store_big_img);
 
 			TextView store_closet_txt = (TextView) convertView
@@ -204,9 +236,41 @@ public class StoreDetailFragment extends Fragment {
 							1).show();
 				}
 			});
+			store_item_img.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+					registerForContextMenu(store_item_img);
+				}
+			});
 
 			return convertView;
 		}
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		// menu.setHeaderTitle("Context Menu");
+		menu.add(0, v.getId(), 0, "Facebook");
+		menu.add(0, v.getId(), 0, "Twitter");
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle() == "Facebook") {
+			Toast.makeText(getActivity().getApplicationContext(), "Facebook", 1)
+					.show();
+		} else if (item.getTitle() == "Twitter") {
+			Toast.makeText(getActivity().getApplicationContext(), "Twitter", 1)
+					.show();
+		} else {
+			return false;
+		}
+		return true;
 	}
 
 }
