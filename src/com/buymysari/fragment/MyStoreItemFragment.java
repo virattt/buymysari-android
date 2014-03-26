@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.Mystore_Item_dto;
@@ -44,12 +45,14 @@ public class MyStoreItemFragment extends Fragment {
 	MyApplication app;
 	Bundle bundle;
 	String myInt;
+	ImageLoader imageLoader;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.mystoreitemlist, container, false);
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
 		app = (MyApplication) getActivity().getApplicationContext();
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -154,7 +157,7 @@ public class MyStoreItemFragment extends Fragment {
 					+ list.get(position).Closeted_item_track);
 			store_item_name_txt.setText(list.get(position).name);
 
-			if (list.get(position).image != null) {
+			/*if (list.get(position).image != null) {
 				byte[] Image_getByte;
 				try {
 					Image_getByte = Base64.decode(list.get(position).image);
@@ -167,7 +170,10 @@ public class MyStoreItemFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
+			
+			imageLoader.DisplayImage(list.get(position).image, store_item_img);
+			
 			store_item_close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override

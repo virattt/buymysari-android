@@ -1,29 +1,19 @@
 package com.buymysari.fragment;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.buymysari.Base64;
-import com.buymysari.CameraActivity;
 import com.buymysari.R;
 import com.buymysari.camera.CameraPreview;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,16 +21,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 public class TakeCameraFragment extends Fragment {
-	 Camera mCamera;
+	Camera mCamera = null;
 	private CameraPreview mCameraPreview;
-	
+
 	protected static final int MEDIA_TYPE_IMAGE = 0;
 	static String FilePAth = "";
 	Button takePicture;
@@ -54,9 +42,8 @@ public class TakeCameraFragment extends Fragment {
 				container, false);
 
 		mCamera = getCameraInstance();
-		Log.v("log_tag", "mCamera :: "+mCamera);
-		
-		mCamera.setDisplayOrientation(90);
+		Log.v("log_tag", "mCamera :: " + mCamera);
+
 		mCameraPreview = new CameraPreview(getActivity(), mCamera);
 		FrameLayout preview = (FrameLayout) rootView
 				.findViewById(R.id.camera_preview_fragment);
@@ -78,15 +65,16 @@ public class TakeCameraFragment extends Fragment {
 		return rootView;
 
 	}
-	
+
 	public boolean checkCameraHardware(Context context) {
-	    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-	        // this device has a camera
-	        return true;
-	    } else {
-	        // no camera on this device
-	        return false;
-	    }
+		if (context.getPackageManager().hasSystemFeature(
+				PackageManager.FEATURE_CAMERA)) {
+			// this device has a camera
+			return true;
+		} else {
+			// no camera on this device
+			return false;
+		}
 	}
 
 	@Override
@@ -104,20 +92,18 @@ public class TakeCameraFragment extends Fragment {
 	}
 
 	private Camera getCameraInstance() {
-		
+
 		try {
-			Log.v("log_tag", "camera try:::"+mCamera);
-			 Camera.open();
-			
+			Log.v("log_tag", "camera try:::" + mCamera);
+			mCamera = Camera.open();
+
 		} catch (Exception e) {
 			// cannot get camera or does not exist
-			Log.v("log_tag", "camera catch:::"+mCamera);
+			Log.v("log_tag", "camera catch:::" + mCamera);
 			releaseCamera();
 		}
 		return mCamera;
 	}
-	
-	
 
 	private static File getOutputMediaFile() {
 		File mediaStorageDir = new File(
@@ -160,26 +146,22 @@ public class TakeCameraFragment extends Fragment {
 				fos.write(data);
 				fos.close();
 
-				/*
-				 * Intent returnIntent = new Intent();
-				 * returnIntent.putExtra("data", data); setResult(RESULT_OK,
-				 * returnIntent); finish();
-				 */
+				
 
 				Log.v("log_tag", "data :: " + data);
 				FragmentManager fm = getFragmentManager();
-			
+
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
 				SetPictureImageFragment fm2 = new SetPictureImageFragment();
-				fragmentTransaction.replace(R.id.relative_camerafragment_id, fm2,
-						"HELLO");
+				fragmentTransaction.replace(R.id.relative_camerafragment_id,
+						fm2, "HELLO");
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
 				Bundle bundle = new Bundle();
 				bundle.putByteArray("position", data);
 				fm2.setArguments(bundle);
+
 				
-				//SetPictureImageFragment fm2 = new SetPictureImageFragment();
 
 			} catch (FileNotFoundException e) {
 
@@ -187,12 +169,6 @@ public class TakeCameraFragment extends Fragment {
 			}
 		}
 	};
+
 	
-
-	/*
-	 * public void onBackPressed() { /*Intent returnIntent = new Intent();
-	 * returnIntent.putExtra("path", FilePAth); setResult(RESULT_OK,
-	 * returnIntent); finish(); };
-	 */
-
 }

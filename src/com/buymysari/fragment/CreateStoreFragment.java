@@ -1,6 +1,7 @@
 package com.buymysari.fragment;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.buymysari.Base64;
 import com.buymysari.CameraActivity;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
@@ -49,7 +51,7 @@ public class CreateStoreFragment extends Fragment {
 	ArrayList<UserInfo_dto> UserInfoList;
 	String base64st;
 	String StoreId;
-	
+	public ImageLoader imageLoader;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -63,7 +65,8 @@ public class CreateStoreFragment extends Fragment {
 		btnUpdateStore = (Button) view.findViewById(R.id.btnUpdateStore);
 
 		app = (MyApplication) getActivity().getApplicationContext();
-
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		
 		edtName = (EditText) view.findViewById(R.id.edtUserName);
 		edtWebsite = (EditText) view.findViewById(R.id.edtWebsite);
 		edtEmail = (EditText) view.findViewById(R.id.edtEmail);
@@ -102,7 +105,7 @@ public class CreateStoreFragment extends Fragment {
 			edtState.setText(DBAdpter.fetch_UserDetail_data.get(0)
 					.getStoreState());
 
-			try {
+		/*	try {
 				Image_getByte1 = Base64.decode(DBAdpter.fetch_UserDetail_data.get(0).getStoreImage());
 				if(Image_getByte1 != null)
 				{
@@ -114,7 +117,11 @@ public class CreateStoreFragment extends Fragment {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} */
+			
+
+			imageLoader.DisplayImage(DBAdpter.fetch_UserDetail_data.get(0).getStoreImage(), imgStorePicture);
+			
 		}
 
 		btnTakePicture.setOnClickListener(new OnClickListener() {
@@ -195,7 +202,7 @@ public class CreateStoreFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*str_user_id = DBAdpter.fetch_UserDetail_data.get(0).getUser_id();
+				str_user_id = DBAdpter.fetch_UserDetail_data.get(0).getUser_id();
 				StoreId = DBAdpter.fetch_UserDetail_data.get(0).getStoreId();
 				
 				str_name = edtName.getText().toString().trim();
@@ -222,7 +229,7 @@ public class CreateStoreFragment extends Fragment {
 				fragmentTransaction.replace(R.id.rela_createStore,fm2, "HELLO");
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-				*/
+				
 			}
 		});
 		return view;

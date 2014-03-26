@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_Store_dto;
@@ -40,6 +41,8 @@ public class StoreProfileGridFragment extends Fragment {
 	TextView store_profilegrid_name, store_url_txt,
 			store_profile_grid_closet_txt, subscribe_store_profile_txt;
 
+	public ImageLoader imageLoader;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -48,7 +51,8 @@ public class StoreProfileGridFragment extends Fragment {
 				container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
 		st_id = app.getStoreId();
-
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		
 		Log.v("log_tag", "st_id  ::: " + st_id);
 
 		gridView = (GridView) rootView.findViewById(R.id.gridView1);
@@ -129,7 +133,9 @@ public class StoreProfileGridFragment extends Fragment {
 						+ gridlist.get(0).closeted_item_count);
 				subscribe_store_profile_txt.setText("Subscribe : "
 						+ gridlist.get(0).subscribed_store_count);
-				updateTableList(gridlist.get(0).store_image);
+			//	updateTableList(gridlist.get(0).store_image);
+				
+				imageLoader.DisplayImage(gridlist.get(0).store_image, list_Store_profile_grid_logo_image);
 
 			} else {
 
@@ -146,7 +152,7 @@ public class StoreProfileGridFragment extends Fragment {
 
 	}
 
-	private void updateTableList(String img) {
+/*	private void updateTableList(String img) {
 
 		if (img.trim().equals("")) {
 			list_Store_profile_grid_logo_image
@@ -166,7 +172,7 @@ public class StoreProfileGridFragment extends Fragment {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 	public class CustomGridViewAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
@@ -194,7 +200,7 @@ public class StoreProfileGridFragment extends Fragment {
 			ImageView store_Name_img = (ImageView) convertView
 					.findViewById(R.id.item_image);
 
-			if (gridlist.get(position).image != null) {
+			/*if (gridlist.get(position).image != null) {
 				byte[] Image_getByte;
 				try {
 					Image_getByte = Base64.decode(gridlist.get(position).image);
@@ -208,7 +214,9 @@ public class StoreProfileGridFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
+			
+			imageLoader.DisplayImage(gridlist.get(position).image, store_Name_img);
 
 			return convertView;
 		}

@@ -39,7 +39,7 @@ public class DBAdpter {
 	public static ArrayList<Closet_dto> Closet_list__data;
 	public static ArrayList<search_items_dto> fetch_search_items_data;
 	public static ArrayList<All_list_home_dto> fetch_list_home_data;
-	
+
 	public static String storeId;
 
 	public static String registerInUser(String firstname, String password,
@@ -98,12 +98,12 @@ public class DBAdpter {
 		return msg;
 	}
 
-	public static ArrayList<UserInfo_dto> createUserStore(String name, String email,
-			String website, String phone, String city, String state,
-			String country, String user_id) {
+	public static ArrayList<UserInfo_dto> createUserStore(String name,
+			String email, String website, String phone, String city,
+			String state, String country, String user_id) {
 
 		fetch_UserDetail_data = new ArrayList<UserInfo_dto>();
-		
+
 		String status = "";
 		String result = "";
 		String msg = "";
@@ -152,12 +152,12 @@ public class DBAdpter {
 
 		//
 		//
-		
+
 		try {
 			JSONObject jObj = new JSONObject(result);
-		//	status = jObj.getString("success");
+			// status = jObj.getString("success");
 			msg = jObj.getString("message");
-			
+
 			Boolean success_con = jObj.getBoolean("success");
 
 			if (success_con == true) {
@@ -179,7 +179,7 @@ public class DBAdpter {
 					user_info_list.setMsg(msg);
 
 					storeId = json_objs.getString("store_id");
-					
+
 					if (!json_objs.getString("store_id").equals("")) {
 						user_info_list.setStoreId(json_objs
 								.getString("store_id"));
@@ -213,7 +213,7 @@ public class DBAdpter {
 				user_info_list.setMsg(msg);
 				fetch_UserDetail_data.add(user_info_list);
 			}
-				Log.v("login Object", msg + " Store_ID " + storeId);
+			Log.v("login Object", msg + " Store_ID " + storeId);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -525,7 +525,7 @@ public class DBAdpter {
 					list_home_data.city = json_objs.getString("city");
 					list_home_data.website = json_objs.getString("website");
 					list_home_data.state = json_objs.getString("state");
-				//	list_home_data.picture = json_objs.getString("picture");
+					list_home_data.picture = json_objs.getString("picture");
 
 					JSONObject json_objs_items = itemInfo.getJSONObject(j);
 					Log.v("log_tag",
@@ -607,16 +607,20 @@ public class DBAdpter {
 				JSONObject jsonitem = itemInfo.getJSONObject(j);
 
 				list_closet_data.setItem_id(jsonitem.getString("item_id"));
-				list_closet_data.setCategory_name(jsonitem.getString("category_name"));
+				list_closet_data.setCategory_name(jsonitem
+						.getString("category_name"));
 				list_closet_data.setGender(jsonitem.getString("gender"));
 				list_closet_data.setName(jsonitem.getString("item_name"));
 				list_closet_data.setImage(jsonitem.getString("item_image"));
 
 				list_closet_data.setStore_id(jsonitem.getString("store_id"));
-				list_closet_data.setCloseted_item_track(jsonitem.getString("Closeted_item_track"));
-				list_closet_data.setStore_name(jsonitem.getString("store_name"));
-				list_closet_data.setStore_image(jsonitem.getString("store_image"));
-				
+				list_closet_data.setCloseted_item_track(jsonitem
+						.getString("Closeted_item_track"));
+				list_closet_data
+						.setStore_name(jsonitem.getString("store_name"));
+				list_closet_data.setStore_image(jsonitem
+						.getString("store_image"));
+
 				Log.v("log", " item_name " + jsonitem.getString("item_name"));
 
 				Closet_list__data.add(list_closet_data);
@@ -1281,56 +1285,110 @@ public class DBAdpter {
 		return msg;
 	}
 
-	 public static Bitmap downloadBitmap(String url) {
-	     // initilize the default HTTP client object
-		 Bitmap image = null ;
-		 
-	     final DefaultHttpClient client = new DefaultHttpClient();
+	public static Bitmap downloadBitmap(String url) {
+		// initilize the default HTTP client object
+		Bitmap image = null;
 
-	     //forming a HttoGet request 
-	     final HttpGet getRequest = new HttpGet(url);
-	     try {
+		final DefaultHttpClient client = new DefaultHttpClient();
 
-	         HttpResponse response = client.execute(getRequest);
+		// forming a HttoGet request
+		final HttpGet getRequest = new HttpGet(url);
+		try {
 
-	         //check 200 OK for success
-	         final int statusCode = response.getStatusLine().getStatusCode();
+			HttpResponse response = client.execute(getRequest);
 
-	         if (statusCode != HttpStatus.SC_OK) {
-	             Log.w("ImageDownloader", "Error " + statusCode + 
-	                     " while retrieving bitmap from " + url);
-	             return null;
+			// check 200 OK for success
+			final int statusCode = response.getStatusLine().getStatusCode();
 
-	         }
+			if (statusCode != HttpStatus.SC_OK) {
+				Log.w("ImageDownloader", "Error " + statusCode
+						+ " while retrieving bitmap from " + url);
+				return null;
 
-	         final HttpEntity entity = response.getEntity();
-	         if (entity != null) {
-	             InputStream inputStream = null;
-	             try {
-	                 // getting contents from the stream 
-	                 inputStream = entity.getContent();
+			}
 
-	                 // decoding stream data back into image Bitmap that android understands
-	                 image = BitmapFactory.decodeStream(inputStream);
+			final HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				InputStream inputStream = null;
+				try {
+					// getting contents from the stream
+					inputStream = entity.getContent();
 
+					// decoding stream data back into image Bitmap that android
+					// understands
+					image = BitmapFactory.decodeStream(inputStream);
 
-	             } finally {
-	                 if (inputStream != null) {
-	                     inputStream.close();
-	                 }
-	                 entity.consumeContent();
-	             }
-	         }
-	     } catch (Exception e) {
-	         // You Could provide a more explicit error message for IOException
-	         getRequest.abort();
-	         Log.e("ImageDownloader", "Something went wrong while" +
-	                 " retrieving bitmap from " + url + e.toString());
-	     } 
+				} finally {
+					if (inputStream != null) {
+						inputStream.close();
+					}
+					entity.consumeContent();
+				}
+			}
+		} catch (Exception e) {
+			// You Could provide a more explicit error message for IOException
+			getRequest.abort();
+			Log.e("ImageDownloader", "Something went wrong while"
+					+ " retrieving bitmap from " + url + e.toString());
+		}
 
-	     return image;
-	 }
-	
+		return image;
+	}
+
+	public static String userUpdateImageStore(String id, String name,
+			String cat_id, String img, String gender) {
+
+		String status = "";
+		String result = "";
+		String msg = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("id", id));
+		nameValuePairs.add(new BasicNameValuePair("name", name));
+		nameValuePairs.add(new BasicNameValuePair("cat_id", cat_id));
+		nameValuePairs.add(new BasicNameValuePair("img", img));
+		nameValuePairs.add(new BasicNameValuePair("gender", gender));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"http://imprintingdesign.com/Indian_Stores/uploadItems/uploadItemToGallery");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result Create Store :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			Log.v("log_tag", "Result DBADPTER 196 :" + result);
+			msg = jObj.getString("message");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+
 	// http://imprintingdesign.com/Indian_Stores/store/viewStoreClosetedItems
 	// http://imprintingdesign.com/Indian_Stores/store/category
 }

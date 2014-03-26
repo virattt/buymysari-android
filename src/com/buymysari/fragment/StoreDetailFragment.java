@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_Store_dto;
@@ -46,6 +47,8 @@ public class StoreDetailFragment extends Fragment {
 	Bundle bundle;
 	String myInt;
 
+	ImageLoader imageLoader;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -53,7 +56,8 @@ public class StoreDetailFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.store_detail_list, container,
 				false);
 		app = (MyApplication) getActivity().getApplicationContext();
-
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		
 		store_subscribe_btn = (Button) rootView
 				.findViewById(R.id.store_subscribe_btn);
 		store_icon = (ImageButton) rootView
@@ -202,7 +206,7 @@ public class StoreDetailFragment extends Fragment {
 			store_item_name_txt.setText(list.get(position).name);
 			final String uid = app.getUserID();
 
-			if (list.get(position).image != null) {
+			/*if (list.get(position).image != null) {
 				byte[] Image_getByte;
 				try {
 					Image_getByte = Base64.decode(list.get(position).image);
@@ -216,8 +220,10 @@ public class StoreDetailFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 
+			imageLoader.DisplayImage(list.get(position).image, store_item_img);
+			
 			store_item_close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override

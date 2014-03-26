@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
 import com.buymysari.GPSTracker;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
@@ -51,7 +52,7 @@ public class HomeFragment extends Fragment {
 	GPSTracker gps;
 	int mCurCheckPosition = 0;
 	 
-	
+	public ImageLoader imageLoader;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class HomeFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.home, container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView)	rootView.findViewById(R.id.home_listview);
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
 		
 		//cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
 		
@@ -225,47 +227,13 @@ public class HomeFragment extends Fragment {
 			itemName_txt.setText(list.get(position).name.toString());
 			final String uid= app.getUserID();
 			Log.v("log_tag", "image :::: " + list.get(position).image);
-			if (list.get(position).image.equals("")) {
-				byte[] Image_getByte;
-				try {
-					Image_getByte = Base64.decode(list.get(position).image);
-					ByteArrayInputStream bytes = new ByteArrayInputStream(
-							Image_getByte);
-					BitmapDrawable bmd = new BitmapDrawable(bytes);
-					Bitmap bm = bmd.getBitmap();
-					
-					/*	Bitmap bm = BitmapFactory.decodeByteArray(
-							Image_getByte, 0,
-							Image_getByte.length); */
-					
-					home_big_img.setImageBitmap(bm);
+			
+			imageLoader.DisplayImage(list.get(position).image, home_big_img);
+			
+			Log.v("log_tag", "picture :::: " + list.get(position).picture);
 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			Log.v("log_tag", "picture : position --> " + position);
-		/*	Log.v("log_tag", "picture :::: " + list.get(position).picture);
-
-			if (list.get(position).picture.equals("")) {
-				byte[] Image_getByte1;
-				try {
-					Image_getByte1 = Base64.decode(list.get(position).picture);
-					
-					ByteArrayInputStream bytes1 = new ByteArrayInputStream(
-							Image_getByte1);
-					BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
-					Bitmap bm1 = bmd1.getBitmap();
-					
-					home_ic_img.setImageBitmap(bm1);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-         */
+			imageLoader.DisplayImage(list.get(position).picture, home_ic_img);
+			
 			home_big_img.setOnClickListener(new View.OnClickListener() {
 
 				@Override

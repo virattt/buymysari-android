@@ -1,9 +1,11 @@
 package com.buymysari.fragment;
 
+import com.buymysari.Base64;
 import com.buymysari.R;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +23,10 @@ public class SetPictureImageFragment extends Fragment {
 	ImageView img;
 	Bundle bundle;
 	byte[] path;
-	Button btnTakecanclePicture;
+	Button conform;
+	float x;
+	Bitmap b;
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -36,41 +41,65 @@ public class SetPictureImageFragment extends Fragment {
 		
 		Log.v("log_tag","SetPictureImageFragment ::: Path :: "+path);
 		img = (ImageView) view.findViewById(R.id.camera_preview_fragment_imageview);
-		btnTakecanclePicture=(Button)view.findViewById(R.id.btnTakecanclePicture);
-		//img.setScaleType(ImageView.ScaleType.FIT_XY);
+		conform=(Button)view.findViewById(R.id.conform);
+		
 
-		Bitmap b = BitmapFactory.decodeByteArray(path, 0,path.length);
+		 b = BitmapFactory.decodeByteArray(path, 0,path.length);
 		Log.v("log_tag","SetPictureImageFragment ::: bitmap :: "+b);
 		
-		img.setImageBitmap(b);
-		img.setScaleType(ImageView.ScaleType.FIT_XY);
+		int width = b.getWidth();
+        int height = b.getHeight();
+
+
+        int newWidth = 500;
+
+        int newHeight  = 500;
+
+        // calculate the scale - in this case = 0.4f
+
+         float scaleWidth = ((float) newWidth) / width;
+
+         float scaleHeight = ((float) newHeight) / height;
+
+         Matrix matrix = new Matrix();
+
+         matrix.postScale(scaleWidth, scaleHeight);
+         matrix.postRotate(90);
+
+         Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,width, height, matrix, true);
+
+         img.setScaleType(ScaleType.CENTER);
+         img.setImageBitmap(resizedBitmap);
 		
-	/*	btnTakecanclePicture.setOnClickListener(new View.OnClickListener() {
+        
+		/*img.setImageBitmap(b);
+		img.setScaleType(ImageView.ScaleType.FIT_XY);*/
+		
+		
+		conform.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FragmentManager fm = getFragmentManager();
+				FragmentManager fm = getChildFragmentManager();
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				TakeCameraFragment fm2 = new TakeCameraFragment();
+				SendImageServerFragment fm2 = new SendImageServerFragment();
+				// CreateStoreFragment fm2 = new CreateStoreFragment();
 				fragmentTransaction.replace(R.id.relative_cameraimageview_fragment, fm2,
 						"HELLO");
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
+				Bundle bundle = new Bundle();
+				bundle.putByteArray("position", path);
+				fm2.setArguments(bundle);
 				
 				
-				/*FragmentManager fm = getFragmentManager();
-			    FragmentTransaction fragmentTransaction = fm
-			      .beginTransaction();
-			    CreateStoreFragment fm2 = new CreateStoreFragment();
-			    fragmentTransaction.replace(R.id.relative_cameraimageview_fragment,
-			      fm2, "HELLO");
-			    fragmentTransaction.addToBackStack(null);
-			    fragmentTransaction.commit();
 			}
 		});
-		*/
+		
 
 		return view;
 	}
+	
+	
 }

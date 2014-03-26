@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.MyStore_list_dto;
@@ -38,6 +39,8 @@ public class StoreProfileFragment extends Fragment {
 	MyListAdapter adtstore;
 	View rootView;
 	private ProgressDialog progress;
+	
+	ImageLoader imageLoader;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +50,8 @@ public class StoreProfileFragment extends Fragment {
 				container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView) rootView.findViewById(R.id.myStore_listview);
-
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
 
@@ -150,7 +154,7 @@ public class StoreProfileFragment extends Fragment {
 
 			store_Name_txt.setText(list.get(position).name);
 
-			if (list.get(position).image != null) {
+			/*if (list.get(position).image != null) {
 				byte[] Image_getByte;
 				try {
 					Image_getByte = Base64.decode(list.get(position).image);
@@ -164,7 +168,10 @@ public class StoreProfileFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
+			
+			imageLoader.DisplayImage(list.get(position).image, store_Name_img);
+			
 			store_Name_img.setOnClickListener(new View.OnClickListener() {
 
 				@Override

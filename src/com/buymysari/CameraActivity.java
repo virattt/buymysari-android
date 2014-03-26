@@ -37,7 +37,6 @@ public class CameraActivity extends Activity {
 		setContentView(R.layout.camera_preview);
 
 		mCamera = getCameraInstance();
-		mCamera.setDisplayOrientation(90);
 		mCameraPreview = new CameraPreview(CameraActivity.this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.addView(mCameraPreview);

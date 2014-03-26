@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
+import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.dto.All_list_home_dto;
 import com.buymysari.dto.Closet_dto;
@@ -39,6 +40,8 @@ public class ClosetFragment extends Fragment {
 	private ProgressDialog progress;
 	MyApplication app;
 	
+	public ImageLoader imageLoader;
+	 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class ClosetFragment extends Fragment {
 		lv = (ListView) rootView.findViewById(R.id.closet_listview);
 		
 		app = (MyApplication) getActivity().getApplicationContext();
+		imageLoader=new ImageLoader(getActivity().getApplicationContext());
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -122,7 +126,6 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			//if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.custom_home_list,
 						null);
 				
@@ -136,46 +139,15 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 						
 						close_btn.setVisibility(View.INVISIBLE);
 						home_username_txt.setText(list.get(position).getStore_name());
-						Log.v("log"," Closet Item NAme IN Adater " + list.get(position).getStore_name());
-						
-						Log.v("log_tag","image :::: " +list.get(position).getImage());
+						Log.v("log"," Closet Item Name In Adater " + list.get(position).getStore_name());
+						Log.v("log_tag","Closet Item  image :::: " +list.get(position).getImage());
 						home_view_txt.setText("Closeted "+list.get(position).getCloseted_item_track());
 						
 						itemName_txt.setText(list.get(position).getName());
 						  
-					/*	byte[] Image_getByte;
-						try {
-							Image_getByte = Base64.decode(list.get(position).getImage());
-							 ByteArrayInputStream bytes = new ByteArrayInputStream(Image_getByte);
-							   BitmapDrawable bmd = new BitmapDrawable(bytes);
-							   Bitmap bm = bmd.getBitmap(); 
-							   home_big_img.setImageBitmap(bm);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}*/
+						imageLoader.DisplayImage(list.get(position).getImage(), home_big_img);
 						
-						Bitmap bm = DBAdpter.downloadBitmap(list.get(position).getImage());
-						home_big_img.setImageBitmap(bm);
-						  
-					/*	if (list.get(position).getStore_image() != null) {
-							    byte[] Image_getByte1;
-							    try {
-							     Image_getByte1 = Base64.decode(list.get(position).getStore_image());
-							     ByteArrayInputStream bytes1 = new ByteArrayInputStream(
-							       Image_getByte1);
-							     BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
-							     Bitmap bm1 = bmd1.getBitmap();
-							     home_ic_img.setImageBitmap(bm1);
-							    } catch (IOException e) {
-							     // TODO Auto-generated catch block
-							     e.printStackTrace();
-							    }
-							   }*/
-						
-						Bitmap bm1 = DBAdpter.downloadBitmap(list.get(position).getStore_image());
-						home_big_img.setImageBitmap(bm1);
-			//}
+						imageLoader.DisplayImage(list.get(position).getStore_image(), home_ic_img);
 			return convertView;
 		}
 	}
