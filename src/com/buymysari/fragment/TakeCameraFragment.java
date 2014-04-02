@@ -42,11 +42,13 @@ public class TakeCameraFragment extends Fragment {
 				container, false);
 
 		mCamera = getCameraInstance();
+
 		Log.v("log_tag", "mCamera :: " + mCamera);
 
 		mCameraPreview = new CameraPreview(getActivity(), mCamera);
 		FrameLayout preview = (FrameLayout) rootView
 				.findViewById(R.id.camera_preview_fragment);
+
 		preview.addView(mCameraPreview);
 
 		takePicture = (Button) rootView
@@ -147,8 +149,6 @@ public class TakeCameraFragment extends Fragment {
 				fos.close();
 
 				
-
-				Log.v("log_tag", "data :: " + data);
 				FragmentManager fm = getFragmentManager();
 
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -160,8 +160,7 @@ public class TakeCameraFragment extends Fragment {
 				Bundle bundle = new Bundle();
 				bundle.putByteArray("position", data);
 				fm2.setArguments(bundle);
-
-				
+				mCamera.startPreview();
 
 			} catch (FileNotFoundException e) {
 
@@ -170,5 +169,4 @@ public class TakeCameraFragment extends Fragment {
 		}
 	};
 
-	
 }

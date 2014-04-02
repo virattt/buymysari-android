@@ -8,15 +8,16 @@ public class UserInfo_dto {
 	public String last_name;
 	public String mobile;
 	public String msg;
+	
 	public String store_id;
-	public String store_name;
+	/*public String store_name;
 	public String store_email;
 	public String store_city;
 	public String store_state;
 	public String store_country;
 	public String store_image;
 	public String store_mobile;
-	public String store_website;
+	public String store_website;*/
 	
 	public String getUser_id() {
 		return user_id;
@@ -54,6 +55,7 @@ public class UserInfo_dto {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+	
 	public String getStoreId() {
 		return store_id;
 	}
@@ -61,7 +63,7 @@ public class UserInfo_dto {
 		this.store_id = store_Id;
 	}
 	
-	public String getStoreName() {
+	/*public String getStoreName() {
 		return store_name;
 	}
 	public void setStoreName(String store_name) {
@@ -116,7 +118,5 @@ public class UserInfo_dto {
 	public void setStoreWebsite(String store_website) {
 		this.store_website = store_website;
 	}
-	
-	
-	
+	*/
 }

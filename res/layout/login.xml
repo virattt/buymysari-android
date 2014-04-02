@@ -2,92 +2,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/login_page"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/lay_1"
+    <Button
+        android:id="@+id/login"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/lay_2" >
+        android:layout_height="60dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:background="#99000000"
+        android:text="Login"
+        android:textColor="#ffffff"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_2"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+         android:layout_marginBottom="10dip"
+        android:layout_above="@+id/login"
+        android:layout_alignLeft="@+id/login"
+        android:layout_alignRight="@+id/login"
+        android:background="#99ffffff" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
             android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:layout_marginTop="50dip" >
+            android:layout_marginTop="25dip"
+            android:background="@drawable/lock" />
 
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:stretchColumns="0,1" >
+        <EditText
+            android:id="@+id/pass_edt_lg"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="20dip"
+            android:password="true"
+            android:singleLine="true"
+            android:hint=" ************* "
+            android:textColor="#000000"
+            android:background="#99ffffff"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/user_txt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
-                    android:text="Username :"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" >
-                </TextView>
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:layout_marginBottom="10dip"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:background="#99ffffff" >
 
-                <EditText
-                    android:id="@+id/user_edt_lg"
-                    android:layout_width="170dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dip"
-                    android:background="@drawable/input"
-                    android:paddingLeft="5dip"
-                    android:singleLine="true"
-                    android:textColor="#000000" >
-                </EditText>
-            </TableRow>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="30dip"
+            android:layout_height="25dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="15dip"
+            android:background="@drawable/user_gray" />
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
-                android:stretchColumns="0,1" >
+        <EditText
+            android:id="@+id/user_edt_lg"
+            android:layout_width="696dp"
+            android:layout_height="60dip"
+            android:singleLine="true"
+            android:layout_marginLeft="10dip"
+            android:background="#99ffffff"
+            android:hint="Email address"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/pass_txt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
-                    android:text="Password  :"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" >
-                </TextView>
+    </LinearLayout>
 
-                <EditText
-                    android:id="@+id/pass_edt_lg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dip"
-                    android:background="@drawable/input"
-                    android:paddingLeft="5dip"
-                    android:password="true"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:inputType="textPassword" >
-                </EditText>
-            </TableRow>
-        </TableLayout>
-
-        <Button
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tableLayout1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="45dp"
-            android:text="Login"
-            android:textColor="#000000" />
-    </RelativeLayout>
 </RelativeLayout>

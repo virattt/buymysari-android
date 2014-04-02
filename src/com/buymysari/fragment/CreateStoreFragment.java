@@ -1,19 +1,20 @@
 package com.buymysari.fragment;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +32,7 @@ import com.buymysari.ImageLoader;
 import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
-import com.buymysari.dto.UserInfo_dto;
+import com.buymysari.dto.Store_profile_dto;
 
 public class CreateStoreFragment extends Fragment {
 
@@ -47,11 +48,14 @@ public class CreateStoreFragment extends Fragment {
 	String base64string = "";
 	byte[] data;
 	byte[] Image_getByte1;
+	byte[] byteArrayimage;
 	String Status = null;
-	ArrayList<UserInfo_dto> UserInfoList;
+	ArrayList<Store_profile_dto> storeProfileInfoList;
+	Store_profile_dto str_prof_data;
 	String base64st;
 	String StoreId;
 	public ImageLoader imageLoader;
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -65,8 +69,8 @@ public class CreateStoreFragment extends Fragment {
 		btnUpdateStore = (Button) view.findViewById(R.id.btnUpdateStore);
 
 		app = (MyApplication) getActivity().getApplicationContext();
-		imageLoader=new ImageLoader(getActivity().getApplicationContext());
-		
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+
 		edtName = (EditText) view.findViewById(R.id.edtUserName);
 		edtWebsite = (EditText) view.findViewById(R.id.edtWebsite);
 		edtEmail = (EditText) view.findViewById(R.id.edtEmail);
@@ -90,38 +94,47 @@ public class CreateStoreFragment extends Fragment {
 		} else {
 			btnCreateStore.setVisibility(view.INVISIBLE);
 			btnUpdateStore.setVisibility(view.VISIBLE);
-			edtName.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreName());
-			edtWebsite.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreWebsite());
-			edtEmail.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreEmail());
-			edtPhone.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreMobile());
-			edtCity.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreCity());
-			edtCountry.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreCountry());
-			edtState.setText(DBAdpter.fetch_UserDetail_data.get(0)
-					.getStoreState());
+			if (DBAdpter.fetch_list_StoreProfile_data != null) {
+				if (DBAdpter.fetch_list_StoreProfile_data.get(0)
+						.getStrore_prof_name() != null) {
+					edtName.setText(DBAdpter.fetch_list_StoreProfile_data
+							.get(0).getStrore_prof_name());
+					edtWebsite.setText(DBAdpter.fetch_list_StoreProfile_data
+							.get(0).getStrore_prof_website());
+					edtEmail.setText(DBAdpter.fetch_list_StoreProfile_data.get(
+							0).getStrore_prof_email());
+					edtPhone.setText(DBAdpter.fetch_list_StoreProfile_data.get(
+							0).getStrore_prof_mobile());
+					edtCity.setText(DBAdpter.fetch_list_StoreProfile_data
+							.get(0).getStrore_prof_city());
+					edtCountry.setText(DBAdpter.fetch_list_StoreProfile_data
+							.get(0).getStrore_prof_country());
+					edtState.setText(DBAdpter.fetch_list_StoreProfile_data.get(
+							0).getStrore_prof_state());
 
-		/*	try {
-				Image_getByte1 = Base64.decode(DBAdpter.fetch_UserDetail_data.get(0).getStoreImage());
-				if(Image_getByte1 != null)
-				{
-					ByteArrayInputStream bytes1 = new ByteArrayInputStream(Image_getByte1);
-					BitmapDrawable bmd1 = new BitmapDrawable(bytes1);
-					Bitmap bm1 = bmd1.getBitmap();
-					imgStorePicture.setImageBitmap(bm1);
+				/*	imageLoader.DisplayImage(
+							DBAdpter.fetch_list_StoreProfile_data.get(0)
+									.getStrore_prof_image(), imgStorePicture);*/
+					
+					
+					  String img_url= DBAdpter.fetch_list_StoreProfile_data.get(0).getStrore_prof_image().toString().trim();
+						        URL url = null;
+						     try {
+						      url = new URL(img_url);
+						     } catch (MalformedURLException e) {
+						      // TODO Auto-generated catch block
+						      e.printStackTrace();
+						     }
+						     Bitmap bmp = null; 
+						        try {
+						      bmp=BitmapFactory.decodeStream(url.openConnection().getInputStream());
+						     } catch (IOException e) {
+						      // TODO Auto-generated catch block
+						      e.printStackTrace();
+						     }
+						        imgStorePicture.setImageBitmap(bmp);
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} */
-			
-
-			imageLoader.DisplayImage(DBAdpter.fetch_UserDetail_data.get(0).getStoreImage(), imgStorePicture);
-			
+			}
 		}
 
 		btnTakePicture.setOnClickListener(new OnClickListener() {
@@ -140,7 +153,7 @@ public class CreateStoreFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 				str_name = edtName.getText().toString().trim();
 				str_website = edtWebsite.getText().toString().trim();
 				str_email = edtEmail.getText().toString().trim();
@@ -149,87 +162,90 @@ public class CreateStoreFragment extends Fragment {
 				str_state = edtState.getText().toString().trim();
 				str_country = edtCountry.getText().toString().trim();
 
-				Log.v("log", " str_name " + str_name + " " + str_website
-						+ " str_email " + str_email + " str_city " + str_city
-						+ "str_mobile " + str_mobile + " state " + str_state
-						+ "country " + str_country);
-
 				final String uid = app.getUserID();
-				final String store_id = app.getStoreId();
-
-				Log.v("log", " create userID --> " + uid + " store_id = = > "
-						+ store_id);
 
 				if ((!str_name.equals("")) && (!str_email.equals(""))
-						&& (!str_website.equals("")) && (!str_mobile.equals(""))
-						&& (!str_city.equals("")) && (!str_country.equals(""))
-						&& (!str_state.equals(""))) {
-					Log.v("log_tag", " if " + uid);
-					ArrayList<UserInfo_dto> list_result = DBAdpter.createUserStore(str_name, str_email,
-							str_website, str_mobile, str_city, str_state,
-							str_country, uid);
-					
-					Log.v("log"," Store " + list_result.get(0).getStoreId());
-					
-					app.setStoreId(list_result.get(0).getStoreId());
-					
-					Toast.makeText(getActivity(), " Store id -->  " + list_result.get(0).getStoreId() , Toast.LENGTH_LONG).show();
+						&& (!str_website.equals(""))
+						&& (!str_mobile.equals("")) && (!str_city.equals(""))
+						&& (!str_country.equals("")) && (!str_state.equals(""))) {
+
+					ArrayList<Store_profile_dto> list_result = DBAdpter
+							.createUserStore(str_name, str_email, str_website,
+									str_mobile, str_city, str_state,
+									str_country, uid);
+
+					app.setStoreId(list_result.get(0).getStrore_prof_id());
+					// app.setUserID(list_result.get(0).getStrore_prof_user_id());
+
+					Toast.makeText(
+							getActivity(),
+							" Store id -->  "
+									+ list_result.get(0).getStrore_prof_id(),
+							Toast.LENGTH_LONG).show();
 
 					Status = DBAdpter.uploadStorePhoto(base64string);
-					Log.v("log_tag", Status);
 
-					
-					FragmentManager fm = getActivity().getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fm.beginTransaction();
+					FragmentManager fm = getActivity()
+							.getSupportFragmentManager();
+					FragmentTransaction fragmentTransaction = fm
+							.beginTransaction();
 					StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
-					fragmentTransaction.replace(R.id.rela_createStore,fm2, "HELLO");
+					fragmentTransaction.replace(R.id.rela_createStore, fm2,
+							"HELLO");
 					fragmentTransaction.addToBackStack(null);
 					fragmentTransaction.commit();
-					
+
 					MarketPlaceActivity.mainLayout.toggleMenu();
-					MarketPlaceActivity.storeOptions.setVisibility(View.VISIBLE);
+					MarketPlaceActivity.storeOptions
+							.setVisibility(View.VISIBLE);
 					MarketPlaceActivity.btnCreateStore.setVisibility(View.GONE);
-		        	
-					
+
 				} else {
-					Toast.makeText(getActivity(), "Pls Fill All value..",Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), "Pls Fill All value..",
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		});
-		
+
 		btnUpdateStore.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				str_user_id = DBAdpter.fetch_UserDetail_data.get(0).getUser_id();
-				StoreId = DBAdpter.fetch_UserDetail_data.get(0).getStoreId();
-				
+				str_user_id = app.getUserID();
+				StoreId = app.getStoreId();
+
 				str_name = edtName.getText().toString().trim();
 				str_website = edtWebsite.getText().toString().trim();
 				str_email = edtEmail.getText().toString().trim();
 				str_city = edtCity.getText().toString().trim();
 				str_mobile = edtPhone.getText().toString().trim();
+
+				final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture
+						.getDrawable();
+				final Bitmap yourBitmap = bitmapDrawable.getBitmap();
+
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+				byte[] byteArray = stream.toByteArray();
+				base64st = Base64.encodeBytes(byteArray);
+
 				
-				
-				final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture.getDrawable();
-	            final Bitmap yourBitmap = bitmapDrawable.getBitmap();
-	            
-	            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	            yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-	            byte[] byteArray = stream.toByteArray();
-	            base64st = Base64.encodeBytes(byteArray);
-				
-				result = DBAdpter.updateUserStore(StoreId,str_name, str_email,str_website, str_mobile, str_city,base64st);
-				Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
-				
+
+				ArrayList<Store_profile_dto> list_result = DBAdpter
+						.updateUserStore(StoreId, str_name, str_email,
+								str_website, str_mobile, str_city, base64st);
+				Toast.makeText(getActivity(), "sucessfully update",
+						Toast.LENGTH_LONG).show();
+
 				FragmentManager fm = getActivity().getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
 				StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
-				fragmentTransaction.replace(R.id.rela_createStore,fm2, "HELLO");
+				fragmentTransaction
+						.replace(R.id.rela_createStore, fm2, "HELLO");
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-				
+
 			}
 		});
 		return view;
@@ -239,32 +255,73 @@ public class CreateStoreFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.v("log", " data --> " + data.getByteArrayExtra("data"));
 		if (requestCode == 1) {
 
 			if (data.hasExtra("data")) {
 
-				Log.v("log", " request if ");
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inPurgeable = true; // inPurgeable is used to free up
+											// memory while required
 
 				Bitmap b = BitmapFactory.decodeByteArray(
 						data.getByteArrayExtra("data"), 0,
-						data.getByteArrayExtra("data").length);
+						data.getByteArrayExtra("data").length, options);
 
-				/*
-				 * int w = 100; int h = 100;
-				 * 
-				 * Matrix mtx = new Matrix(); int finalDegree = 90;
-				 * mtx.postRotate(finalDegree); b = Bitmap.createBitmap(b, 0 , 0
-				 * , w , h, mtx , true);
-				 */
+				int width = b.getWidth();
+				int height = b.getHeight();
+				int newWidth = 100;
+				int newHeight = 80;
+				float scaleWidth = ((float) newWidth) / width;
 
-				imgStorePicture.setImageBitmap(b);
-				imgStorePicture.setScaleType(ScaleType.FIT_XY);
+				float scaleHeight = ((float) newHeight) / height;
 
-				base64string = Base64.encodeBytes(data
-						.getByteArrayExtra("data"));
-				Log.v("log", "base64string " + base64string);
+				Matrix matrix = new Matrix();
+
+				matrix.postScale(scaleWidth, scaleHeight);
+
+				int rotation = getActivity().getWindowManager()
+						.getDefaultDisplay().getRotation();
+
+				int finalDegree = 0;
+
+				if (rotation == 0) {
+
+					finalDegree = 90;
+
+				}
+
+				if (rotation == 1) {
+
+					finalDegree = 270;
+
+				}
+
+				if (rotation == 2) {
+
+					finalDegree = 180;
+
+				}
+
+				if (rotation == 3) {
+
+					finalDegree = 90;
+
+				}
+
+				matrix.postRotate(finalDegree);
+
+				Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0, width,
+						height, matrix, true);
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+				byteArrayimage = stream.toByteArray();
+
+				imgStorePicture.setImageBitmap(resizedBitmap);
+				imgStorePicture.setScaleType(ScaleType.CENTER);
+
+				base64string = Base64.encodeBytes(byteArrayimage);
 			}
 		}
 	}
+
 }

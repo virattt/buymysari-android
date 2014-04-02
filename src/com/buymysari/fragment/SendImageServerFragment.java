@@ -1,15 +1,8 @@
 package com.buymysari.fragment;
 
-import com.buymysari.DBAdpter;
-import com.buymysari.MarketPlaceActivity;
-import com.buymysari.MyApplication;
-import com.buymysari.R;
-import com.buymysari.SegmentedRadioGroup;
-import com.buymysari.SegmentedRadioGroupMale;
-
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -21,10 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import com.buymysari.DBAdpter;
+import com.buymysari.MyApplication;
+import com.buymysari.R;
+import com.buymysari.SegmentedRadioGroup;
+import com.buymysari.SegmentedRadioGroupMale;
 
 public class SendImageServerFragment extends Fragment {
 	SegmentedRadioGroup segmentText;
@@ -40,6 +39,7 @@ public class SendImageServerFragment extends Fragment {
 	String cat_id = "";
 	String gender = "";
 	private ProgressDialog progress;
+	InputMethodManager mgr;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -53,8 +53,9 @@ public class SendImageServerFragment extends Fragment {
 		}
 
 		view = inflater.inflate(R.layout.sendimageserver, null);
-	//	view.setFocusableInTouchMode(true);
-	//	view.requestFocus();
+
+		// view.setFocusableInTouchMode(true);
+		// view.requestFocus();
 		bundle = this.getArguments();
 		path = bundle.getByteArray("position");
 		segmentText = (SegmentedRadioGroup) view
@@ -63,8 +64,12 @@ public class SendImageServerFragment extends Fragment {
 				.findViewById(R.id.segment_text_male);
 		sendImg = (Button) view.findViewById(R.id.btn_send_image);
 		edt_txt = (EditText) view.findViewById(R.id.edt_text_store_name);
+
+		edt_txt.requestFocus();
+		mgr = (InputMethodManager) getActivity().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		mgr.showSoftInput(edt_txt, InputMethodManager.SHOW_IMPLICIT);
 		app = (MyApplication) getActivity().getApplicationContext();
-		
 
 		sendImg.setOnClickListener(new View.OnClickListener() {
 
@@ -79,10 +84,11 @@ public class SendImageServerFragment extends Fragment {
 						.getCheckedRadioButtonId();
 				RadioButton radioSexButton = (RadioButton) view
 						.findViewById(segmentTextMaleTxt);
+				hideKeybord(edt_txt);
 
-				b = BitmapFactory.decodeByteArray(path, 0, path.length);
+				// b = BitmapFactory.decodeByteArray(path, 0, path.length);
 				base64string = Base64.encodeToString(path, Base64.DEFAULT);
-				
+
 				if (radiocatButton.getText().toString().equals("S")) {
 					cat_id = "4";
 
@@ -91,8 +97,7 @@ public class SendImageServerFragment extends Fragment {
 				} else if (radiocatButton.getText().toString().equals("A")) {
 					cat_id = "5";
 				}
-				
-				
+
 				if (radioSexButton.getText().toString().equals("M")) {
 					gender = "Male";
 
@@ -103,7 +108,7 @@ public class SendImageServerFragment extends Fragment {
 				progress = new ProgressDialog(getActivity());
 				progress.setMessage("Loading...");
 				new SendImageServerTask(progress).execute("Home");
-				
+
 			}
 		});
 
@@ -123,11 +128,10 @@ public class SendImageServerFragment extends Fragment {
 
 		@Override
 		protected String doInBackground(String... arg) {
-			
 
 			String msg = DBAdpter.userUpdateImageStore(app.getStoreId(),
-					"bags", cat_id, base64string, gender);
-			Log.v("log_tag", " Msg "+ msg);
+					edt_txt.getText().toString(), cat_id, base64string, gender);
+			Log.v("log_tag", " Msg " + msg);
 			return msg;
 		}
 
@@ -138,21 +142,24 @@ public class SendImageServerFragment extends Fragment {
 			progress.dismiss();
 			Toast.makeText(getActivity().getApplicationContext(), result,
 					Toast.LENGTH_LONG).show();
-			
+
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fm.beginTransaction();
 			StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
-			fragmentTransaction.replace(R.id.relative_sendimage_send,fm2, "HELLO");
+			fragmentTransaction.replace(R.id.relative_sendimage_send, fm2,
+					"HELLO");
 			fragmentTransaction.addToBackStack(null);
-			fragmentTransaction.commit();
-			
-			MarketPlaceActivity.mainLayout.toggleMenu();
-			MarketPlaceActivity.storeOptions.setVisibility(View.VISIBLE);
-			MarketPlaceActivity.btnCreateStore.setVisibility(View.GONE);
-			
+			// fragmentTransaction.commit();
+			fragmentTransaction.commitAllowingStateLoss();
+			// hideKeybord(edt_txt);
 
 		}
 
+	}
+
+	public void hideKeybord(View view) {
+		mgr.hideSoftInputFromWindow(view.getWindowToken(),
+				InputMethodManager.RESULT_UNCHANGED_SHOWN);
 	}
 
 }

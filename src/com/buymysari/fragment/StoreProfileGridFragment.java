@@ -1,13 +1,17 @@
 package com.buymysari.fragment;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
@@ -42,7 +45,7 @@ public class StoreProfileGridFragment extends Fragment {
 			store_profile_grid_closet_txt, subscribe_store_profile_txt;
 
 	public ImageLoader imageLoader;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -51,8 +54,8 @@ public class StoreProfileGridFragment extends Fragment {
 				container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
 		st_id = app.getStoreId();
-		imageLoader=new ImageLoader(getActivity().getApplicationContext());
-		
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+
 		Log.v("log_tag", "st_id  ::: " + st_id);
 
 		gridView = (GridView) rootView.findViewById(R.id.gridView1);
@@ -133,46 +136,42 @@ public class StoreProfileGridFragment extends Fragment {
 						+ gridlist.get(0).closeted_item_count);
 				subscribe_store_profile_txt.setText("Subscribe : "
 						+ gridlist.get(0).subscribed_store_count);
-			//	updateTableList(gridlist.get(0).store_image);
+				// updateTableList(gridlist.get(0).store_image);
+
+				Log.v("log_tag", "gridlist.get(0).store_image :: "+gridlist.get(0).store_image);
 				
-				imageLoader.DisplayImage(gridlist.get(0).store_image, list_Store_profile_grid_logo_image);
+				/*imageLoader.DisplayImage(gridlist.get(0).store_image.toString().trim(),
+						list_Store_profile_grid_logo_image);
+				*/
+				String img_url= gridlist.get(0).store_image.toString().trim();//url of the image
+					    URL url = null;
+						try {
+							url = new URL(img_url);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				Bitmap bmp = null; 
+					    try {
+							bmp=BitmapFactory.decodeStream(url.openConnection().getInputStream());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					    
+					    list_Store_profile_grid_logo_image.setImageBitmap(bmp);
 
 			} else {
 
 				Toast.makeText(getActivity().getApplicationContext(),
-						" No Stroe Items Available ", Toast.LENGTH_LONG).show();
+						" No Stroe Items Available ", Toast.LENGTH_SHORT).show();
 			}
 
 			progress.dismiss();
 
 		}
 
-		// You'll have to override this method on your other tasks that extend
-		// from this one and use your JSONObject as needed
-
 	}
-
-/*	private void updateTableList(String img) {
-
-		if (img.trim().equals("")) {
-			list_Store_profile_grid_logo_image
-					.setImageResource(R.drawable.ic_launcher);
-		} else {
-			byte[] Image_getByte;
-			try {
-				Image_getByte = Base64.decode(img);
-				ByteArrayInputStream bytes = new ByteArrayInputStream(
-						Image_getByte);
-				BitmapDrawable bmd = new BitmapDrawable(bytes);
-				Bitmap bm = bmd.getBitmap();
-				list_Store_profile_grid_logo_image.setImageBitmap(bm);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}*/
 
 	public class CustomGridViewAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
@@ -200,25 +199,21 @@ public class StoreProfileGridFragment extends Fragment {
 			ImageView store_Name_img = (ImageView) convertView
 					.findViewById(R.id.item_image);
 
-			/*if (gridlist.get(position).image != null) {
-				byte[] Image_getByte;
-				try {
-					Image_getByte = Base64.decode(gridlist.get(position).image);
-					ByteArrayInputStream bytes = new ByteArrayInputStream(
-							Image_getByte);
-					BitmapDrawable bmd = new BitmapDrawable(bytes);
-					Bitmap bm = bmd.getBitmap();
-					store_Name_img.setImageBitmap(bm);
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
 			
-			imageLoader.DisplayImage(gridlist.get(position).image, store_Name_img);
+			if (gridlist.get(position).image != "") {
+				
+				
+
+				imageLoader.DisplayImage(gridlist.get(position).image,
+						store_Name_img);
+			} else {
+
+				Toast.makeText(getActivity(), "No Item Available",
+						Toast.LENGTH_SHORT).show();
+			}
 
 			return convertView;
 		}
 	}
+
 }

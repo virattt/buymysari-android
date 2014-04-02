@@ -9,6 +9,6 @@
     <string-array name="store_items">
         <item >Store Profile</item>
         <item >Store Gallery</item>
-        <item >Add a Picture</item>
+        <item >Add Picture</item>
     </string-array>
 </resources>

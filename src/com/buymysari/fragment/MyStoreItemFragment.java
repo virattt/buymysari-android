@@ -28,13 +28,17 @@ import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
+import com.buymysari.dto.MyStore_list_dto;
 import com.buymysari.dto.Mystore_Item_dto;
 import com.buymysari.dto.UserInfo_dto;
+import com.buymysari.fragment.StoreProfileFragment.MyListAdapter;
+import com.buymysari.fragment.StoreProfileFragment.loadMoreListView;
 
 public class MyStoreItemFragment extends Fragment {
 
 	ListView lv;
 	ArrayList<Mystore_Item_dto> list = new ArrayList<Mystore_Item_dto>();
+	ArrayList<Mystore_Item_dto> newLoadedList;
 	MyListAdapter adt;
 	View rootView;
 	private ProgressDialog progress;
@@ -45,15 +49,25 @@ public class MyStoreItemFragment extends Fragment {
 	MyApplication app;
 	Bundle bundle;
 	String myInt;
-	ImageLoader imageLoader;
+
+	int pageNumber = 1;
+	public ImageLoader imageLoader;
+	private ProgressDialog loadMoreProgress;
+	Button btnLoadMore;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.mystoreitemlist, container, false);
-		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 		app = (MyApplication) getActivity().getApplicationContext();
+
+		
+
+		loadMoreProgress = new ProgressDialog(getActivity());
+		loadMoreProgress.setMessage("Loading...");
+
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
 		bundle = this.getArguments();
@@ -67,6 +81,18 @@ public class MyStoreItemFragment extends Fragment {
 		}
 
 		lv = (ListView) rootView.findViewById(R.id.mystoreitem_listview);
+		
+		btnLoadMore = new Button(getActivity());
+		btnLoadMore.setText("Load More");
+		lv.addFooterView(btnLoadMore);
+
+		btnLoadMore.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// Starting a new async task
+				new loadMoreListView().execute();
+			}
+		});
 
 		return rootView;
 	}
@@ -86,7 +112,7 @@ public class MyStoreItemFragment extends Fragment {
 			String listSize = "";
 			Log.v("log_tag", "list DoinBaCK ");
 
-			list = DBAdpter.getMyStoreItemData(myInt);
+			list = DBAdpter.getMyStoreItemData(myInt, pageNumber + "");
 
 			Log.v("log_tag", "list_size ClosetItems :: " + list.size());
 
@@ -116,6 +142,59 @@ public class MyStoreItemFragment extends Fragment {
 
 		// You'll have to override this method on your other tasks that extend
 		// from this one and use your JSONObject as needed
+
+	}
+
+	public class loadMoreListView extends AsyncTask<String, Void, String> {
+
+		public void onPreExecute() {
+
+			loadMoreProgress.show();
+
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+
+			pageNumber += 1;
+
+			newLoadedList = new ArrayList<Mystore_Item_dto>();
+			newLoadedList = DBAdpter.getMyStoreItemData(myInt, pageNumber + "");
+
+			Log.v("log_tag", "newLoadedList :: " + newLoadedList.size());
+
+			for (int i = 0; i < newLoadedList.size(); i++) {
+
+				list.add(newLoadedList.get(i));
+			}
+			listSize = newLoadedList.size() +"";
+			return listSize;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "Load More List ON Post");
+
+			if (Integer.parseInt(result) > 0) {
+				int currentPosition = lv.getFirstVisiblePosition();
+				adt = new MyListAdapter(getActivity());
+				lv.setAdapter(adt);
+				adt.notifyDataSetChanged();
+				lv.setSelectionFromTop(currentPosition + 1, 0);
+			} else {
+				Toast.makeText(getActivity().getApplicationContext(),
+						"No Store Items Available ", Toast.LENGTH_LONG)
+						.show();
+				btnLoadMore.setVisibility(View.INVISIBLE);
+			}
+
+
+			if (loadMoreProgress != null) {
+				loadMoreProgress.dismiss();
+			}
+		}
 
 	}
 
@@ -157,23 +236,8 @@ public class MyStoreItemFragment extends Fragment {
 					+ list.get(position).Closeted_item_track);
 			store_item_name_txt.setText(list.get(position).name);
 
-			/*if (list.get(position).image != null) {
-				byte[] Image_getByte;
-				try {
-					Image_getByte = Base64.decode(list.get(position).image);
-					ByteArrayInputStream bytes = new ByteArrayInputStream(Image_getByte);
-					BitmapDrawable bmd = new BitmapDrawable(bytes);
-					Bitmap bm = bmd.getBitmap();
-					store_item_img.setImageBitmap(bm);
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
-			
 			imageLoader.DisplayImage(list.get(position).image, store_item_img);
-			
+
 			store_item_close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -188,7 +252,7 @@ public class MyStoreItemFragment extends Fragment {
 			return convertView;
 		}
 	}
-	
+
 	public class ClosetTask extends AsyncTask<String, Void, String> {
 
 		public ClosetTask(ProgressDialog progress) {
@@ -222,6 +286,5 @@ public class MyStoreItemFragment extends Fragment {
 		}
 
 	}
-
 
 }

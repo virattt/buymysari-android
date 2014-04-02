@@ -1,13 +1,8 @@
 package com.buymysari.fragment;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,28 +15,32 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.MyStore_list_dto;
+import com.buymysari.dto.search_items_dto;
+import com.buymysari.fragment.SearchItemsFragment.MyListAdapter;
+import com.buymysari.fragment.SearchItemsFragment.loadMoreListView;
 
 public class StoreProfileFragment extends Fragment {
 	ListView lv;
 	ArrayList<MyStore_list_dto> list = new ArrayList<MyStore_list_dto>();
+	ArrayList<MyStore_list_dto> newLoadedList;
 	MyApplication app;
 	MyListAdapter adtstore;
 	View rootView;
 	private ProgressDialog progress;
-	
-	ImageLoader imageLoader;
-
+	int pageNumber = 1;
+	 public ImageLoader imageLoader; 
+	 private ProgressDialog loadMoreProgress;
+	 Button btnLoadMore;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -51,6 +50,13 @@ public class StoreProfileFragment extends Fragment {
 		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView) rootView.findViewById(R.id.myStore_listview);
 		imageLoader=new ImageLoader(getActivity().getApplicationContext());
+		
+		 btnLoadMore = new Button(getActivity());
+		btnLoadMore.setText("Load More");
+		lv.addFooterView(btnLoadMore);
+		
+		loadMoreProgress = new ProgressDialog(getActivity());
+		loadMoreProgress.setMessage("Loading...");
 		
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -72,6 +78,15 @@ public class StoreProfileFragment extends Fragment {
 				fm2.setArguments(bundle);
 			}
 		});
+		
+		btnLoadMore.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View arg0) {
+		        // Starting a new async task
+		        new loadMoreListView().execute();
+		    }
+		});
+		
 
 		return rootView;
 	}
@@ -84,14 +99,14 @@ public class StoreProfileFragment extends Fragment {
 
 		public void onPreExecute() {
 			progress.show();
+		
 		}
 
 		@Override
 		protected String doInBackground(String... arg) {
 			String listSize = "";
-			Log.v("log_tag", "list DoinBaCK ");
-
-			list = DBAdpter.getMyStoreData(app.getUserID());
+			list.clear();
+			list = DBAdpter.getMyStoreData(app.getUserID(),pageNumber+"");
 
 			Log.v("log_tag", "list_size ClosetItems :: " + list.size());
 
@@ -118,8 +133,66 @@ public class StoreProfileFragment extends Fragment {
 
 		}
 
-		// You'll have to override this method on your other tasks that extend
-		// from this one and use your JSONObject as needed
+	
+
+	}
+	
+public class loadMoreListView extends AsyncTask<String, Void, String> {
+		
+		public void onPreExecute() {
+			
+			loadMoreProgress.show(); 
+		    
+		}
+		
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String listSize = "";
+	        
+	        pageNumber += 1;
+	        
+	        
+	        newLoadedList = new ArrayList<MyStore_list_dto>();
+			newLoadedList = DBAdpter.getMyStoreData(app.getUserID(),pageNumber+"");
+			
+		Log.v("log_tag", "newLoadedList :: "+newLoadedList.size());
+			
+			for(int i=0;i< newLoadedList.size() ;i++)
+			{
+				
+				
+				list.add(newLoadedList.get(i));
+			}
+			listSize = newLoadedList.size() +"";
+	        return listSize; 
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	Log.v("log_tag","Load More List ON Post");
+	    	
+	    	if (Integer.parseInt(result) > 0) {
+	    	       int currentPosition = lv.getFirstVisiblePosition();
+	    	       adtstore = new MyListAdapter(getActivity().getApplicationContext());
+		   			lv.setAdapter(adtstore);
+		   			adtstore.notifyDataSetChanged();
+	    	          lv.setSelectionFromTop(currentPosition + 1, 0);   
+	    	      }
+	    	      else
+	    	      {
+	    	       Toast.makeText(getActivity().getApplicationContext(),
+	    	    		   		"No Store Data Available ", Toast.LENGTH_LONG).show();
+	    	       btnLoadMore.setVisibility(View.GONE);
+	    	      }
+	    	
+	    	
+	    	
+	    	if(loadMoreProgress != null)
+	    	{
+	    		loadMoreProgress.dismiss();
+	    	}
+	    }
 
 	}
 
@@ -154,21 +227,7 @@ public class StoreProfileFragment extends Fragment {
 
 			store_Name_txt.setText(list.get(position).name);
 
-			/*if (list.get(position).image != null) {
-				byte[] Image_getByte;
-				try {
-					Image_getByte = Base64.decode(list.get(position).image);
-					ByteArrayInputStream bytes = new ByteArrayInputStream(
-							Image_getByte);
-					BitmapDrawable bmd = new BitmapDrawable(bytes);
-					Bitmap bm = bmd.getBitmap();
-					store_Name_img.setImageBitmap(bm);
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
+			
 			
 			imageLoader.DisplayImage(list.get(position).image, store_Name_img);
 			

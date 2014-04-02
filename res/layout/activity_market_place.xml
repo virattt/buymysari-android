@@ -1,89 +1,219 @@
 <com.buymysari.layout.MainLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
     <!-- This holds our menu -->
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="#BF221010"
         android:orientation="vertical" >
 
         <EditText
-                android:id="@+id/edtSearchText"
-                android:drawableRight="@drawable/search_icon"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:inputType="textPersonName" >
-		</EditText>
-        
-       	<TableLayout
-                android:id="@+id/tab_layout"
-                android:layout_marginTop="5dip"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <TableRow
-                    android:id="@+id/tableRow1"
-                    android:layout_marginTop="5dip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-                </TableRow>
-
-            </TableLayout>
-        
-        <TextView
-            android:id="@+id/person_txt"
-            android:layout_width="match_parent"
+            android:id="@+id/edtSearchText"
+            android:layout_width="fill_parent"
             android:layout_height="40dip"
-            android:background="@android:color/black"
-            android:paddingLeft="5dip"
-            android:text="Personal"
-            android:textColor="@android:color/white"
-            android:textSize="22sp" />
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:layout_marginTop="30dip"
+            android:background="@drawable/rounded_edt"
+            android:hint="Search by city or store name"
+            android:inputType="textPersonName"
+            android:paddingLeft="20dip" >
+        </EditText>
+
+        <LinearLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="65dip"
+            android:layout_marginTop="20dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnCloth"
+                android:layout_width="65dip"
+                android:layout_height="65dip"
+                android:layout_marginLeft="15dip"
+                android:background="@drawable/cloth_selector"
+                android:onClick="toggleMenu"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnShoes"
+                android:layout_width="65dip"
+                android:layout_height="65dip"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/shoes_selector"
+                android:onClick="toggleMenu"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAcce"
+                android:layout_width="65dip"
+                android:layout_height="65dip"
+                android:layout_marginLeft="5dip"
+                android:background="@drawable/acce_selector"
+                android:onClick="toggleMenu"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAll"
+                android:layout_width="65dip"
+                android:layout_height="65dip"
+                android:layout_marginLeft="5dip"
+                android:onClick="toggleMenu"
+                android:text="All"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/line_layout_personal"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginLeft="15dip"
+            android:layout_marginTop="20dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/person_txt"
+                android:layout_width="150dip"
+                android:layout_height="40dip"
+                android:paddingLeft="5dip"
+                android:text="Personal"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/person_img"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_marginRight="20dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/userwhite" />
+        </RelativeLayout>
 
         <ListView
             android:id="@+id/activity_main_menu_listview"
             android:layout_width="match_parent"
-            android:layout_height="100dip"
-            android:background="#B4D609"
+            android:layout_height="150dip"
+            android:layout_marginLeft="25dip"
             android:cacheColorHint="#00000000" >
         </ListView>
-		
-		<Button
-                android:id="@+id/btnCrStore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="toggleMenu"
-                android:text="Create Store" />
-		
+
+        <Button
+            android:id="@+id/btnCrStore"
+            android:layout_width="wrap_content"
+            android:layout_height="50dip"
+            android:layout_marginTop="20dip"
+            android:layout_marginLeft="15dip"
+            android:onClick="toggleMenu"
+            android:text="Create Store" />
+
         <LinearLayout
             android:id="@+id/StoreProfileOptions"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="170dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="20dip"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:id="@+id/line_layout_store"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/store_txt"
+                    android:layout_width="150dip"
+                    android:layout_height="40dip"
+                    android:text="Store"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/store_img"
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:layout_marginRight="20dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/shop_white" >
+                    </ImageView>
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/activity_store_menu_listview"
+                android:layout_width="match_parent"
+                android:layout_height="120dip"
+                android:layout_marginLeft="5dip"
+                android:cacheColorHint="#00000000" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/line_layout_user"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="15dip"
+            android:orientation="horizontal" >
+
+            <com.buymysari.CircularImageView
+                android:id="@+id/user_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp" >
+            </com.buymysari.CircularImageView>
+
+            <!--
+                 <ImageView 
+        	    android:id="@+id/user_img"
+            	android:layout_width="60dip"
+            	android:layout_height="60dip"
+        	   />
+            -->
 
             <TextView
-                android:id="@+id/store_txt"
-                android:layout_width="match_parent"
+                android:id="@+id/user_txt"
+                android:layout_width="150dip"
                 android:layout_height="40dip"
-                android:background="@android:color/black"
                 android:paddingLeft="5dip"
-                android:text="Stores"
+                android:text="Zeeshan Syed"
                 android:textColor="@android:color/white"
                 android:textSize="22sp" />
-            
-            <ListView
-	            android:id="@+id/activity_store_menu_listview"
-	            android:layout_width="match_parent"
-	            android:layout_height="fill_parent"
-	            android:background="#B4D609"
-	            android:cacheColorHint="#00000000" >
-        	</ListView>
-            
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/line_layout_logout"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginLeft="15dip"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/logout_img"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:background="@drawable/logout" />
+
+            <TextView
+                android:id="@+id/logout_txt"
+                android:layout_width="150dip"
+                android:layout_height="40dip"
+                android:paddingLeft="55dip"
+                android:text="Logout"
+                android:textColor="@android:color/white"
+                android:textSize="22sp" />
+        </RelativeLayout>
     </LinearLayout>
 
     <!-- This holds our content -->
@@ -97,25 +227,44 @@
         <!-- This acts as Actionbar -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#96D6E3"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
+            android:background="@drawable/headerbackground"
             android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/activity_main_content_button_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="toggleMenu"
-                android:text="Menu" />
+                android:layout_marginTop="5dip"
+                android:layout_width="34dip"
+                android:layout_height="40dip"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/menu"
+                android:onClick="toggleMenu" />
 
             <TextView
                 android:id="@+id/activity_main_content_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="176dip"
+                android:layout_marginLeft="20dip"
+                android:layout_height="40dip"
+                android:background="@drawable/header"
                 android:gravity="center"
-                android:text="@string/app_name" />
+                android:layout_marginTop="5dip"
+                android:textSize="3dip" />
+            
+            <TextView
+                android:id="@+id/activity_new"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                 />
+            
+             <ImageView
+                android:id="@+id/search_img"
+                android:layout_marginLeft="40dip"
+                android:layout_marginTop="5dip"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:background="@drawable/search" />
+            
         </LinearLayout>
 
         <!-- This is where fragment will show up -->
@@ -125,7 +274,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white" >
-
         </FrameLayout>
     </LinearLayout>
 

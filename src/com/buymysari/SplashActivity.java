@@ -1,13 +1,10 @@
 package com.buymysari;
 
-import com.buymysari.R;
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.Button;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class SplashActivity extends Activity {
 
@@ -26,7 +23,6 @@ public class SplashActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-				finish();
 				startActivity(i);
 			}
 		});
@@ -37,7 +33,6 @@ public class SplashActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(SplashActivity.this, RegisterActivity.class);
-				finish();
 				startActivity(i);
 
 			}

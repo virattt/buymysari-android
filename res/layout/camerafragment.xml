@@ -7,21 +7,26 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/camera_preview_fragment"
+    <RelativeLayout
+        android:id="@+id/camera_preview_framelayout"
         android:layout_width="fill_parent"
-        android:layout_height="300dip"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/conform" >
+        android:layout_height="420dip" >
+        <FrameLayout
+            android:id="@+id/camera_preview_fragment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/conform" >
         </FrameLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btnTakePicturefragment"
         android:layout_width="60dip"
         android:layout_height="60dip"
-        android:layout_below="@+id/camera_preview_fragment"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/camera" />
 
 </RelativeLayout>

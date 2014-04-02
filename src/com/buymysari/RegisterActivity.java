@@ -60,11 +60,10 @@ public class RegisterActivity extends Activity {
 
 				} else {
 
-					
 					progress = new ProgressDialog(RegisterActivity.this);
 					progress.setMessage("Loading...");
 
-					new PostTask(progress).execute("Home");
+					new PostTask().execute("Home");
 				}
 
 			}
@@ -72,10 +71,6 @@ public class RegisterActivity extends Activity {
 	}
 
 	private class PostTask extends AsyncTask<String, Integer, String> {
-
-		public PostTask(ProgressDialog progress) {
-			progress = progress;
-		}
 
 		public void onPreExecute() {
 			progress.show();

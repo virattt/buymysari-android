@@ -23,13 +23,13 @@ import com.buymysari.camera.CameraPreview;
 
 public class CameraActivity extends Activity {
 
-	 Camera mCamera;
-	 CameraPreview mCameraPreview;
+	Camera mCamera;
+	CameraPreview mCameraPreview;
 	protected static final int MEDIA_TYPE_IMAGE = 0;
 	static String FilePAth = "";
 	Button takePicture;
-	static String base64string="";
-	
+	static String base64string = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -47,12 +47,11 @@ public class CameraActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
 				mCamera.takePicture(null, null, mPicture);
-
 			}
 		});
 	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -60,28 +59,30 @@ public class CameraActivity extends Activity {
 		releaseCamera();
 	}
 
-	 private void releaseCamera(){
-	        if (mCamera != null){
-	            mCamera.release();        // release the camera for other applications
-	            mCamera = null;
-	        }
-	    }
-	 private Camera getCameraInstance() {
-			Camera camera = null;
-			try {
-				camera = Camera.open();
-			} catch (Exception e) {
-				// cannot get camera or does not exist
-				releaseCamera();
-			}
-			return camera;
+	private void releaseCamera() {
+		if (mCamera != null) {
+			mCamera.release(); // release the camera for other applications
+			mCamera = null;
 		}
+	}
 
+	private Camera getCameraInstance() {
+		Camera camera = null;
+		try {
+			camera = Camera.open();
+		} catch (Exception e) {
+			// cannot get camera or does not exist
+			releaseCamera();
+		}
+		return camera;
+	}
 
 	private static File getOutputMediaFile() {
 		File mediaStorageDir = new File(
-				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"MyCameraApp");
-						
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				"MyCameraApp");
+
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
 				Log.d("MyCameraApp", "failed to create directory");
@@ -112,11 +113,13 @@ public class CameraActivity extends Activity {
 				return;
 			}
 			try {
-				
+
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
-				
+
+				Log.v("log_tag", "fos" + fos);
+				// mCamera.startPreview();
 				Intent returnIntent = new Intent();
 				returnIntent.putExtra("data", data);
 				setResult(RESULT_OK, returnIntent);

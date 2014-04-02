@@ -1,5 +1,7 @@
 package com.buymysari.fragment;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.buymysari.DBAdpter;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
+import com.buymysari.dto.UserInfo_dto;
 
 public class ProfileFragment extends Fragment{
 	
@@ -84,12 +87,12 @@ public class ProfileFragment extends Fragment{
 				
 				Log.v("log"," profile UserID --> " + userId);
 				
-				String  result_message =  DBAdpter.updateUserInfo(userId,strFname,strLname,strEmail,strPassword);
-				Log.v("log", " resultMesssage --> " + result_message);
+				ArrayList<UserInfo_dto>  result_list =  DBAdpter.updateUserInfo(userId,strFname,strLname,strEmail,strPassword);
+				Log.v("log", " resultMesssage --> " + result_list.get(0).getMsg());
 				
-				if(result_message.equals("User information successfully updated"))
+				if(result_list.get(0).getMsg().equals("User information successfully updated"))
 				{
-					Toast.makeText(getActivity(), result_message , 1).show();
+					Toast.makeText(getActivity(), result_list.get(0).getMsg() , 1).show();
 					
 					FragmentManager fm = getFragmentManager();
 					FragmentTransaction fragmentTransaction = fm

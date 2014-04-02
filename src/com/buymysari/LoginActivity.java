@@ -1,16 +1,11 @@
 package com.buymysari;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -22,7 +17,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.buymysari.dto.UserInfo_dto;
-import com.buymysari.R;
 
 public class LoginActivity extends Activity {
 	EditText uname;
@@ -75,10 +69,10 @@ public class LoginActivity extends Activity {
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				    imm.hideSoftInputFromWindow(login.getWindowToken(), 0);
 					
-					new JSONTask(progress).execute("Home");
+					new JSONTask().execute("Home");
 					
 				} else {
-					Toast.makeText(LoginActivity.this, "No Internet Available ", 1)
+					Toast.makeText(LoginActivity.this, "No Internet Available ", Toast.LENGTH_LONG)
 							.show();
 				}
 
@@ -96,10 +90,6 @@ public class LoginActivity extends Activity {
 
 	
 public class JSONTask extends AsyncTask<String, Void, String> {
-		
-		public JSONTask(ProgressDialog progress) {
-			   progress = progress;
-		}
 		
 		public void onPreExecute() {
 		    progress.show();

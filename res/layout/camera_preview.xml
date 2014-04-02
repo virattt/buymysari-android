@@ -4,22 +4,19 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/camera_preview"
-        android:layout_width="fill_parent"
-        android:layout_height="300dip"
-        android:layout_alignParentLeft="true" >
-
-        
-    </FrameLayout>
-
     <Button
         android:id="@+id/btnTakePicture"
         android:layout_width="60dip"
         android:layout_height="60dip"
-        android:layout_below="@+id/camera_preview"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
         android:background="@drawable/camera" />
+
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="260dip"
+        android:layout_centerHorizontal="true" >
+    </FrameLayout>
 
 </RelativeLayout>
