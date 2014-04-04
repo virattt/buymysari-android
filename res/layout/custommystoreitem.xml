@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@color/White"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
     android:padding="5dip" >
@@ -11,26 +12,20 @@
     <ImageButton
         android:id="@+id/mystoreitem_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="150dp"
         android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
         android:scaleType="fitXY" />
-
-    <TextView
-        android:id="@+id/mystoreitem_closet_txt_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/mystoreitem_big_img"
-        android:layout_marginTop="24dp"
-        android:text="" />
 
     <Button
         android:id="@+id/mystoreitem_close_home_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignRight="@+id/mystoreitem_big_img"
         android:layout_below="@+id/mystoreitem_big_img"
-        android:text="Closet It" />
+        android:layout_margin="10dip"
+        android:background="@drawable/door"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/mystoreitemName_txt"
@@ -38,8 +33,22 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mystoreitem_close_home_btn"
         android:layout_alignBottom="@+id/mystoreitem_close_home_btn"
-        android:layout_marginRight="54dp"
-        android:layout_toLeftOf="@+id/mystoreitem_close_home_btn"
-        android:text="" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dip"
+        android:text=""
+        android:textColor="#466aaf"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/mystoreitem_closet_txt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mystoreitemName_txt"
+        android:layout_alignBottom="@+id/mystoreitemName_txt"
+        android:layout_alignLeft="@+id/mystoreitem_big_img"
+        android:layout_margin="10dip"
+        android:text=""
+        android:textColor="#999592"
+        android:textSize="16sp" />
 
 </RelativeLayout>

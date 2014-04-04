@@ -7,24 +7,32 @@
     android:background="@android:color/white"
     android:descendantFocusability="blocksDescendants" >
 
-    <ImageButton
+    <!--
+         <ImageButton
         android:id="@+id/my_Store_logo_image"
         android:layout_width="60dip"
         android:layout_height="60dip"
         android:layout_margin="5dip" />
+    -->
+
+    <com.buymysari.CircularImageView
+        android:id="@+id/my_Store_logo_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp" >
+    </com.buymysari.CircularImageView>
 
     <TextView
         android:id="@+id/mystore_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/my_Store_logo_image"
+        android:layout_alignParentTop="true"
         android:layout_margin="5dip"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="19dp"
         android:layout_toRightOf="@+id/my_Store_logo_image"
         android:text="dfdsfds"
-        android:textColor="#040404"
-        android:textSize="15sp"
+        android:textColor="#466aaf"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:typeface="sans" />
 

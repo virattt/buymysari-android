@@ -16,12 +16,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.buymysari.Base64;
 import com.buymysari.DBAdpter;
@@ -54,7 +56,7 @@ public class MyStoreItemFragment extends Fragment {
 	public ImageLoader imageLoader;
 	private ProgressDialog loadMoreProgress;
 	Button btnLoadMore;
-
+	int NoMoredataAvailable = 0;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -62,8 +64,6 @@ public class MyStoreItemFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.mystoreitemlist, container, false);
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 		app = (MyApplication) getActivity().getApplicationContext();
-
-		
 
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
@@ -82,7 +82,7 @@ public class MyStoreItemFragment extends Fragment {
 
 		lv = (ListView) rootView.findViewById(R.id.mystoreitem_listview);
 		
-		btnLoadMore = new Button(getActivity());
+		/*btnLoadMore = new Button(getActivity());
 		btnLoadMore.setText("Load More");
 		lv.addFooterView(btnLoadMore);
 
@@ -92,7 +92,44 @@ public class MyStoreItemFragment extends Fragment {
 				// Starting a new async task
 				new loadMoreListView().execute();
 			}
-		});
+		});*/
+		
+		
+		lv.setOnScrollListener(new OnScrollListener(){
+			private int mLastFirstVisibleItem;
+			
+		    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		      // TODO Auto-generated method stub
+		    }
+		    public void onScrollStateChanged(AbsListView view, int scrollState) {
+		      // TODO Auto-generated method stub
+		      
+		       if(scrollState == 0) 
+		      Log.i("a", "scrolling stopped...");
+
+
+		        if (view.getId() == lv.getId()) {
+		        final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
+		         if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+		           // mIsScrollingUp = false;
+		            Log.i("a", "scrolling down...");
+		            
+		            Log.v("log"," NOMOreData  " + NoMoredataAvailable);
+			        if (NoMoredataAvailable != 1) 
+			        {
+			        	new loadMoreListView().execute();
+			        	Log.v("log"," NOMOreData if " + NoMoredataAvailable);
+			        }
+		            
+		        } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+		           // mIsScrollingUp = true;
+		            Log.i("a", "scrolling up...");
+		        }
+
+		        mLastFirstVisibleItem = currentFirstVisibleItem;
+		    } 
+		    }
+		  });
 
 		return rootView;
 	}
@@ -184,10 +221,13 @@ public class MyStoreItemFragment extends Fragment {
 				adt.notifyDataSetChanged();
 				lv.setSelectionFromTop(currentPosition + 1, 0);
 			} else {
+				
+				NoMoredataAvailable  = 1;
+				
 				Toast.makeText(getActivity().getApplicationContext(),
 						"No Store Items Available ", Toast.LENGTH_LONG)
 						.show();
-				btnLoadMore.setVisibility(View.INVISIBLE);
+				//btnLoadMore.setVisibility(View.INVISIBLE);
 			}
 
 

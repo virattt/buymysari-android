@@ -1,12 +1,15 @@
 package com.buymysari.fragment;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
-
-import org.json.JSONObject;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,8 +39,6 @@ import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
-import com.buymysari.dto.search_items_dto;
-import com.buymysari.fragment.SearchItemsFragment.loadMoreListView;
 
 public class HomeFragment extends Fragment {
 	
@@ -57,8 +60,12 @@ public class HomeFragment extends Fragment {
 	Button btnLoadMore;
 	int pageNumber = 1;
 	private ProgressDialog loadMoreProgress;
-	 
+
+	int visibleThreshold = 20;
 	public ImageLoader imageLoader;
+	
+	int NoMoredataAvailable = 0;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -69,9 +76,9 @@ public class HomeFragment extends Fragment {
 		imageLoader=new ImageLoader(getActivity().getApplicationContext());
 		
 		
-		btnLoadMore = new Button(getActivity());
+		/*btnLoadMore = new Button(getActivity());
 		btnLoadMore.setText("Load More");
-		lv.addFooterView(btnLoadMore);
+		lv.addFooterView(btnLoadMore);*/
 		
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
@@ -96,13 +103,48 @@ public class HomeFragment extends Fragment {
 			 new JSONTask().execute();
 		 }
 		
-		 btnLoadMore.setOnClickListener(new View.OnClickListener() {
+		 lv.setOnScrollListener(new OnScrollListener(){
+				private int mLastFirstVisibleItem;
+				
+			    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			      // TODO Auto-generated method stub
+			    }
+			    public void onScrollStateChanged(AbsListView view, int scrollState) {
+			      // TODO Auto-generated method stub
+			      
+			       if(scrollState == 0) 
+			      Log.i("a", "scrolling stopped...");
+
+
+			        if (view.getId() == lv.getId()) {
+			        final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
+			         if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+			           // mIsScrollingUp = false;
+			            Log.i("a", "scrolling down...");
+			            
+			            Log.v("log"," NOMOreData  " + NoMoredataAvailable);
+				        if (NoMoredataAvailable != 1) 
+				        {
+				        	new loadMoreListView().execute();
+				        	Log.v("log"," NOMOreData if " + NoMoredataAvailable);
+				        }
+			            
+			        } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+			           // mIsScrollingUp = true;
+			            Log.i("a", "scrolling up...");
+			        }
+
+			        mLastFirstVisibleItem = currentFirstVisibleItem;
+			    } 
+			    }
+			  });
+		/* btnLoadMore.setOnClickListener(new View.OnClickListener() {
 			    @Override
 			    public void onClick(View arg0) {
 			        // Starting a new async task
 			        new loadMoreListView().execute();
 			    }
-		 });
+		 });*/
 		
 		return rootView;
 	}
@@ -123,7 +165,7 @@ public class HomeFragment extends Fragment {
 			progress.setMessage("Loading...");
 			progress.show(); 
 		    
-			/*  gps = new GPSTracker(getActivity().getApplicationContext());
+			  gps = new GPSTracker(getActivity().getApplicationContext());
 
 		    // check if GPS enabled
 		    if (gps.canGetLocation()) {
@@ -151,7 +193,7 @@ public class HomeFragment extends Fragment {
 		    } else {
 
 		     gps.showSettingsAlert();
-		    }*/
+		    }
 			
 			cityName = "ahmedabad";
 		}
@@ -221,9 +263,9 @@ public class HomeFragment extends Fragment {
 	        
 	        Log.v("log_tag","list DoinBaCK " + cityName);
 	        
-	        newLoadedList = DBAdpter.getNewsData(cityName , pageNumber +"");
+	    	newLoadedList = DBAdpter.getNewsData(cityName , pageNumber +"");
 	        
-	        for (int j = 0; j < newLoadedList.size(); j++) {
+	    	for (int j = 0; j < newLoadedList.size(); j++) {
 				
 	        	/*All_list_home_dto list_home_data = new All_list_home_dto();
 				Log.v("log_tag", "Storename  "+ newLoadedList.get(j).store_name);
@@ -271,11 +313,13 @@ public class HomeFragment extends Fragment {
 	    	else
 	    	{
 	    		
+	    		NoMoredataAvailable  = 1;
+	    		
 	    		Log.v("log"," home else " + result);
 	    		
 	    		Toast.makeText(getActivity().getApplicationContext(),
 						"No More Items Available ", Toast.LENGTH_LONG).show();
-		    		btnLoadMore.setVisibility(View.GONE);
+		    	// btnLoadMore.setVisibility(View.GONE);
 	    	}
 	    	
 	    	if(loadMoreProgress != null)
@@ -317,7 +361,8 @@ public class HomeFragment extends Fragment {
 			CircularImageView home_ic_img = (CircularImageView)convertView.findViewById(R.id.list_home_logo_image);
 			home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
 			home_ic_img.setBorderWidth(0);
-			home_ic_img.addShadow();
+			//home_ic_img.addShadow();
+			
 			ImageButton home_big_img = (ImageButton) convertView
 					.findViewById(R.id.sarees_big_img);
 			TextView home_username_txt = (TextView) convertView
@@ -327,7 +372,8 @@ public class HomeFragment extends Fragment {
 
 			TextView itemName_txt = (TextView) convertView
 					.findViewById(R.id.itemName_txt);
-
+			TextView closeted_txt = (TextView) convertView
+					.findViewById(R.id.closeted_view_txt_view);
 			Button close_btn = (Button) convertView
 					.findViewById(R.id.close_home_btn);
 			ImageView home_view_image = (ImageView) convertView
@@ -337,6 +383,7 @@ public class HomeFragment extends Fragment {
 			home_view_txt.setText(" "
 					+ list.get(position).views.toString());
 			itemName_txt.setText(list.get(position).name.toString());
+			closeted_txt.setText(" " + list.get(position).Closeted_item_track.toString());
 			final String uid= app.getUserID();
 			
 			
@@ -439,4 +486,19 @@ public class HomeFragment extends Fragment {
 
 		}
 	}
+
+	/*@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if (scrollState == SCROLL_STATE_IDLE) {
+			if (lv.getLastVisiblePosition() >= lv.getCount()
+					- visibleThreshold) {
+				new loadMoreListView().execute();
+			}
+		}
+	}*/
 }

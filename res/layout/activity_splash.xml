@@ -13,7 +13,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dip"
         android:layout_marginRight="20dip"
-        android:background="#99111111"
+        android:background="@drawable/btn_selector"
         android:text="Register with Email"
         android:textColor="@android:color/white"
         android:textSize="21sp"
@@ -28,7 +28,7 @@
         android:layout_alignRight="@+id/register_home_btn"
         android:layout_marginBottom="18dp"
         android:text="Login"
-        android:background="#99111111"
+        android:background="@drawable/btn_selector"
         android:textColor="@android:color/white"
         android:textSize="21sp"
         android:textStyle="bold" />

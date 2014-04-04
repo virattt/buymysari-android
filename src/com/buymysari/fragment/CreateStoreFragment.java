@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.buymysari.Base64;
 import com.buymysari.CameraActivity;
+import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MarketPlaceActivity;
@@ -36,7 +37,7 @@ import com.buymysari.dto.Store_profile_dto;
 
 public class CreateStoreFragment extends Fragment {
 
-	ImageView imgStorePicture;
+	//ImageView imgStorePicture;
 	Button btnCreateStore, btnTakePicture, btnUpdateStore;
 
 	EditText edtName, edtWebsite, edtEmail, edtPhone, edtCity, edtCountry,
@@ -55,6 +56,7 @@ public class CreateStoreFragment extends Fragment {
 	String base64st;
 	String StoreId;
 	public ImageLoader imageLoader;
+	CircularImageView imgStorePicture;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -63,13 +65,17 @@ public class CreateStoreFragment extends Fragment {
 		// setContentView(R.layout.create_store);
 		View view = inflater.inflate(R.layout.create_store, null);
 
-		imgStorePicture = (ImageView) view.findViewById(R.id.imageView1);
+		//imgStorePicture = (ImageView) view.findViewById(R.id.imageView1);
 		btnCreateStore = (Button) view.findViewById(R.id.btnCreateStore);
 		btnTakePicture = (Button) view.findViewById(R.id.btnTakePicture);
 		btnUpdateStore = (Button) view.findViewById(R.id.btnUpdateStore);
 
 		app = (MyApplication) getActivity().getApplicationContext();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+		 imgStorePicture = (CircularImageView)view.findViewById(R.id.imageView1);
+		imgStorePicture.setBorderColor(getResources().getColor(R.color.GrayLight));
+		imgStorePicture.setBorderWidth(0);
+		//imgStorePicture.addShadow();
 
 		edtName = (EditText) view.findViewById(R.id.edtUserName);
 		edtWebsite = (EditText) view.findViewById(R.id.edtWebsite);

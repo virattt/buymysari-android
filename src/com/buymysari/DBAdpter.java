@@ -487,7 +487,7 @@ public class DBAdpter {
 					search_items.setStore_image(json_objs
 							.getString("store_image"));
 					search_items.setViews(json_objs.getString("views"));
-
+					search_items.setCloseted_item_track(json_objs.getString("Closeted_item_track"));
 					fetch_search_items_data.add(search_items);
 				}
 			}
@@ -579,6 +579,8 @@ public class DBAdpter {
 								.getString("image");
 						list_home_data.views = json_objs_items
 								.getString("views");
+						list_home_data.Closeted_item_track = json_objs_items
+								.getString("Closeted_item_track");
 						fetch_list_home_data.add(list_home_data);
 					}
 				}

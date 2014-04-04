@@ -10,12 +10,19 @@ public class search_items_dto {
 	public String store_id;
 	public String store_name;
 	public String views;
+	public String closeted_item_track;
 	
 	public String getViews() {
 		return views;
 	}
 	public void setViews(String views) {
 		this.views = views;
+	}
+	public String getCloseted_item_track() {
+		return closeted_item_track;
+	}
+	public void setCloseted_item_track(String closeted_item_track) {
+		this.closeted_item_track = closeted_item_track;
 	}
 	public String getItem_id() {
 		return item_id;

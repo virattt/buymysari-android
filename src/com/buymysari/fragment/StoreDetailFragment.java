@@ -2,11 +2,14 @@ package com.buymysari.fragment;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buymysari.Base64;
+import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
@@ -39,16 +43,16 @@ public class StoreDetailFragment extends Fragment {
 	ArrayList<All_list_Store_dto> list = new ArrayList<All_list_Store_dto>();
 	MyListAdapter adt;
 	View rootView;
-	ImageButton store_icon;
+	// ImageButton store_icon;
 	TextView storeName;
 	Button store_subscribe_btn;
 	MyApplication app;
 	private ProgressDialog progress;
 	Bundle bundle;
 	String myInt;
-
+	CircularImageView store_icon;
 	ImageLoader imageLoader;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -56,12 +60,21 @@ public class StoreDetailFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.store_detail_list, container,
 				false);
 		app = (MyApplication) getActivity().getApplicationContext();
-		imageLoader=new ImageLoader(getActivity().getApplicationContext());
-		
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+
 		store_subscribe_btn = (Button) rootView
 				.findViewById(R.id.store_subscribe_btn);
-		store_icon = (ImageButton) rootView
+		/*
+		 * store_icon = (ImageButton) rootView
+		 * .findViewById(R.id.list_Store_logo_image);
+		 */
+		store_icon = (CircularImageView) rootView
 				.findViewById(R.id.list_Store_logo_image);
+		store_icon.setBorderColor(getResources().getColor(R.color.GrayLight));
+		store_icon.setBorderWidth(0);
+		//store_icon.addShadow();
+		
+		
 		storeName = (TextView) rootView.findViewById(R.id.store_list_name);
 		bundle = this.getArguments();
 		myInt = bundle.getString("position");
@@ -72,18 +85,16 @@ public class StoreDetailFragment extends Fragment {
 
 			store_icon.setVisibility(View.INVISIBLE);
 			store_subscribe_btn.setVisibility(View.INVISIBLE);
-			store_icon.setVisibility(View.INVISIBLE);
-			Toast.makeText(getActivity().getApplicationContext(), "No Store Detail Available",
-					Toast.LENGTH_LONG).show();
-			
+			Toast.makeText(getActivity().getApplicationContext(),
+					"No Store Detail Available", Toast.LENGTH_LONG).show();
+
 		} else {
 			store_icon.setVisibility(View.VISIBLE);
 			store_subscribe_btn.setVisibility(View.VISIBLE);
-			store_icon.setVisibility(View.VISIBLE);
 			progress = new ProgressDialog(getActivity());
 			progress.setMessage("Loading...");
 			new JSONTask(progress).execute("Home");
-			
+
 		}
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -101,8 +112,10 @@ public class StoreDetailFragment extends Fragment {
 				new SubscribeTask(progress).execute(app.getUserID(), myInt);
 			}
 		});
+
 		
 		return rootView;
+		
 	}
 
 	public class JSONTask extends AsyncTask<String, Void, String> {
@@ -130,11 +143,11 @@ public class StoreDetailFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			// Create here your JSONObject...
 			Log.v("log_tag", "list ON Post");
-			
-			
-			
+
 			if (Integer.parseInt(result) > 0) {
 				storeName.setText(list.get(0).store_name);
+				Log.v("log_tag", "list.get(0).store_image "
+						+ list.get(0).store_image);
 				updateTableList(list.get(0).store_image);
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
@@ -147,23 +160,26 @@ public class StoreDetailFragment extends Fragment {
 
 		}
 
-	
-
 	}
 
 	private void updateTableList(String img) {
-		byte[] Image_getByte;
+		String img_url = img.toString().trim();
+		URL url = null;
 		try {
-			Image_getByte = Base64.decode(img);
-			ByteArrayInputStream bytes = new ByteArrayInputStream(Image_getByte);
-			BitmapDrawable bmd = new BitmapDrawable(bytes);
-			Bitmap bm = bmd.getBitmap();
-			store_icon.setImageBitmap(bm);
-
+			url = new URL(img_url);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap bmp = null;
+		try {
+			bmp = BitmapFactory.decodeStream(url.openConnection()
+					.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		store_icon.setImageBitmap(bmp);
 	}
 
 	public class MyListAdapter extends BaseAdapter {
@@ -206,24 +222,19 @@ public class StoreDetailFragment extends Fragment {
 			store_item_name_txt.setText(list.get(position).name);
 			final String uid = app.getUserID();
 
-			/*if (list.get(position).image != null) {
-				byte[] Image_getByte;
-				try {
-					Image_getByte = Base64.decode(list.get(position).image);
-					ByteArrayInputStream bytes = new ByteArrayInputStream(
-							Image_getByte);
-					BitmapDrawable bmd = new BitmapDrawable(bytes);
-					Bitmap bm = bmd.getBitmap();
-					store_item_img.setImageBitmap(bm);
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
+			/*
+			 * if (list.get(position).image != null) { byte[] Image_getByte; try
+			 * { Image_getByte = Base64.decode(list.get(position).image);
+			 * ByteArrayInputStream bytes = new ByteArrayInputStream(
+			 * Image_getByte); BitmapDrawable bmd = new BitmapDrawable(bytes);
+			 * Bitmap bm = bmd.getBitmap(); store_item_img.setImageBitmap(bm);
+			 * 
+			 * } catch (IOException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); } }
+			 */
 
 			imageLoader.DisplayImage(list.get(position).image, store_item_img);
-			
+
 			store_item_close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -271,7 +282,7 @@ public class StoreDetailFragment extends Fragment {
 		}
 		return true;
 	}
-	
+
 	public class ClosetTask extends AsyncTask<String, Void, String> {
 
 		public ClosetTask(ProgressDialog progress) {
@@ -305,7 +316,7 @@ public class StoreDetailFragment extends Fragment {
 		}
 
 	}
-	
+
 	public class SubscribeTask extends AsyncTask<String, Void, String> {
 
 		public SubscribeTask(ProgressDialog progress) {
@@ -321,9 +332,8 @@ public class StoreDetailFragment extends Fragment {
 		protected String doInBackground(String... arg) {
 			String user_id = arg[0];
 			String myInt = arg[1];
-			
 
-			String msg = DBAdpter.storeSubscribeData(user_id,myInt);
+			String msg = DBAdpter.storeSubscribeData(user_id, myInt);
 
 			return msg;
 		}
@@ -339,7 +349,5 @@ public class StoreDetailFragment extends Fragment {
 		}
 
 	}
-
-	
 
 }

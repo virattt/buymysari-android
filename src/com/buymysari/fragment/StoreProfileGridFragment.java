@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
@@ -40,11 +41,12 @@ public class StoreProfileGridFragment extends Fragment {
 	private ProgressDialog progress;
 	GridView gridView;
 	String st_id;
-	ImageView list_Store_profile_grid_logo_image;
+	// ImageView list_Store_profile_grid_logo_image;
 	TextView store_profilegrid_name, store_url_txt,
 			store_profile_grid_closet_txt, subscribe_store_profile_txt;
 
 	public ImageLoader imageLoader;
+	CircularImageView list_Store_profile_grid_logo_image;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,11 +58,18 @@ public class StoreProfileGridFragment extends Fragment {
 		st_id = app.getStoreId();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
-		Log.v("log_tag", "st_id  ::: " + st_id);
-
 		gridView = (GridView) rootView.findViewById(R.id.gridView1);
-		list_Store_profile_grid_logo_image = (ImageView) rootView
+		/*
+		 * list_Store_profile_grid_logo_image = (ImageView) rootView
+		 * .findViewById(R.id.list_Store_profile_grid_logo_image);
+		 */
+
+		list_Store_profile_grid_logo_image = (CircularImageView) rootView
 				.findViewById(R.id.list_Store_profile_grid_logo_image);
+		list_Store_profile_grid_logo_image.setBorderColor(getResources()
+				.getColor(R.color.GrayLight));
+		list_Store_profile_grid_logo_image.setBorderWidth(0);
+		// list_Store_profile_grid_logo_image.addShadow();
 		store_profilegrid_name = (TextView) rootView
 				.findViewById(R.id.store_profilegrid_name);
 		store_url_txt = (TextView) rootView.findViewById(R.id.store_url_txt);
@@ -138,33 +147,41 @@ public class StoreProfileGridFragment extends Fragment {
 						+ gridlist.get(0).subscribed_store_count);
 				// updateTableList(gridlist.get(0).store_image);
 
-				Log.v("log_tag", "gridlist.get(0).store_image :: "+gridlist.get(0).store_image);
-				
-				/*imageLoader.DisplayImage(gridlist.get(0).store_image.toString().trim(),
-						list_Store_profile_grid_logo_image);
-				*/
-				String img_url= gridlist.get(0).store_image.toString().trim();//url of the image
-					    URL url = null;
-						try {
-							url = new URL(img_url);
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				Bitmap bmp = null; 
-					    try {
-							bmp=BitmapFactory.decodeStream(url.openConnection().getInputStream());
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					    
-					    list_Store_profile_grid_logo_image.setImageBitmap(bmp);
+				Log.v("log_tag",
+						"gridlist.get(0).store_image :: "
+								+ gridlist.get(0).store_image);
+
+				/*
+				 * imageLoader.DisplayImage(gridlist.get(0).store_image.toString(
+				 * ).trim(), list_Store_profile_grid_logo_image);
+				 */
+				String img_url = gridlist.get(0).store_image.toString().trim();// url
+																				// of
+																				// the
+																				// image
+				URL url = null;
+				try {
+					url = new URL(img_url);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Bitmap bmp = null;
+				try {
+					bmp = BitmapFactory.decodeStream(url.openConnection()
+							.getInputStream());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				list_Store_profile_grid_logo_image.setImageBitmap(bmp);
 
 			} else {
 
 				Toast.makeText(getActivity().getApplicationContext(),
-						" No Stroe Items Available ", Toast.LENGTH_SHORT).show();
+						" No Stroe Items Available ", Toast.LENGTH_SHORT)
+						.show();
 			}
 
 			progress.dismiss();
@@ -199,10 +216,7 @@ public class StoreProfileGridFragment extends Fragment {
 			ImageView store_Name_img = (ImageView) convertView
 					.findViewById(R.id.item_image);
 
-			
 			if (gridlist.get(position).image != "") {
-				
-				
 
 				imageLoader.DisplayImage(gridlist.get(position).image,
 						store_Name_img);

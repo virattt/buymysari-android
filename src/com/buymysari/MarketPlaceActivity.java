@@ -261,6 +261,7 @@ public class MarketPlaceActivity extends FragmentActivity {
 		lvMenu = (ListView) findViewById(R.id.activity_main_menu_listview);
 		lvMenu.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.custom_textview, lvMenuItems));
+		lvMenu.setDivider(null);
 		lvMenu.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -273,6 +274,7 @@ public class MarketPlaceActivity extends FragmentActivity {
 		StoreMenu = (ListView) findViewById(R.id.activity_store_menu_listview);
 		StoreMenu.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.custom_textview, StoreMenuItems));
+		StoreMenu.setDivider(null);
 		StoreMenu.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,

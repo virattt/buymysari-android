@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,8 +31,9 @@ import com.buymysari.ImageLoader;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.search_items_dto;
+import com.buymysari.fragment.ClosetFragment.loadMoreListView;
 
-public class SearchItemsFragment extends Fragment {
+public class SearchItemsFragment extends Fragment{
 	
 	Bitmap image_url;
 	Bitmap Store_Image_Url;
@@ -51,10 +54,14 @@ public class SearchItemsFragment extends Fragment {
 	String searchText;
 	String searchCateId;
 	
-	int pageNumber = 1;
+	 int pageNumber = 1;
 	 public ImageLoader imageLoader; 
 	 private ProgressDialog loadMoreProgress;
 	 Button btnLoadMore;
+	 
+	 int visibleThreshold = 20;
+	 int NoMoredataAvailable = 0;
+	 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -77,9 +84,9 @@ public class SearchItemsFragment extends Fragment {
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
 		
-		btnLoadMore = new Button(getActivity());
+		/*btnLoadMore = new Button(getActivity());
 		btnLoadMore.setText("Load More");
-		lv.addFooterView(btnLoadMore);
+		lv.addFooterView(btnLoadMore);*/
 		
 		Bundle bundle = this.getArguments();
 		searchText = bundle.getString("searchText");
@@ -88,13 +95,49 @@ public class SearchItemsFragment extends Fragment {
 		
 		new JSONTask(progress).execute("Home");
 		
-		btnLoadMore.setOnClickListener(new View.OnClickListener() {
+		lv.setOnScrollListener(new OnScrollListener(){
+			private int mLastFirstVisibleItem;
+			
+		    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		      // TODO Auto-generated method stub
+		    }
+		    public void onScrollStateChanged(AbsListView view, int scrollState) {
+		      // TODO Auto-generated method stub
+		      
+		       if(scrollState == 0) 
+		      Log.i("a", "scrolling stopped...");
+
+
+		        if (view.getId() == lv.getId()) {
+		        final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
+		         if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+		           // mIsScrollingUp = false;
+		            Log.i("a", "scrolling down...");
+		            
+		            Log.v("log"," NOMOreData  " + NoMoredataAvailable);
+			        if (NoMoredataAvailable != 1) 
+			        {
+			        	new loadMoreListView().execute();
+			        	Log.v("log"," NOMOreData if " + NoMoredataAvailable);
+			        }
+		            
+		            
+		        } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+		           // mIsScrollingUp = true;
+		            Log.i("a", "scrolling up...");
+		        }
+
+		        mLastFirstVisibleItem = currentFirstVisibleItem;
+		    } 
+		    }
+		  });
+		/*btnLoadMore.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View arg0) {
 		        // Starting a new async task
 		        new loadMoreListView().execute();
 		    }
-		});
+		});*/
 		
 		return rootView;
 	}
@@ -141,6 +184,7 @@ public class SearchItemsFragment extends Fragment {
 			}
 			else
 			{
+				
 				Toast.makeText(getActivity().getApplicationContext(), "There is no Search item", Toast.LENGTH_LONG).show();
 			}
 		}
@@ -204,10 +248,9 @@ public class SearchItemsFragment extends Fragment {
 	    	else
 	    	{
 	    		Log.v("log"," Search else" + result);
-	    		
+	    		NoMoredataAvailable  = 1;
 	    		Toast.makeText(getActivity().getApplicationContext(),
-					"No More Search Items Available ", Toast.LENGTH_LONG).show();
-	    		btnLoadMore.setVisibility(View.GONE);
+					"No More Search Items Available ", Toast.LENGTH_LONG).show();	
 	    	}
 	    	
 	    	if(loadMoreProgress != null)
@@ -230,6 +273,7 @@ public class SearchItemsFragment extends Fragment {
 			public TextView home_view_txt;
 			public TextView itemName_txt;
 			public Button close_btn;
+			public TextView close_txt;
 		}
 		
 		public int getCount() {
@@ -258,11 +302,13 @@ public class SearchItemsFragment extends Fragment {
 			holder.home_view_txt = (TextView) convertView.findViewById(R.id.home_view_txt_view);
 			holder.itemName_txt = (TextView) convertView.findViewById(R.id.itemName_txt);
 			holder.close_btn = (Button) convertView.findViewById(R.id.close_home_btn);
-
+			holder.close_txt = (TextView) convertView.findViewById(R.id.closeted_view_txt_view);
+			
 			holder.home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
 			holder.home_ic_img.setBorderWidth(0);
 			
 			holder.home_username_txt.setText(list.get(position).getStore_name().toString());
+			holder.close_txt.setText(" " + list.get(position).getCloseted_item_track().toString());
 			holder.home_view_txt.setText(" " + list.get(position).getViews().toString());
 			holder.itemName_txt.setText(list.get(position).getItem_name().toString());
 			final String uid = app.getUserID();
