@@ -6,83 +6,87 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/lin_regi"
         android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_above="@+id/login"
-        android:layout_alignLeft="@+id/login"
-        android:layout_alignRight="@+id/login"
-        android:layout_marginBottom="16dp"
-        android:background="#80ffffff" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="20dip"
-            android:layout_height="20dip"
-            android:layout_marginLeft="20dip"
-            android:layout_marginTop="25dip"
-            android:background="@drawable/lock" />
-
-        <EditText
-            android:id="@+id/pass_edt_lg"
-            android:layout_width="match_parent"
-            android:layout_height="60dip"
-            android:layout_marginLeft="20dip"
-            android:background="#80ffffff"
-            android:hint=" ************* "
-            android:password="true"
-            android:singleLine="true"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_marginLeft="20dip"
-        android:layout_marginRight="20dip"
-        android:layout_above="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="22dp"
-        android:background="#80ffffff" >
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="30dip"
-            android:layout_height="25dip"
-            android:layout_marginLeft="20dip"
-            android:layout_marginTop="15dip"
-            android:background="@drawable/user_gray" />
-
-        <EditText
-            android:id="@+id/user_edt_lg"
-            android:layout_width="696dp"
-            android:layout_height="60dip"
-            android:layout_marginLeft="10dip"
-            android:background="#80ffffff"
-            android:hint="  Email address"
-            android:singleLine="true"
-            android:textSize="24sp"
-            android:textStyle="bold" >
-
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/login"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="20dip"
-        android:layout_marginRight="20dip"
-        android:layout_height="60dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="30dp"
-        android:background="#99000000"
-        android:text="Login"
-        android:textColor="#ffffff"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="22dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="20dip"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/email" />
+
+            <EditText
+                android:id="@+id/user_edt_lg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="  Email address"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lineEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_above="@+id/password_edt_lg"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/lock" />
+
+            <EditText
+                android:id="@+id/pass_edt_lg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:ellipsize="start"
+                android:ems="10"
+                android:hint="************"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dip"
+            android:background="#99000000"
+            android:text="Login"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -9,142 +9,154 @@
         android:id="@+id/lin_regi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dip"
-        android:layout_marginRight="20dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="80dp"
         android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/lineUsername"
             android:layout_width="fill_parent"
-            android:layout_height="40dip"
-            android:layout_marginTop="10dip"
-            android:background="#80ffffff" >
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="30dip"
-                android:layout_height="25dip"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="10dip"
-                android:layout_marginTop="8dip"
+                android:layout_width="22dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/user_gray" />
 
             <EditText
                 android:id="@+id/fristName_edt_lg"
                 android:layout_width="match_parent"
-                android:layout_height="40dip"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/lineUsername"
                 android:layout_alignParentLeft="true"
-                android:background="#80ffffff"
+                android:background="@null"
                 android:ellipsize="start"
                 android:ems="10"
                 android:hint="First name"
                 android:inputType="textPersonName"
+                android:paddingLeft="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="22sp"
+                android:textSize="19sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lineLastname"
             android:layout_width="fill_parent"
-            android:layout_height="40dip"
-            android:layout_marginTop="10dip"
-            android:background="#80ffffff" >
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="30dip"
-                android:layout_height="25dip"
-                android:layout_marginBottom="19dp"
-                android:layout_marginLeft="10dip"
-                android:layout_marginTop="8dip"
+                android:layout_width="22dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/user_gray" />
 
             <EditText
                 android:id="@+id/lastName_edt_lg"
-                android:layout_width="wrap_content"
-                android:layout_height="40dip"
-                android:layout_weight="1"
-                android:background="#80ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
                 android:ellipsize="start"
                 android:ems="10"
                 android:hint="Last name"
                 android:inputType="textPersonName"
+                android:paddingLeft="10dp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/lineEmail"
+            android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
-            android:layout_height="40dip"
-            android:layout_above="@+id/password_edt_lg"
-            android:layout_marginTop="10dip"
-            android:background="#80ffffff" >
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
 
             <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="30dip"
-                android:layout_height="25dip"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="10dip"
-                android:layout_marginTop="8dip"
+                android:id="@+id/imageView2"
+                android:layout_width="22dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="20dip"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/email" />
 
             <EditText
                 android:id="@+id/email_edt_lg"
                 android:layout_width="match_parent"
-                android:layout_height="40dip"
-                android:background="#80ffffff"
-                android:ellipsize="start"
-                android:ems="10"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
                 android:hint="Email address"
-                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lineEmail"
             android:layout_width="fill_parent"
-            android:layout_height="40dip"
+            android:layout_height="50dp"
             android:layout_above="@+id/password_edt_lg"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="10dip"
-            android:background="#80ffffff" >
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#BBffffff" >
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="30dip"
-                android:layout_height="25dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginTop="8dip"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="13dp"
                 android:background="@drawable/lock" />
 
             <EditText
                 android:id="@+id/password_edt_lg"
                 android:layout_width="match_parent"
-                android:layout_height="40dip"
-                android:layout_marginBottom="10dp"
-                android:background="#80ffffff"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
                 android:ellipsize="start"
                 android:ems="10"
                 android:hint="************"
                 android:inputType="textPassword"
+                android:paddingLeft="10dp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <Button
             android:id="@+id/register_btn"
             android:layout_width="match_parent"
-            android:layout_height="40dip"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dip"
             android:background="#99000000"
             android:text="Register"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
+
     </LinearLayout>
 
 </RelativeLayout>

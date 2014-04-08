@@ -1,7 +1,7 @@
 package com.buymysari;
 
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.buymysari.dto.UserInfo_dto;
 
+@SuppressLint("NewApi")
 public class LoginActivity extends Activity {
 	EditText uname;
 	EditText pass;

@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:background="@drawable/splash"
     android:gravity="top" >
+
     <Button
         android:id="@+id/register_home_btn"
         android:layout_width="fill_parent"
@@ -16,7 +17,7 @@
         android:background="@drawable/btn_selector"
         android:text="Register with Email"
         android:textColor="@android:color/white"
-        android:textSize="21sp"
+        android:textSize="19sp"
         android:textStyle="bold" />
 
     <Button
@@ -27,10 +28,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/register_home_btn"
         android:layout_marginBottom="18dp"
-        android:text="Login"
         android:background="@drawable/btn_selector"
+        android:text="Login"
         android:textColor="@android:color/white"
-        android:textSize="21sp"
+        android:textSize="19sp"
         android:textStyle="bold" />
 
 </RelativeLayout>
