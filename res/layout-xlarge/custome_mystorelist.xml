@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rela_store_fragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="5dip"
+    android:background="@android:color/white"
+    android:descendantFocusability="blocksDescendants" >
+
+    <!--
+         <ImageButton
+        android:id="@+id/my_Store_logo_image"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_margin="5dip" />
+    -->
+
+    <TextView
+        android:id="@+id/mystore_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="35dip"
+        android:layout_toRightOf="@+id/my_Store_logo_image"
+        android:text="Sonya&apos;s Saris"
+        android:textColor="#466aaf"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <com.buymysari.CircularImageView
+        android:id="@+id/my_Store_logo_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="20dip" />
+
+    <TextView
+        android:id="@+id/txtAddressSubScribeProfile"
+        android:layout_width="80dip"
+        android:layout_height="30dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="35dip"
+        android:text="Toronto"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#466aaf"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/my_Store_logo_image" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="110dip"
+            android:layout_height="40dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dip"
+            android:layout_marginRight="4dp"
+            android:background="#41d845"
+            android:text="SUBSCRIBED"
+            android:textColor="@color/White" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="40dip"
+            android:layout_height="45dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="147dp"
+            android:paddingBottom="10dip"
+            android:src="@drawable/door" />
+
+        <TextView
+            android:id="@+id/txtClosetnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24dp"
+            android:layout_toRightOf="@+id/imageView2"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dip"
+            android:text="200"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/Gray"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtAddressSubScribeProfile"
+        android:layout_marginRight="5dip"
+        android:layout_toLeftOf="@+id/txtAddressSubScribeProfile"
+        android:src="@drawable/point" />
+
+</RelativeLayout>

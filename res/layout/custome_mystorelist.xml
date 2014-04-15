@@ -15,25 +15,91 @@
         android:layout_margin="5dip" />
     -->
 
-    <com.buymysari.CircularImageView
-        android:id="@+id/my_Store_logo_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp" >
-    </com.buymysari.CircularImageView>
-
     <TextView
         android:id="@+id/mystore_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="5dip"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="19dp"
+        android:layout_margin="25dip"
         android:layout_toRightOf="@+id/my_Store_logo_image"
-        android:text="dfdsfds"
+        android:text="Sonya&apos;s Saris"
         android:textColor="#466aaf"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:typeface="sans" />
+
+    <com.buymysari.CircularImageView
+        android:id="@+id/my_Store_logo_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/txtAddressSubScribeProfile"
+        android:layout_width="80dip"
+        android:layout_height="30dip"
+        android:layout_alignParentRight="true"
+        android:textColor="#466aaf"
+        android:layout_marginTop="25dip"
+        android:text="Toronto"
+        android:layout_marginLeft="5dip"
+        android:textSize="16sp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentLeft="true"
+        
+        android:layout_below="@+id/my_Store_logo_image" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="110dip"
+            android:layout_height="40dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="10dip"
+            android:background="#41d845"
+            android:text="SUBSCRIBED"
+            android:textColor="@color/White" />
+
+        <TextView
+            android:id="@+id/txtClosetnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="46dp"
+            android:layout_toLeftOf="@+id/button1"
+            android:paddingBottom="10dip"
+            android:gravity="center_vertical"
+            android:text="200"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/Gray"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="10dip"
+            android:layout_toLeftOf="@+id/txtClosetnumber"
+            android:src="@drawable/door" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dip"
+        android:layout_alignBottom="@+id/txtAddressSubScribeProfile"
+        android:layout_toLeftOf="@+id/txtAddressSubScribeProfile"
+        android:src="@drawable/point" />
 
 </RelativeLayout>

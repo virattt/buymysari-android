@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,9 +52,9 @@ public class StoreDetailFragment extends Fragment {
 	private ProgressDialog progress;
 	Bundle bundle;
 	String myInt;
-	CircularImageView store_icon;
 	ImageLoader imageLoader;
-
+	CircularImageView store_icon;
+	ImageView imView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -64,16 +66,19 @@ public class StoreDetailFragment extends Fragment {
 
 		store_subscribe_btn = (Button) rootView
 				.findViewById(R.id.store_subscribe_btn);
-		/*
-		 * store_icon = (ImageButton) rootView
-		 * .findViewById(R.id.list_Store_logo_image);
-		 */
-		store_icon = (CircularImageView) rootView
-				.findViewById(R.id.list_Store_logo_image);
-		store_icon.setBorderColor(getResources().getColor(R.color.GrayLight));
-		store_icon.setBorderWidth(0);
-		//store_icon.addShadow();
 		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		
+			store_icon = (CircularImageView) rootView.findViewById(R.id.list_Store_logo_image);
+			store_icon.setBorderColor(getResources().getColor(R.color.GrayLight));
+			store_icon.setBorderWidth(0);
+			
+		} else {
+			Log.v("log", " Below HoneyComb ");
+
+			imView = (ImageView) rootView.findViewById(R.id.list_Store_logo_image);
+		}
+
 		
 		storeName = (TextView) rootView.findViewById(R.id.store_list_name);
 		bundle = this.getArguments();
@@ -82,14 +87,17 @@ public class StoreDetailFragment extends Fragment {
 		Log.v("log_tag", "myInt " + myInt);
 
 		if (myInt.trim().equals("")) {
-
-			store_icon.setVisibility(View.INVISIBLE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				store_icon.setVisibility(View.INVISIBLE);
+			}
 			store_subscribe_btn.setVisibility(View.INVISIBLE);
 			Toast.makeText(getActivity().getApplicationContext(),
 					"No Store Detail Available", Toast.LENGTH_LONG).show();
 
 		} else {
-			store_icon.setVisibility(View.VISIBLE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				store_icon.setVisibility(View.VISIBLE);
+			}
 			store_subscribe_btn.setVisibility(View.VISIBLE);
 			progress = new ProgressDialog(getActivity());
 			progress.setMessage("Loading...");
@@ -179,7 +187,16 @@ public class StoreDetailFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		store_icon.setImageBitmap(bmp);
+		
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			store_icon.setImageBitmap(bmp);
+		}
+		else
+		{
+			imView.setImageBitmap(bmp);
+		}
+		
 	}
 
 	public class MyListAdapter extends BaseAdapter {

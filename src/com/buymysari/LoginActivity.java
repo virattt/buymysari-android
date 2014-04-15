@@ -1,7 +1,7 @@
 package com.buymysari;
 
 import java.util.ArrayList;
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.buymysari.dto.UserInfo_dto;
 
-@SuppressLint("NewApi")
 public class LoginActivity extends Activity {
 	EditText uname;
 	EditText pass;
@@ -99,11 +99,11 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 	    @Override
 	    protected String doInBackground(String... arg) {
 	        String listSize = "";
-	        Log.v("log_tag","list DoinBaCK ");
+	        Log.v("log_tag","list DoinBaCK wwww ");
 	        
 	        list = DBAdpter.getAllUserInfo(strUname, strPass);
 	        
-	        return listSize; // This value will be returned to your onPostExecute(result) method
+	       return listSize; // This value will be returned to your onPostExecute(result) method
 	    }
 
 	    @Override
@@ -112,15 +112,26 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 	    	Log.v("log_tag","list ON Post");
 	    		
 	    	String resultNew = list.get(0).msg;
-			String user_id = list.get(0).user_id;
-			
-			if(list.get(0).store_id != null )
+			String user_id = list.get(0).user_id;	
+			/*Log.v("log_tag","list DoinBaCK "+user_id);
+			 app.setUserID(user_id);
+			 Log.v("log_tag","list DoinBaCK storeId "+list.get(0).strore_profile_id );*/
+			 
+			if(list.get(0).strore_profile_id != null )
 			{
-				String store_id = list.get(0).store_id;
-		        app.setUserID(user_id);
+				String store_id = list.get(0).strore_profile_id;
+		       
 		        app.setStoreId(store_id);	
+		        app.setUserID("");
+		        
+		        Log.v("log_tag","list DoinBaCK if "+user_id);
 			}
-			
+			else if(user_id != null){
+				app.setStoreId("");	
+		        app.setUserID(user_id);
+		        
+		        Log.v("log_tag","list DoinBaCK else"+list.get(0).strore_profile_id);
+			}
 	        if (resultNew.equals("success fully login")) {
 				
 	        	Toast.makeText(LoginActivity.this, resultNew, Toast.LENGTH_LONG).show();

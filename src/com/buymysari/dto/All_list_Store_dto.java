@@ -8,6 +8,7 @@ public class All_list_Store_dto {
 	public String state;
 	public String country;
 	public String mobile;
+	public String address;
 	public String website;
 	public String closeted_item_count;
 	public String subscribed_store_count;

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:padding="1dip" >
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+    <ImageButton
+        android:id="@+id/store_big_img"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/itemName_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/close_home_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dip"
+        android:text=""
+        android:textColor="#466aaf"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/close_home_btn"
+        android:layout_marginBottom="2dip"
+        android:background="#999592" />
+
+    <TextView
+        android:id="@+id/store_closet_txt_view"
+        android:layout_width="20dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/itemName_txt"
+        android:text=""
+        android:textColor="#999592"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/close_home_btn"
+        android:layout_width="35dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/store_big_img"
+        android:layout_margin="10dip"
+        android:layout_toLeftOf="@+id/store_closet_txt_view"
+        android:background="@drawable/door"
+        android:scaleType="fitCenter" />
+
+    <ImageView
+        android:id="@+id/items_view"
+        android:layout_width="40dip"
+        android:layout_height="35dip"
+        
+        android:layout_alignTop="@+id/close_home_btn"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/eye"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_alignBottom="@+id/itemName_txt"
+        android:layout_toRightOf="@+id/items_view"
+        android:text="" />
+
+</RelativeLayout>

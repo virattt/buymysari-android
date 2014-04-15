@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/register_page"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scroll_regi_store"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="100dip"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lin_regi_store"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/lineUsername_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView1_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/user_gray" />
+
+                <EditText
+                    android:id="@+id/fristName_edt_lg_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/lineUsername_store"
+                    android:layout_alignParentLeft="true"
+                    android:background="@null"
+                    android:ellipsize="start"
+                    android:ems="10"
+                    android:hint="First name"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lineLastname_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView1_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/user_gray" />
+
+                <EditText
+                    android:id="@+id/lastName_edt_lg_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:ellipsize="start"
+                    android:ems="10"
+                    android:hint="Last name"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="10dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout1_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/email" />
+
+                <EditText
+                    android:id="@+id/email_edt_lg_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="Email address"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lineEmail_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/password_edt_lg"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView1_store"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/lock" />
+
+                <EditText
+                    android:id="@+id/password_edt_lg_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:ellipsize="start"
+                    android:ems="10"
+                    android:hint="************"
+                    android:inputType="textPassword"
+                    android:paddingLeft="10dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_name_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="40dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/shop" />
+
+                <EditText
+                    android:id="@+id/store_name_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="Store name"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_website_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/globe" />
+
+                <EditText
+                    android:id="@+id/store_website_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="Website"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_phone_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/telephone" />
+
+                <EditText
+                    android:id="@+id/store_phone_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="Phone"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_address_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/loc" />
+
+                <EditText
+                    android:id="@+id/store_address_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="Address"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_city_store"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#BBffffff" >
+
+                <ImageView
+                    android:id="@+id/imageView2_store"
+                    android:layout_width="22dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/loc" />
+
+                <EditText
+                    android:id="@+id/store_city_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dip"
+                    android:background="@null"
+                    android:hint="City"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/register_btn_store"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dip"
+                android:background="#99000000"
+                android:text="Register"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,13 +1,21 @@
 package com.buymysari.fragment;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +24,24 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
 import com.buymysari.dto.Closet_dto;
-import com.buymysari.fragment.HomeFragment.loadMoreListView;
 
 public class ClosetFragment extends Fragment  {
 
@@ -48,15 +61,59 @@ public class ClosetFragment extends Fragment  {
 	Button btnLoadMore;
 	int pageNumber = 1;
 	int NoMoredataAvailable = 0;
-
-		@Override
+	TextView txtName ,txtWebSite, txt_closet_text;
+	
+	CustomGridViewAdapter adtstore;
+	FrameLayout closet_grid_layout;
+	GridView closet_gridView;
+	
+	ToggleButton btnClosetList, btnClosetGrid;
+	String userId;
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.closet, container, false);
 		lv = (ListView) rootView.findViewById(R.id.closet_listview);
 
+		txtName = (TextView)rootView.findViewById(R.id.txtStoreName);
+		txtWebSite = (TextView)rootView.findViewById(R.id.txtStoreWebsite);
+		txt_closet_text = (TextView)rootView.findViewById(R.id.txt_closet_text);
 		app = (MyApplication) getActivity().getApplicationContext();
+		
+		String FirstNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name();
+		
+		 userId = app.getUserID();
+		String lastName = DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
+	//	String userImage = DBAdpter.fetch_UserDetail_data.get(0).get();
+		String emailId = DBAdpter.fetch_UserDetail_data.get(0).getEmail();
+		String Mobile = DBAdpter.fetch_UserDetail_data.get(0).getMobile();
+		
+		Log.v("log"," userName " + FirstNAme+" "+lastName + " emailId "+ emailId + " mobile " + Mobile);
+		txtName.setText(FirstNAme+" "+lastName);
+		txtWebSite.setText(emailId);
+		txt_closet_text.setText(FirstNAme+"'s Closet");
+		
+		closet_grid_layout = (FrameLayout) rootView
+				.findViewById(R.id.closet_gridview_framelayout);
+		closet_gridView = (GridView) rootView
+				.findViewById(R.id.closet_gridView);
+		
+	/*	Bitmap store_bmp = getBitmapFromUrl(storeImage);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			CircularImageView Store_ic_img = (CircularImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
+			Store_ic_img.setImageBitmap(store_bmp);
+			Store_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+			Store_ic_img.setBorderWidth(0);
+		} else {
+			Log.v("log", " Below HoneyComb ");
+
+			ImageView imView = (ImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
+			imView.setImageBitmap(store_bmp);
+		}*/
+		
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -71,6 +128,41 @@ public class ClosetFragment extends Fragment  {
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
 
+		btnClosetGrid = (ToggleButton) rootView.findViewById(R.id.btnClosetGrid);
+		btnClosetList = (ToggleButton) rootView.findViewById(R.id.btnClosetList);
+		
+		btnClosetList.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+
+				if (isChecked) {
+					lv.setVisibility(View.VISIBLE);
+					closet_grid_layout.setVisibility(View.GONE);
+				} else {
+					lv.setVisibility(View.GONE);
+					closet_grid_layout.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+
+		btnClosetGrid.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+
+				if (isChecked) {
+					lv.setVisibility(View.GONE);
+					closet_grid_layout.setVisibility(View.VISIBLE);
+				} else {
+					lv.setVisibility(View.VISIBLE);
+					closet_grid_layout.setVisibility(View.GONE);
+				}
+			}
+		});
+		
 		new JSONTask(progress).execute("Home");
 
 		lv.setOnScrollListener(new OnScrollListener(){
@@ -160,7 +252,9 @@ public class ClosetFragment extends Fragment  {
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
 				adt.notifyDataSetChanged();
-				lv.setSelectionFromTop(currentPosition + 1, 0);
+				lv.setSelectionFromTop(currentPosition + 1, 0); 
+				
+				
 			} else {
 				Log.v("log", " Search else" + result);
 				NoMoredataAvailable  = 1;
@@ -210,6 +304,9 @@ public class ClosetFragment extends Fragment  {
 			if (Integer.parseInt(result) > 0) {
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
+				
+				adtstore = new CustomGridViewAdapter(getActivity().getApplicationContext());
+				closet_gridView.setAdapter(adtstore);
 			} else {
 				Toast.makeText(getActivity().getApplicationContext(),
 						"No Closeted Item Available ", Toast.LENGTH_LONG)
@@ -223,7 +320,26 @@ public class ClosetFragment extends Fragment  {
 		// from this one and use your JSONObject as needed
 
 	}
-
+	// list.get(position).getStore_image()
+	public Bitmap getBitmapFromUrl (String urlStore) {
+		URL url = null;
+		try {
+			url = new URL(urlStore);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap bmp = null;
+		try {
+			bmp = BitmapFactory.decodeStream(url.openConnection()
+					.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bmp;
+	}
+	
 	public class MyListAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
@@ -247,13 +363,20 @@ public class ClosetFragment extends Fragment  {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custom_home_list, null);
 
-			CircularImageView home_ic_img = (CircularImageView) convertView
-					.findViewById(R.id.list_home_logo_image);
-			home_ic_img.setBorderColor(getResources().getColor(
-					R.color.GrayLight));
-			home_ic_img.setBorderWidth(0);
-			// home_ic_img.addShadow();
+			URL url = null;
+				Bitmap bmp = getBitmapFromUrl(list.get(position).getStore_image());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				CircularImageView home_ic_img = (CircularImageView) convertView.findViewById(R.id.list_home_logo_image);
+				home_ic_img.setImageBitmap(bmp);
+				home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+				home_ic_img.setBorderWidth(0);
+			} else {
+				Log.v("log", " Below HoneyComb ");
 
+				ImageView imView = (ImageView) convertView.findViewById(R.id.list_home_logo_image);
+				imView.setImageBitmap(bmp);
+			}
+			
 			ImageButton home_big_img = (ImageButton) convertView
 					.findViewById(R.id.sarees_big_img);
 			TextView home_username_txt = (TextView) convertView
@@ -280,10 +403,51 @@ public class ClosetFragment extends Fragment  {
 			imageLoader.DisplayImage(list.get(position).getImage(),
 					home_big_img);
 
-			imageLoader.DisplayImage(list.get(position).getStore_image(),
-					home_ic_img);
 			return convertView;
 		}
 	}
+	
+	public class CustomGridViewAdapter extends BaseAdapter {
+		private LayoutInflater mInflater;
 
+		public CustomGridViewAdapter(Context context) {
+			mInflater = LayoutInflater.from(context);
+
+		}
+
+		public int getCount() {
+			return list.size();
+		}
+
+		public Object getItem(int position) {
+			return position;
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			convertView = mInflater.inflate(R.layout.closet_custom_grid, null);
+			
+			ImageView closet_big_img = (ImageView) convertView
+					.findViewById(R.id.closet_item_image);
+			if (list.get(position).getImage() != "") {
+
+				imageLoader.DisplayImage(list.get(position).getImage(),
+						closet_big_img);
+
+			} else {
+
+				/*
+				 * Toast.makeText(getActivity(), "No Item Available",
+				 * Toast.LENGTH_SHORT).show();
+				 */
+			}
+
+			return convertView;
+		}
+	}
+	
 }

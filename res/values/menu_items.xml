@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="menu_items">
-        <item >Home</item>
+        
         <item >My Profile</item>
         <item >My Closet</item>
         <item >My Stores</item>
@@ -10,5 +10,8 @@
         <item >Store Profile</item>
         <item >Store Gallery</item>
         <item >Add Picture</item>
+    </string-array>
+    <string-array name="create_store_items">
+        <item>Create Store</item>
     </string-array>
 </resources>

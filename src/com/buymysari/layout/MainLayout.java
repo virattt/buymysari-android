@@ -6,7 +6,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
@@ -63,7 +65,7 @@ public class MainLayout extends LinearLayout {
     
     // Is user dragging the content
     boolean isDragging = false;
-    
+    boolean calledFromToggleMenu = false;
     // Used to facilitate ACTION_UP 
     int lastDiffX = 0;
     
@@ -105,19 +107,14 @@ public class MainLayout extends LinearLayout {
         super.onAttachedToWindow();
         
         // Get our 2 child View
-        menu = this.getChildAt(0);
-        content = this.getChildAt(1);   
+        menu = this.getChildAt(1);
+        content = this.getChildAt(0);   
         
-        // Attach View.OnTouchListener
-        content.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return MainLayout.this.onContentTouch(v, event);
-            }
-        });
-        
+       
         // Initially hide the menu
         menu.setVisibility(View.GONE);
+        //set api version check here
+        //menu.setAlpha((float) 0.9);
     }
     
     // Called from layout when this view should assign a size and position to each of its children
@@ -141,48 +138,98 @@ public class MainLayout extends LinearLayout {
             // menu View occupies the full height, but certain width
             LayoutParams menuLayoutParams = (LayoutParams)menu.getLayoutParams();
             menuLayoutParams.height = this.getHeight();
-            menuLayoutParams.width = this.getWidth() - menuRightMargin;
+            menuLayoutParams.width = (int)(mainLayoutWidth * 0.7);
             
         }
         
         // Layout the child views    
-        menu.layout(left, top, right - menuRightMargin, bottom);
         
-        Log.v("log"," margin left " + left + " top " + top +" right " + right + " bottom " + bottom); 
-        
+        menu.layout(left, top, (int)(mainLayoutWidth * 0.7), bottom);
         content.layout(left + contentXOffset, top, right + contentXOffset, bottom);
         
     }
     
     // Custom methods for MainLayout
-    
+    public void checkBeforeToggleMenu(String action){
+    	if(action == "CLOSE"){
+    		Log.v("menu", "check if menu is oprn and then close it");
+    		if(currentMenuState == MenuState.SHOWN){
+    			Log.v("menu","menu is open close it");
+    			this.toggleMenu();
+    		}
+    	}else{
+    		Log.v("menu", "check if menu is close and then open it");
+    		if(currentMenuState == MenuState.HIDDEN){
+    			Log.v("menu","menu is close open it");
+    			this.toggleMenu();
+    		}
+    	}
+    }
     // Used to show/hide menu accordingly
     public void toggleMenu() {
+    	this.calledFromToggleMenu = true;
         // Do nothing if sliding is in progress
         if(currentMenuState == MenuState.HIDING || currentMenuState == MenuState.SHOWING)
             return;
         
         switch(currentMenuState) {
         case HIDDEN:
-            currentMenuState = MenuState.SHOWING;
-            menu.setVisibility(View.VISIBLE);
-            menuScroller.startScroll(0, 0, menu.getLayoutParams().width,
-                    0, SLIDING_DURATION);
+        	//show menu here
+        	Log.v("log","current state is hidden");
+        	
+        	TranslateAnimation moveLefttoRight = new TranslateAnimation(menu.getWidth()*-1, 0, 0, 0);
+        	
+        	moveLefttoRight.setAnimationListener(new Animation.AnimationListener(){
+        	    @Override
+        	    public void onAnimationStart(Animation arg0) {
+        	    	menu.setVisibility(View.VISIBLE);
+        	    	menu.bringToFront();
+        	    }           
+        	    @Override
+        	    public void onAnimationRepeat(Animation arg0) {
+        	    }           
+        	    @Override
+        	    public void onAnimationEnd(Animation arg0) {
+        	    	
+        	    }
+        	});
+        	
+            moveLefttoRight.setDuration(300);
+            moveLefttoRight.setFillAfter(true);
+            menu.startAnimation(moveLefttoRight);
+            currentMenuState = MenuState.SHOWN;
             break;
         case SHOWN:
-            currentMenuState = MenuState.HIDING;
-            menuScroller.startScroll(contentXOffset, 0, -contentXOffset, 
-                    0, SLIDING_DURATION);
+        	//hide menu here
+        	Log.v("log","current state is visible");
+        	TranslateAnimation moveRightoLeft = new TranslateAnimation(0, menu.getWidth()*-1, 0, 0);
+        	moveRightoLeft.setDuration(300);
+        	moveRightoLeft.setFillAfter(true);
+            menu.startAnimation(moveRightoLeft);
+            currentMenuState = MenuState.HIDDEN;
+            moveRightoLeft.setAnimationListener(new Animation.AnimationListener(){
+        	    @Override
+        	    public void onAnimationStart(Animation arg0) {
+        	    	
+        	    }           
+        	    @Override
+        	    public void onAnimationRepeat(Animation arg0) {
+        	    }           
+        	    @Override
+        	    public void onAnimationEnd(Animation arg0) {
+        	    	Log.v("log","hiding menu");
+        	    	content.bringToFront();
+        	    }
+        	});
             break;
         default:
             break;
         }
-        
         // Begin querying
-        menuHandler.postDelayed(menuRunnable, QUERY_INTERVAL);
+        //menuHandler.postDelayed(menuRunnable, QUERY_INTERVAL);
         
         // Invalite this whole MainLayout, causing onLayout() to be called
-        this.invalidate();
+        //this.invalidate();
     }
     
     // Query Scroller

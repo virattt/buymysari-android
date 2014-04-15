@@ -1,10 +1,15 @@
 package com.buymysari.fragment;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +26,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -296,7 +302,36 @@ public class SearchItemsFragment extends Fragment{
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.custom_home_list, parent, false);	 
 			holder = new ViewHolder();
 				
-			holder.home_ic_img = (CircularImageView) convertView.findViewById(R.id.list_home_logo_image);
+			URL url = null;
+			try {
+				url = new URL(list.get(position).getStore_image());
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Bitmap bmp = null;
+			try {
+				bmp = BitmapFactory.decodeStream(url.openConnection()
+						.getInputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				CircularImageView home_ic_img = (CircularImageView) convertView.findViewById(R.id.list_home_logo_image);
+				home_ic_img.setImageBitmap(bmp);
+				home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+				home_ic_img.setBorderWidth(0);
+				
+			} else {
+				Log.v("log", " Below HoneyComb ");
+
+				ImageView imView = (ImageView) convertView.findViewById(R.id.list_home_logo_image);
+				imView.setImageBitmap(bmp);
+			}
+			
+			
 			holder.home_big_img = (ImageButton) convertView.findViewById(R.id.sarees_big_img);
 			holder.home_username_txt = (TextView) convertView.findViewById(R.id.home_list_username);
 			holder.home_view_txt = (TextView) convertView.findViewById(R.id.home_view_txt_view);
@@ -304,8 +339,6 @@ public class SearchItemsFragment extends Fragment{
 			holder.close_btn = (Button) convertView.findViewById(R.id.close_home_btn);
 			holder.close_txt = (TextView) convertView.findViewById(R.id.closeted_view_txt_view);
 			
-			holder.home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
-			holder.home_ic_img.setBorderWidth(0);
 			
 			holder.home_username_txt.setText(list.get(position).getStore_name().toString());
 			holder.close_txt.setText(" " + list.get(position).getCloseted_item_track().toString());
@@ -319,9 +352,6 @@ public class SearchItemsFragment extends Fragment{
 			 
 			Log.v("log_tag", " Store picture :::: " + list.get(position).getStore_image());
 		
-			imageLoader.DisplayImage(list.get(position).getStore_image(), holder.home_ic_img);
-			
-			
 			holder.home_big_img.setOnClickListener(new View.OnClickListener() {
 
 				@Override

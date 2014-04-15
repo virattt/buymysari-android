@@ -11,10 +11,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buymysari.Base64;
@@ -34,16 +37,20 @@ import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.Store_profile_dto;
+import com.buymysari.dto.UserInfo_dto;
 
 public class CreateStoreFragment extends Fragment {
 
-	//ImageView imgStorePicture;
-	Button btnCreateStore, btnTakePicture, btnUpdateStore;
+	// ImageView imgStorePicture;
+	Button btnUpdateStore;
+	TextView btnTakePicture;
 
-	EditText edtName, edtWebsite, edtEmail, edtPhone, edtCity, edtCountry,
-			edtState;
-	String str_name, str_email, str_city, str_mobile, str_state, str_country,
-			str_website, str_user_id;
+	EditText first_name, last_name, email_edt, password_edt, store_name_edt,
+			website_edt, phone_edt, city_edt, address_edt;
+	String str_first_name, str_last_name, str_email_edt, str_password_edt,
+			str_store_name_edt, str_website_edt, str_phone_edt, str_city_edt,
+			str_address_edt;
+
 	String result = null;
 	MyApplication app;
 	String base64string = "";
@@ -56,6 +63,7 @@ public class CreateStoreFragment extends Fragment {
 	String base64st;
 	String StoreId;
 	public ImageLoader imageLoader;
+	ImageView imView;
 	CircularImageView imgStorePicture;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,82 +73,96 @@ public class CreateStoreFragment extends Fragment {
 		// setContentView(R.layout.create_store);
 		View view = inflater.inflate(R.layout.create_store, null);
 
-		//imgStorePicture = (ImageView) view.findViewById(R.id.imageView1);
-		btnCreateStore = (Button) view.findViewById(R.id.btnCreateStore);
-		btnTakePicture = (Button) view.findViewById(R.id.btnTakePicture);
-		btnUpdateStore = (Button) view.findViewById(R.id.btnUpdateStore);
+		// imgStorePicture = (ImageView) view.findViewById(R.id.imageView1);
+
+		btnTakePicture = (TextView) view.findViewById(R.id.btnTakePicture);
+		btnUpdateStore = (Button) view
+				.findViewById(R.id.register_btn_update_store);
 
 		app = (MyApplication) getActivity().getApplicationContext();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
-		 imgStorePicture = (CircularImageView)view.findViewById(R.id.imageView1);
-		imgStorePicture.setBorderColor(getResources().getColor(R.color.GrayLight));
-		imgStorePicture.setBorderWidth(0);
-		//imgStorePicture.addShadow();
 
-		edtName = (EditText) view.findViewById(R.id.edtUserName);
-		edtWebsite = (EditText) view.findViewById(R.id.edtWebsite);
-		edtEmail = (EditText) view.findViewById(R.id.edtEmail);
-		edtPhone = (EditText) view.findViewById(R.id.edtPhone);
-		edtCity = (EditText) view.findViewById(R.id.edtCity);
-		edtCountry = (EditText) view.findViewById(R.id.edtCountry);
-		edtState = (EditText) view.findViewById(R.id.edtState);
-
-		if (app.getStoreId().equals("null")) {
-
-			btnCreateStore.setVisibility(view.VISIBLE);
-			btnUpdateStore.setVisibility(view.INVISIBLE);
-			edtName.setText("");
-			edtWebsite.setText("");
-			edtEmail.setText("");
-			edtPhone.setText("");
-			edtCity.setText("");
-			edtCountry.setText("");
-			edtState.setText("");
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			imgStorePicture = (CircularImageView) view
+					.findViewById(R.id.imageView1);
+			imgStorePicture.setBorderColor(getResources().getColor(
+					R.color.GrayLight));
+			imgStorePicture.setBorderWidth(0);
 		} else {
-			btnCreateStore.setVisibility(view.INVISIBLE);
-			btnUpdateStore.setVisibility(view.VISIBLE);
-			if (DBAdpter.fetch_list_StoreProfile_data != null) {
-				if (DBAdpter.fetch_list_StoreProfile_data.get(0)
-						.getStrore_prof_name() != null) {
-					edtName.setText(DBAdpter.fetch_list_StoreProfile_data
-							.get(0).getStrore_prof_name());
-					edtWebsite.setText(DBAdpter.fetch_list_StoreProfile_data
-							.get(0).getStrore_prof_website());
-					edtEmail.setText(DBAdpter.fetch_list_StoreProfile_data.get(
-							0).getStrore_prof_email());
-					edtPhone.setText(DBAdpter.fetch_list_StoreProfile_data.get(
-							0).getStrore_prof_mobile());
-					edtCity.setText(DBAdpter.fetch_list_StoreProfile_data
-							.get(0).getStrore_prof_city());
-					edtCountry.setText(DBAdpter.fetch_list_StoreProfile_data
-							.get(0).getStrore_prof_country());
-					edtState.setText(DBAdpter.fetch_list_StoreProfile_data.get(
-							0).getStrore_prof_state());
+			Log.v("log", " Below HoneyComb ");
+			imView = (ImageView) view.findViewById(R.id.imageView1);
+		}
 
-				/*	imageLoader.DisplayImage(
-							DBAdpter.fetch_list_StoreProfile_data.get(0)
-									.getStrore_prof_image(), imgStorePicture);*/
-					
-					
-					  String img_url= DBAdpter.fetch_list_StoreProfile_data.get(0).getStrore_prof_image().toString().trim();
-						        URL url = null;
-						     try {
-						      url = new URL(img_url);
-						     } catch (MalformedURLException e) {
-						      // TODO Auto-generated catch block
-						      e.printStackTrace();
-						     }
-						     Bitmap bmp = null; 
-						        try {
-						      bmp=BitmapFactory.decodeStream(url.openConnection().getInputStream());
-						     } catch (IOException e) {
-						      // TODO Auto-generated catch block
-						      e.printStackTrace();
-						     }
-						        imgStorePicture.setImageBitmap(bmp);
+		first_name = (EditText) view
+				.findViewById(R.id.fristName_edt_lg_update_store);
+		last_name = (EditText) view
+				.findViewById(R.id.lastName_edt_lg_update_store);
+		email_edt = (EditText) view
+				.findViewById(R.id.email_edt_lg_update_store);
+
+		store_name_edt = (EditText) view
+				.findViewById(R.id.store_name_update_edt);
+		website_edt = (EditText) view
+				.findViewById(R.id.store_website_update_edt);
+		phone_edt = (EditText) view.findViewById(R.id.store_phone_update_edt);
+		city_edt = (EditText) view.findViewById(R.id.store_address_update_edt);
+		address_edt = (EditText) view.findViewById(R.id.store_city_update_edt);
+
+		if (DBAdpter.fetch_UserDetail_data != null) {
+
+			first_name.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_firstName());
+			last_name.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_lastName());
+			email_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_email());
+
+			store_name_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_name());
+			website_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_website());
+
+			city_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_city());
+			address_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_Address());
+			phone_edt.setText(DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_mobile());
+
+			String img_url = DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_image().toString().trim();
+			Log.v("log_tag", "img_url  " + img_url);
+
+			if (img_url.equals("")) {
+
+			} else {
+				URL url = null;
+				try {
+					url = new URL(img_url);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				Bitmap bmp = null;
+				try {
+					bmp = BitmapFactory.decodeStream(url.openConnection()
+							.getInputStream());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+					imgStorePicture.setImageBitmap(bmp);
+
+				} else {
+
+					imView.setImageBitmap(bmp);
+				}
+
 			}
+
 		}
 
 		btnTakePicture.setOnClickListener(new OnClickListener() {
@@ -154,43 +176,50 @@ public class CreateStoreFragment extends Fragment {
 			}
 		});
 
-		btnCreateStore.setOnClickListener(new OnClickListener() {
+		btnUpdateStore.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				StoreId = app.getStoreId();
 
-				str_name = edtName.getText().toString().trim();
-				str_website = edtWebsite.getText().toString().trim();
-				str_email = edtEmail.getText().toString().trim();
-				str_city = edtCity.getText().toString().trim();
-				str_mobile = edtPhone.getText().toString().trim();
-				str_state = edtState.getText().toString().trim();
-				str_country = edtCountry.getText().toString().trim();
+				str_first_name = first_name.getText().toString().trim();
+				str_last_name = last_name.getText().toString().trim();
+				str_email_edt = email_edt.getText().toString().trim();
+				str_store_name_edt = store_name_edt.getText().toString().trim();
+				str_website_edt = website_edt.getText().toString().trim();
+				str_phone_edt = phone_edt.getText().toString().trim();
+				str_city_edt = city_edt.getText().toString().trim();
+				str_address_edt = address_edt.getText().toString().trim();
 
-				final String uid = app.getUserID();
+				if ((!str_first_name.equals("")) && (!str_last_name.equals(""))
+						&& (!str_email_edt.equals(""))
+						&& (!str_store_name_edt.equals(""))
+						&& (!str_website_edt.equals(""))
+						&& (!str_phone_edt.equals(""))
+						&& (!str_city_edt.equals(""))
+						&& (!str_address_edt.equals(""))) {
+					final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture
+							.getDrawable();
+					final Bitmap yourBitmap = bitmapDrawable.getBitmap();
 
-				if ((!str_name.equals("")) && (!str_email.equals(""))
-						&& (!str_website.equals(""))
-						&& (!str_mobile.equals("")) && (!str_city.equals(""))
-						&& (!str_country.equals("")) && (!str_state.equals(""))) {
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+					byte[] byteArray = stream.toByteArray();
+					base64st = Base64.encodeBytes(byteArray);
+					Log.v("log_tag", "base64st" + base64st);
+					ArrayList<UserInfo_dto> list_result = DBAdpter
+							.updateUserStore(StoreId, str_first_name,
+									str_last_name, str_email_edt,
+									str_store_name_edt, str_website_edt,
+									str_phone_edt, str_city_edt,
+									str_address_edt, base64st);
 
-					ArrayList<Store_profile_dto> list_result = DBAdpter
-							.createUserStore(str_name, str_email, str_website,
-									str_mobile, str_city, str_state,
-									str_country, uid);
-
-					app.setStoreId(list_result.get(0).getStrore_prof_id());
-					// app.setUserID(list_result.get(0).getStrore_prof_user_id());
-
-					Toast.makeText(
-							getActivity(),
-							" Store id -->  "
-									+ list_result.get(0).getStrore_prof_id(),
+					Toast.makeText(getActivity(), "sucessfully update",
 							Toast.LENGTH_LONG).show();
 
-					Status = DBAdpter.uploadStorePhoto(base64string);
-
+				
+					
 					FragmentManager fm = getActivity()
 							.getSupportFragmentManager();
 					FragmentTransaction fragmentTransaction = fm
@@ -201,57 +230,7 @@ public class CreateStoreFragment extends Fragment {
 					fragmentTransaction.addToBackStack(null);
 					fragmentTransaction.commit();
 
-					MarketPlaceActivity.mainLayout.toggleMenu();
-					MarketPlaceActivity.storeOptions
-							.setVisibility(View.VISIBLE);
-					MarketPlaceActivity.btnCreateStore.setVisibility(View.GONE);
-
-				} else {
-					Toast.makeText(getActivity(), "Pls Fill All value..",
-							Toast.LENGTH_LONG).show();
 				}
-			}
-		});
-
-		btnUpdateStore.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				str_user_id = app.getUserID();
-				StoreId = app.getStoreId();
-
-				str_name = edtName.getText().toString().trim();
-				str_website = edtWebsite.getText().toString().trim();
-				str_email = edtEmail.getText().toString().trim();
-				str_city = edtCity.getText().toString().trim();
-				str_mobile = edtPhone.getText().toString().trim();
-
-				final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture
-						.getDrawable();
-				final Bitmap yourBitmap = bitmapDrawable.getBitmap();
-
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-				byte[] byteArray = stream.toByteArray();
-				base64st = Base64.encodeBytes(byteArray);
-
-				
-
-				ArrayList<Store_profile_dto> list_result = DBAdpter
-						.updateUserStore(StoreId, str_name, str_email,
-								str_website, str_mobile, str_city, base64st);
-				Toast.makeText(getActivity(), "sucessfully update",
-						Toast.LENGTH_LONG).show();
-
-				FragmentManager fm = getActivity().getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
-				fragmentTransaction
-						.replace(R.id.rela_createStore, fm2, "HELLO");
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-
 			}
 		});
 		return view;
@@ -322,8 +301,19 @@ public class CreateStoreFragment extends Fragment {
 				resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 				byteArrayimage = stream.toByteArray();
 
-				imgStorePicture.setImageBitmap(resizedBitmap);
-				imgStorePicture.setScaleType(ScaleType.CENTER);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+					imgStorePicture.setImageBitmap(resizedBitmap);
+					imgStorePicture.setScaleType(ScaleType.CENTER);
+					MarketPlaceActivity.imView.setImageBitmap(resizedBitmap);
+					MarketPlaceActivity.imView.setScaleType(ScaleType.CENTER);
+
+				} else {
+					imView.setImageBitmap(resizedBitmap);
+					imView.setScaleType(ScaleType.CENTER);
+					MarketPlaceActivity.imView1.setImageBitmap(resizedBitmap);
+					MarketPlaceActivity.imView1.setScaleType(ScaleType.CENTER);
+				}
 
 				base64string = Base64.encodeBytes(byteArrayimage);
 			}

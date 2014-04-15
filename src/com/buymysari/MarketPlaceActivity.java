@@ -5,9 +5,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,20 +19,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.buymysari.dto.CateDto;
 import com.buymysari.fragment.ClosetFragment;
@@ -40,21 +48,26 @@ import com.buymysari.fragment.StoreProfileFragment;
 import com.buymysari.fragment.StoreProfileGridFragment;
 import com.buymysari.fragment.TakeCameraFragment;
 import com.buymysari.layout.MainLayout;
-import com.buymysari.R;
 
-public class MarketPlaceActivity extends FragmentActivity {
+public class MarketPlaceActivity extends FragmentActivity implements
+		OnTouchListener {
 
 	public static MainLayout mainLayout;
-	Button btMenu;
+	Button btMenu, bottom_home_btn_toolbar, bottom_closet_main_toolbat_btn,
+			bottom_favourite_btn;
 	private ListView lvMenu, StoreMenu;
 	private String[] lvMenuItems;
 	private String[] StoreMenuItems;
+
+	public static CircularImageView imView;
+	public static ImageView imView1;
+
 	public static TextView tvTitle;
 	String cityName;
+	GPSTracker gps;
 	List<Button> buttons = new ArrayList<Button>();
 
-	public static LinearLayout storeOptions;
-	public static Button btnCreateStore;
+	public static LinearLayout storeOptions, personOptions;
 
 	ArrayAdapter<String> adapter;
 	ArrayList<CateDto> CategoryNames;
@@ -62,15 +75,15 @@ public class MarketPlaceActivity extends FragmentActivity {
 	String searchText;
 
 	MyApplication app;
-	int cateIdSelected = 0;
+	String cateIdSelected = "";
 
-	Button btnCl, btnAcc, btnAllCategory;
-	Button btnSh;
 	Boolean clothStataus = false;
 
-	CircularImageView imView;
 	TextView txtUserName;
 	String UserNAme;
+	ToggleButton btnCl, btnSh, btnAcc;
+	float downXValue, downYValue;
+	ImageView search_img;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +94,28 @@ public class MarketPlaceActivity extends FragmentActivity {
 
 		app = (MyApplication) this.getApplicationContext();
 		edtSearchText = (EditText) findViewById(R.id.edtSearchText);
+		bottom_home_btn_toolbar = (Button) findViewById(R.id.bottom_home_btn_toolbar);
+		search_img = (ImageView)findViewById(R.id.search_img);
+		bottom_closet_main_toolbat_btn = (Button) findViewById(R.id.bottom_closet_main_toolbat_btn);
+		bottom_favourite_btn = (Button) findViewById(R.id.bottom_favourite_btn);
 
-		imView = (CircularImageView) findViewById(R.id.user_img);
 		txtUserName = (TextView) findViewById(R.id.user_txt);
 
-		UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name() + " "
-				+ DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
-		txtUserName.setText(UserNAme);
-
-		String img_url = DBAdpter.fetch_list_StoreProfile_data.get(0)
-				.getStrore_prof_image().toString().trim();
+		if(!app.getUserID().equals("")){
+			
+			UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name() + " "
+					+ DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
+			
+			}else{
+				
+				UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName() + " "
+						+ DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_lastName();
+			}
+			
+			txtUserName.setText(UserNAme);
+			
+			String img_url = DBAdpter.fetch_UserDetail_data.get(0)
+				.getStrore_profile_image().toString().trim();
 		URL url = null;
 		try {
 			url = new URL(img_url);
@@ -106,30 +131,145 @@ public class MarketPlaceActivity extends FragmentActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		imView.setImageBitmap(bmp);
-		imView.setBorderColor(getResources().getColor(R.color.GrayLight));
-		imView.setBorderWidth(0);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			Log.v("log", " Above HoneyComb ");
+			
+			imView = (CircularImageView) findViewById(R.id.user_img);
+			imView.setImageBitmap(bmp);
+			imView.setBorderColor(getResources().getColor(R.color.GrayLight));
+			imView.setBorderWidth(0);
+		} else {
+			Log.v("log", " Below HoneyComb ");
+
+			imView1 = (ImageView) findViewById(R.id.user_img);
+			imView1.setImageBitmap(bmp);
+		}
 		
+		search_img.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mainLayout.checkBeforeToggleMenu("OPEN");
+				edtSearchText.setFocusable(true);
+			}
+		});
+		
+		gps = new GPSTracker(MarketPlaceActivity.this);
+
+		// check if GPS enabled
+		if (gps.canGetLocation()) {
+
+			double latitude = gps.getLatitude();
+			double longitude = gps.getLongitude();
+
+			Geocoder geocoder = new Geocoder(MarketPlaceActivity.this,
+					Locale.ENGLISH);
+			List<Address> addresses;
+			try {
+
+				addresses = geocoder.getFromLocation(latitude, longitude, 1);
+				Log.v("log_tag", "cityName ::: " + addresses);
+
+				cityName = addresses.get(0).getLocality();
+				Log.v("log_tag", "cityName ::: " + cityName);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+
+			gps.showSettingsAlert();
+		}
+
+		
+		bottom_home_btn_toolbar.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				FragmentManager fm = MarketPlaceActivity.this
+						.getSupportFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				HomeFragment fm2 = new HomeFragment();
+				fragmentTransaction.replace(
+						R.id.activity_main_content_fragment, fm2, "HELLO");
+
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+
+				// mainLayout.toggleMenu();
+			}
+		});
+
+		bottom_closet_main_toolbat_btn
+				.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						FragmentManager fm = MarketPlaceActivity.this
+								.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
+						ClosetFragment fm2 = new ClosetFragment();
+						fragmentTransaction.replace(
+								R.id.activity_main_content_fragment, fm2,
+								"HELLO");
+
+						fragmentTransaction.addToBackStack(null);
+						fragmentTransaction.commit();
+
+						// mainLayout.toggleMenu();
+					}
+				});
+
+		bottom_favourite_btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				FragmentManager fm = MarketPlaceActivity.this
+						.getSupportFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				StoreProfileFragment fm2 = new StoreProfileFragment();
+				fragmentTransaction.replace(
+						R.id.activity_main_content_fragment, fm2, "HELLO");
+
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+
+				// mainLayout.toggleMenu();
+			}
+		});
+
 		// CategoryNames = DBAdpter.fetchCategoryNames();
 
-		btnCl = (Button) findViewById(R.id.btnCloth);
-		btnSh = (Button) findViewById(R.id.btnShoes);
-		btnAcc = (Button) findViewById(R.id.btnAcce);
-		btnAllCategory = (Button) findViewById(R.id.btnAll);
+		btnCl = (ToggleButton) findViewById(R.id.btnCloth);
+		btnSh = (ToggleButton) findViewById(R.id.btnShoes);
+		btnAcc = (ToggleButton) findViewById(R.id.btnAcce);
 
-		btnCl.setOnClickListener(new OnClickListener() {
+		btnCl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
-			@Override
-			public void onClick(View v) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				// TODO Auto-generated method stub
-				Log.v("log", " cloth ");
 
-				btnCl.setEnabled(false);
-				btnAcc.setEnabled(true);
-				btnSh.setEnabled(true);
-				btnAllCategory.setEnabled(true);
-
-				cateIdSelected = 1;
+				if (isChecked) {
+					buttonView.setBackgroundResource(R.drawable.clothes);
+					cateIdSelected = cateIdSelected + "1";
+				} else {
+					buttonView.setBackgroundResource(R.drawable.clothes_active);
+				}
+				if (btnSh.isChecked()) {
+					cateIdSelected = cateIdSelected + ",4";
+				}
+				if (btnAcc.isChecked()) {
+					cateIdSelected = cateIdSelected + ",5";
+				}
 
 				FragmentManager fm = MarketPlaceActivity.this
 						.getSupportFragmentManager();
@@ -138,107 +278,16 @@ public class MarketPlaceActivity extends FragmentActivity {
 				fragmentTransaction.replace(
 						R.id.activity_main_content_fragment, fm2, "HELLO");
 				Bundle bundle = new Bundle();
+				if(!edtSearchText.getText().toString().equals(""))
+				{
 				bundle.putString("searchText", edtSearchText.getText()
 						.toString());
-				bundle.putString("searchCateId", cateIdSelected + "");
-				fm2.setArguments(bundle);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-
-				mainLayout.toggleMenu();
-			}
-		});
-
-		btnSh.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				Log.v("log", " Shoes ");
-
-				btnSh.setEnabled(false);
-				btnCl.setEnabled(true);
-				btnAcc.setEnabled(true);
-				btnAllCategory.setEnabled(true);
-
-				cateIdSelected = 4;
-				FragmentManager fm = MarketPlaceActivity.this
-						.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				SearchItemsFragment fm2 = new SearchItemsFragment();
-				fragmentTransaction.replace(
-						R.id.activity_main_content_fragment, fm2, "HELLO");
-				Bundle bundle = new Bundle();
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				bundle.putString("searchCateId", cateIdSelected + "");
-				fm2.setArguments(bundle);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-
-				mainLayout.toggleMenu();
-			}
-		});
-
-		btnAcc.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				Log.v("log", " Acce ");
-
-				btnAcc.setEnabled(false);
-				btnSh.setEnabled(true);
-				btnCl.setEnabled(true);
-				btnAllCategory.setEnabled(true);
-
-				cateIdSelected = 5;
-
-				FragmentManager fm = MarketPlaceActivity.this
-						.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				SearchItemsFragment fm2 = new SearchItemsFragment();
-				fragmentTransaction.replace(
-						R.id.activity_main_content_fragment, fm2, "HELLO");
-				Bundle bundle = new Bundle();
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				bundle.putString("searchCateId", cateIdSelected + "");
-				fm2.setArguments(bundle);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-
-				mainLayout.toggleMenu();
-			}
-		});
-
-		btnAllCategory.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				Log.v("log", " All ");
-
-				cateIdSelected = 0;
-
-				btnAllCategory.setEnabled(false);
-				btnAcc.setEnabled(true);
-				btnSh.setEnabled(true);
-				btnCl.setEnabled(true);
-
-				FragmentManager fm = MarketPlaceActivity.this
-						.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				SearchItemsFragment fm2 = new SearchItemsFragment();
-				fragmentTransaction.replace(
-						R.id.activity_main_content_fragment, fm2, "HELLO");
-				Bundle bundle = new Bundle();
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				bundle.putString("searchCateId", cateIdSelected + "");
+				}
+				else
+				{
+					bundle.putString("searchText", cityName);
+				}
+				bundle.putString("searchCateId", cateIdSelected);
 				fm2.setArguments(bundle);
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
@@ -248,14 +297,94 @@ public class MarketPlaceActivity extends FragmentActivity {
 			}
 		});
 
-		/*
-		 * tr = (TableRow)findViewById(R.id.tableRow1); for (int c=0; c <
-		 * CategoryNames.size() ; c++) { Button b = new Button (this);
-		 * b.setId(Integer.parseInt(CategoryNames.get(c).getCate_id()));
-		 * b.setText(CategoryNames.get(c).getCategory_name());
-		 * b.setTextSize(15.0f); b.setTextColor(Color.BLACK);
-		 * b.setOnClickListener(this); buttons.add(b); tr.addView(b, 60,60); }
-		 */
+		btnSh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					buttonView.setBackgroundResource(R.drawable.shoes);
+					cateIdSelected = cateIdSelected + ",4";
+				} else {
+					buttonView.setBackgroundResource(R.drawable.shoes_active);
+				}
+				if (btnCl.isChecked()) {
+					cateIdSelected = cateIdSelected + ",1";
+				}
+				if (btnAcc.isChecked()) {
+					cateIdSelected = cateIdSelected + ",5";
+				}
+
+				FragmentManager fm = MarketPlaceActivity.this
+						.getSupportFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				SearchItemsFragment fm2 = new SearchItemsFragment();
+				fragmentTransaction.replace(
+						R.id.activity_main_content_fragment, fm2, "HELLO");
+				Bundle bundle = new Bundle();
+				if(!edtSearchText.getText().toString().equals(""))
+				{
+				bundle.putString("searchText", edtSearchText.getText()
+						.toString());
+				}
+				else
+				{
+					bundle.putString("searchText", cityName);
+				}
+				bundle.putString("searchCateId", cateIdSelected);
+				fm2.setArguments(bundle);
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+
+				mainLayout.toggleMenu();
+			}
+		});
+
+		btnAcc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					buttonView.setBackgroundResource(R.drawable.accessories);
+					cateIdSelected = cateIdSelected + ",5";
+				} else {
+					buttonView
+							.setBackgroundResource(R.drawable.accessories_active);
+				}
+
+				if (btnCl.isChecked()) {
+					cateIdSelected = cateIdSelected + ",1";
+				}
+				if (btnSh.isChecked()) {
+					cateIdSelected = cateIdSelected + ",4";
+				}
+
+				FragmentManager fm = MarketPlaceActivity.this
+						.getSupportFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				SearchItemsFragment fm2 = new SearchItemsFragment();
+				fragmentTransaction.replace(
+						R.id.activity_main_content_fragment, fm2, "HELLO");
+				Bundle bundle = new Bundle();
+				if(!edtSearchText.getText().toString().equals(""))
+				{
+				bundle.putString("searchText", edtSearchText.getText()
+						.toString());
+				}
+				else
+				{
+					bundle.putString("searchText", cityName);
+				}
+				bundle.putString("searchCateId", cateIdSelected);
+				fm2.setArguments(bundle);
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+
+				mainLayout.toggleMenu();
+
+			}
+		});
 
 		lvMenuItems = getResources().getStringArray(R.array.menu_items);
 		lvMenu = (ListView) findViewById(R.id.activity_main_menu_listview);
@@ -282,48 +411,46 @@ public class MarketPlaceActivity extends FragmentActivity {
 				onStoreMenuItemClick(parent, view, position, id);
 			}
 		});
+		
+		/*CreateMenuItems = getResources().getStringArray(R.array.create_store_items);
+		CreateMenu = (ListView) findViewById(R.id.create_activity_store_menu_listview);
+		CreateMenu.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.custom_textview, CreateMenuItems));
+		CreateMenu.setDivider(null);
+		CreateMenu.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				onCreateStoreMenuItemClick(parent, view, position, id);
+			}
+		});*/
 
 		tvTitle = (TextView) findViewById(R.id.activity_main_content_title);
 		storeOptions = (LinearLayout) findViewById(R.id.StoreProfileOptions);
+		personOptions = (LinearLayout) findViewById(R.id.personal_linear);
 
 		Log.v("log", " Marketplace activty storeId --> " + app.getStoreId());
 
-		btnCreateStore = (Button) findViewById(R.id.btnCrStore);
-
+		
 		Log.v("log", " Marketplace StoreID ====>  " + app.getStoreId());
 
-		if (!app.getStoreId().equals("null")) {
+		if (!app.getStoreId().equals("") && app.getUserID().equals("")) {
 			Log.v("log", " StoreId  if ");
 
 			storeOptions.setVisibility(View.VISIBLE);
-			btnCreateStore.setVisibility(View.GONE);
+			personOptions.setVisibility(View.GONE);
+			bottom_closet_main_toolbat_btn.setVisibility(View.GONE);
+			bottom_favourite_btn.setVisibility(View.GONE);
+			
 		} else {
 			Log.v("log", " StoreId  else ");
 
 			storeOptions.setVisibility(View.GONE);
-			btnCreateStore.setVisibility(View.VISIBLE);
+			personOptions.setVisibility(View.VISIBLE);
 		}
 
-		btnCreateStore.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				FragmentManager fm = MarketPlaceActivity.this
-						.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				CreateStoreFragment fm2 = new CreateStoreFragment();
-				fragmentTransaction.replace(
-						R.id.activity_main_content_fragment, fm2, "HELLO");
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-
-				mainLayout.toggleMenu();
-			}
-		});
-
-		FragmentManager fm = this.getSupportFragmentManager();
+			FragmentManager fm = this.getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 
 		HomeFragment fragment = new HomeFragment();
@@ -351,22 +478,52 @@ public class MarketPlaceActivity extends FragmentActivity {
 
 					tvTitle.setText("Search Reuslts View");
 
-					FragmentManager fm = MarketPlaceActivity.this
-							.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fm
-							.beginTransaction();
-					SearchItemsFragment fm2 = new SearchItemsFragment();
-					fragmentTransaction.replace(
-							R.id.activity_main_content_fragment, fm2, "HELLO");
-					Bundle bundle = new Bundle();
-					bundle.putString("searchText", edtSearchText.getText()
-							.toString());
-					bundle.putString("searchCateId", cateIdSelected + "");
-					fm2.setArguments(bundle);
-					fragmentTransaction.addToBackStack(null);
-					fragmentTransaction.commit();
-					mainLayout.toggleMenu();
-					return true;
+					if (edtSearchText.getText().toString().equals("")) {
+						
+						Log.v("log_tag", "cityName"+ cityName);
+						Log.v("log_tag", "cityName else :: cateid "+ cateIdSelected);
+						
+						FragmentManager fm = MarketPlaceActivity.this
+								.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
+						SearchItemsFragment fm2 = new SearchItemsFragment();
+						fragmentTransaction.replace(
+								R.id.activity_main_content_fragment, fm2,
+								"HELLO");
+						Bundle bundle = new Bundle();
+						bundle.putString("searchText", cityName);
+						bundle.putString("searchCateId", cateIdSelected);
+						fm2.setArguments(bundle);
+						fragmentTransaction.addToBackStack(null);
+						fragmentTransaction.commit();
+						mainLayout.toggleMenu();
+						return true;
+
+					} else {
+						Log.v("lig_tag", "cityName else ::"+ edtSearchText.getText()
+								.toString());
+						
+						FragmentManager fm = MarketPlaceActivity.this
+								.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
+						SearchItemsFragment fm2 = new SearchItemsFragment();
+						fragmentTransaction.replace(
+								R.id.activity_main_content_fragment, fm2,
+								"HELLO");
+						Bundle bundle = new Bundle();
+						bundle.putString("searchText", edtSearchText.getText()
+								.toString());
+						bundle.putString("searchCateId", cateIdSelected);
+						fm2.setArguments(bundle);
+						fragmentTransaction.addToBackStack(null);
+						fragmentTransaction.commit();
+						mainLayout.toggleMenu();
+						return true;
+
+					}
+
 				}
 				return false;
 			}
@@ -448,9 +605,12 @@ public class MarketPlaceActivity extends FragmentActivity {
 		android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 		Fragment fragment = null;
 
-		if (selectedItem.compareTo("Home") == 0) {
-			fragment = new HomeFragment();
-		} else if (selectedItem.compareTo("My Profile") == 0) {
+		/*
+		 * if (selectedItem.compareTo("Home") == 0) { fragment = new
+		 * HomeFragment(); } else
+		 */
+
+		if (selectedItem.compareTo("My Profile") == 0) {
 			fragment = new ProfileFragment();
 		} else if (selectedItem.compareTo("My Stores") == 0) {
 			fragment = new StoreProfileFragment();
@@ -471,6 +631,80 @@ public class MarketPlaceActivity extends FragmentActivity {
 
 		// Hide menu anyway
 		mainLayout.toggleMenu();
+	}
+
+	@Override
+	public boolean onTouch(View arg0, MotionEvent event) {
+		// TODO Auto-generated method stub
+		if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			// do something
+			Log.v("log", "motion detected");
+		}
+		return true;
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		super.dispatchTouchEvent(ev);
+
+		switch (ev.getAction()) {
+
+		case MotionEvent.ACTION_DOWN: {
+			// store the X value when the user's finger was pressed down
+			downXValue = ev.getX();
+			downYValue = ev.getY();
+			Log.v("", "= " + downYValue);
+			break;
+		}
+
+		case MotionEvent.ACTION_UP: {
+			// Get the X value when the user released his/her finger
+			float currentX = ev.getX();
+			float currentY = ev.getY();
+			// check if horizontal or vertical movement was bigger
+
+			if (Math.abs(downXValue - currentX) > Math.abs(downYValue
+					- currentY)) {
+				Log.v("", "x");
+				// going backwards: pushing stuff to the right
+
+				Log.v("log", " downXvalue - currentX "
+						+ (downXValue - currentX));
+
+				if (downXValue < currentX) {
+					Log.v("", "right");
+					if (-150 > (downXValue - currentX)) {
+						Log.v("log", "right if");
+						mainLayout.checkBeforeToggleMenu("OPEN");
+					} else {
+						Log.v("log", "right else");
+					}
+				}
+
+				// going forwards: pushing stuff to the left
+				if (downXValue > currentX) {
+					mainLayout.checkBeforeToggleMenu("CLOSE");
+
+				}
+
+			} else {
+				Log.v("", "y ");
+
+				if (downYValue < currentY) {
+					Log.v("", "down");
+
+				}
+				if (downYValue > currentY) {
+					Log.v("", "up");
+
+				}
+			}
+			break;
+		}
+
+		}
+		return true;
 	}
 
 	/*

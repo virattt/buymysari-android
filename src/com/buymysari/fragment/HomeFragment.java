@@ -1,16 +1,20 @@
 package com.buymysari.fragment;
 
-
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,11 +45,11 @@ import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
 
 public class HomeFragment extends Fragment {
-	
+
 	ListView lv;
 	ArrayList<All_list_home_dto> list;
 	ArrayList<All_list_home_dto> newLoadedList;
-	
+
 	MyListAdapter adt;
 	All_list_home_dto list_home;
 	String cityName;
@@ -63,280 +67,263 @@ public class HomeFragment extends Fragment {
 
 	int visibleThreshold = 20;
 	public ImageLoader imageLoader;
-	
+
 	int NoMoredataAvailable = 0;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.home, container, false);
 		app = (MyApplication) getActivity().getApplicationContext();
-		lv = (ListView)	rootView.findViewById(R.id.home_listview);
-		imageLoader=new ImageLoader(getActivity().getApplicationContext());
-		
-		
-		/*btnLoadMore = new Button(getActivity());
-		btnLoadMore.setText("Load More");
-		lv.addFooterView(btnLoadMore);*/
-		
+		lv = (ListView) rootView.findViewById(R.id.home_listview);
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+
+		/*
+		 * btnLoadMore = new Button(getActivity());
+		 * btnLoadMore.setText("Load More"); lv.addFooterView(btnLoadMore);
+		 */
+
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
-		
-		//cityName = getActivity().getIntent().getExtras().getString("cityName").toString();
-		
+
+		// cityName =
+		// getActivity().getIntent().getExtras().getString("cityName").toString();
+
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-		
-		 if (savedInstanceState != null) {
-	            // Restore last state for checked position.
-	            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
-	            Log.v("log", " get Save Status if --> " + mCurCheckPosition);
-	     }
-		 else
-		 {
-			 Log.v("log", " get Save Status else --> " + mCurCheckPosition);
-			 new JSONTask().execute();
-		 }
-		
-		 lv.setOnScrollListener(new OnScrollListener(){
-				private int mLastFirstVisibleItem;
-				
-			    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			      // TODO Auto-generated method stub
-			    }
-			    public void onScrollStateChanged(AbsListView view, int scrollState) {
-			      // TODO Auto-generated method stub
-			      
-			       if(scrollState == 0) 
-			      Log.i("a", "scrolling stopped...");
 
+		if (savedInstanceState != null) {
+			// Restore last state for checked position.
+			mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
+			Log.v("log", " get Save Status if --> " + mCurCheckPosition);
+		} else {
+			Log.v("log", " get Save Status else --> " + mCurCheckPosition);
+			new JSONTask().execute();
+		}
 
-			        if (view.getId() == lv.getId()) {
-			        final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
-			         if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-			           // mIsScrollingUp = false;
-			            Log.i("a", "scrolling down...");
-			            
-			            Log.v("log"," NOMOreData  " + NoMoredataAvailable);
-				        if (NoMoredataAvailable != 1) 
-				        {
-				        	new loadMoreListView().execute();
-				        	Log.v("log"," NOMOreData if " + NoMoredataAvailable);
-				        }
-			            
-			        } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-			           // mIsScrollingUp = true;
-			            Log.i("a", "scrolling up...");
-			        }
+		lv.setOnScrollListener(new OnScrollListener() {
+			private int mLastFirstVisibleItem;
 
-			        mLastFirstVisibleItem = currentFirstVisibleItem;
-			    } 
-			    }
-			  });
-		/* btnLoadMore.setOnClickListener(new View.OnClickListener() {
-			    @Override
-			    public void onClick(View arg0) {
-			        // Starting a new async task
-			        new loadMoreListView().execute();
-			    }
-		 });*/
-		
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+			}
+
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+
+				if (scrollState == 0)
+					Log.i("a", "scrolling stopped...");
+
+				if (view.getId() == lv.getId()) {
+					final int currentFirstVisibleItem = lv
+							.getFirstVisiblePosition();
+					if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+						// mIsScrollingUp = false;
+						Log.i("a", "scrolling down...");
+
+						Log.v("log", " NOMOreData  " + NoMoredataAvailable);
+						if (NoMoredataAvailable != 1) {
+							new loadMoreListView().execute();
+							Log.v("log", " NOMOreData if "
+									+ NoMoredataAvailable);
+						}
+
+					} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+						// mIsScrollingUp = true;
+						Log.i("a", "scrolling up...");
+					}
+
+					mLastFirstVisibleItem = currentFirstVisibleItem;
+				}
+			}
+		});
+		/*
+		 * btnLoadMore.setOnClickListener(new View.OnClickListener() {
+		 * 
+		 * @Override public void onClick(View arg0) { // Starting a new async
+		 * task new loadMoreListView().execute(); } });
+		 */
 		return rootView;
 	}
-	
+
 	@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        
-        this.getActivity().getSupportFragmentManager().putFragment(outState,"listAdded", HomeFragment.this);
-        		
-        //outState.putInt("curChoice", mCurCheckPosition);
-    }
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		this.getActivity().getSupportFragmentManager()
+				.putFragment(outState, "listAdded", HomeFragment.this);
+
+		outState.putInt("curChoice", mCurCheckPosition);
+	}
 
 	public class JSONTask extends AsyncTask<String, Void, String> {
-		
+
 		public void onPreExecute() {
 			progress = new ProgressDialog(getActivity());
 			progress.setMessage("Loading...");
-			progress.show(); 
-		    
-			  gps = new GPSTracker(getActivity().getApplicationContext());
+			progress.show();
 
-		    // check if GPS enabled
-		    if (gps.canGetLocation()) {
+			gps = new GPSTracker(getActivity().getApplicationContext());
 
-		     double latitude = gps.getLatitude();
-		     double longitude = gps.getLongitude();
+			// check if GPS enabled
+			if (gps.canGetLocation()) {
 
-		     Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),
-		       Locale.ENGLISH);
-		     List<Address> addresses;
-		     try {
+				double latitude = gps.getLatitude();
+				double longitude = gps.getLongitude();
 
-		      addresses = geocoder
-		        .getFromLocation(latitude, longitude, 1);
-		      Log.v("log_tag", "cityName ::: " + addresses);
+				Geocoder geocoder = new Geocoder(getActivity()
+						.getApplicationContext(), Locale.ENGLISH);
+				List<Address> addresses;
+				try {
 
-		      cityName = addresses.get(0).getLocality();
-		      Log.v("log_tag", "cityName ::: " + cityName);
+					addresses = geocoder
+							.getFromLocation(latitude, longitude, 1);
+					Log.v("log_tag", "cityName ::: " + addresses);
 
-		     } catch (IOException e) {
-		      // TODO Auto-generated catch block
-		      e.printStackTrace();
-		     }
+					cityName = addresses.get(0).getLocality();
+					Log.v("log_tag", "cityName ::: " + cityName);
 
-		    } else {
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-		     gps.showSettingsAlert();
-		    }
-			
-			cityName = "ahmedabad";
+			} else {
+
+				gps.showSettingsAlert();
+			}
+
+			// cityName = "ahmedabad";
 		}
-		
-	    @Override
-	    protected String doInBackground(String... arg) {
-	        String listSize = "";
-	        Log.v("log_tag","list DoinBaCK " + cityName);
-	        
-	        if(DBAdpter.fetch_list_home_data != null)
-	        {
-	        	Log.v("log"," fetch list Size ---> " + DBAdpter.fetch_list_home_data.size());
-	        	list = DBAdpter.fetch_list_home_data;
-	        	listSize = DBAdpter.fetch_list_home_data.size() + "";
-	        }
-	        else
-	        {
-	        	list = new ArrayList<All_list_home_dto>();
-	        	list = DBAdpter.getNewsData(cityName , pageNumber +"");
-	        	
-	        	Log.v("log_tag","list_size :: "+ list.size());
-        	}
-	        
-	        listSize = list.size() +"";
-	        return listSize; // This value will be returned to your onPostExecute(result) method
-	    }
 
-	    @Override
-	    protected void onPostExecute(String result) {
-	        // Create here your JSONObject...
-	    	Log.v("log_tag","list ON Post");
-	    	
-	    	if (Integer.parseInt(result) > 0) {
-	    		
-	    		adt = new MyListAdapter(getActivity(),list);
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+			/*Log.v("log_tag", "list DoinBaCK " + cityName);
+			Log.v("log_tag", "DBAdpter.fetch_list_home_data"
+					+ DBAdpter.fetch_list_home_data);
+
+			if (DBAdpter.fetch_list_home_data != null) {
+				Log.v("log", " fetch list Size ---> "
+						+ DBAdpter.fetch_list_home_data.size());
+				list = DBAdpter.fetch_list_home_data;
+				listSize = DBAdpter.fetch_list_home_data.size() + "";
+			} else {
+				list = new ArrayList<All_list_home_dto>();
+				list = DBAdpter.getNewsData(cityName, pageNumber + "");
+
+				Log.v("log_tag", "list_size :: " + list.size());
+			}*/
+			list = new ArrayList<All_list_home_dto>();
+			list = DBAdpter.getNewsData(cityName, pageNumber + "");
+
+			Log.v("log_tag", "list_size :: " + list.size());
+
+			listSize = list.size() + "";
+			return listSize; // This value will be returned to your
+								// onPostExecute(result) method
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "list ON Post" + result);
+
+			if (Integer.parseInt(result) > 0) {
+
+				adt = new MyListAdapter(getActivity(), list);
 				lv.setAdapter(adt);
 			} else {
-				
+
 				Toast.makeText(getActivity().getApplicationContext(),
 						"No Items Available ", Toast.LENGTH_LONG).show();
 			}
-	   
-	    	if(progress != null)
-	    	{
-	    		progress.dismiss();
-	    	}
-	    }
 
-	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
-	   
-	}
-	
-	
-	public class loadMoreListView extends AsyncTask<String, Void, String> {
-	
-		public void onPreExecute() {
-			
-			loadMoreProgress.show();
-		    cityName = "ahmedabad";
+			if (progress != null) {
+				progress.dismiss();
+			}
 		}
-		
-	    @Override
-	    protected String doInBackground(String... arg) {
-	        String listSize = "";
-	        
-	        pageNumber += 1;
-	        
-	        Log.v("log_tag","list DoinBaCK " + cityName);
-	        
-	    	newLoadedList = DBAdpter.getNewsData(cityName , pageNumber +"");
-	        
-	    	for (int j = 0; j < newLoadedList.size(); j++) {
-				
-	        	/*All_list_home_dto list_home_data = new All_list_home_dto();
-				Log.v("log_tag", "Storename  "+ newLoadedList.get(j).store_name);
-				
-				list_home_data.store_id = newLoadedList.get(j).store_id;
-				list_home_data.store_name = newLoadedList.get(j).store_name;
-				
-				list_home_data.city = newLoadedList.get(j).city;
-				list_home_data.website = newLoadedList.get(j).website;
-				list_home_data.state = newLoadedList.get(j).state;
-				list_home_data.picture = newLoadedList.get(j).picture;
 
-				Log.v("log_tag", "json_objs_items " + newLoadedList.get(j).name);
-				list_home_data.item_id = newLoadedList.get(j).item_id;
-				list_home_data.name = newLoadedList.get(j).name;
-				list_home_data.gender = newLoadedList.get(j).gender;
-			//	list_home_data.category_name = json_objs_items.getString("category_name");
-				list_home_data.image = newLoadedList.get(j).image;
-				list_home_data.views = newLoadedList.get(j).views;*/
-				
+		// You'll have to override this method on your other tasks that extend
+		// from this one and use your JSONObject as needed
+
+	}
+
+	public class loadMoreListView extends AsyncTask<String, Void, String> {
+
+		public void onPreExecute() {
+
+			loadMoreProgress.show();
+			// cityName = "ahmedabad";
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+
+			pageNumber += 1;
+
+			Log.v("log_tag", "list DoinBaCK " + cityName);
+
+			newLoadedList = DBAdpter.getNewsData(cityName, pageNumber + "");
+
+			for (int j = 0; j < newLoadedList.size(); j++) {
+
 				list.add(newLoadedList.get(j));
 			}
-	        
-	        listSize = newLoadedList.size() + "";
-	        
-	        return listSize; // This value will be returned to your onPostExecute(result) method
-	    }
 
-	    @Override
-	    protected void onPostExecute(String result) {
-	        // Create here your JSONObject...
-	    	Log.v("log_tag","Load More List ON Post");
-	    	
-	    	if (Integer.parseInt(result) > 0) {
-	    		
-	    		Log.v("log"," home if" + result);
-	    		
-	    		int currentPosition = lv.getFirstVisiblePosition();
-		    	adt = new MyListAdapter(getActivity(),list);
-		    	lv.setAdapter(adt);
-		    	adt.notifyDataSetChanged();	
-		    	lv.setSelectionFromTop(currentPosition + 1, 0);
-		    	  
-	    	}
-	    	else
-	    	{
-	    		
-	    		NoMoredataAvailable  = 1;
-	    		
-	    		Log.v("log"," home else " + result);
-	    		
-	    		Toast.makeText(getActivity().getApplicationContext(),
+			listSize = newLoadedList.size() + "";
+
+			return listSize; // This value will be returned to your
+								// onPostExecute(result) method
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "Load More List ON Post");
+
+			if (Integer.parseInt(result) > 0) {
+
+				Log.v("log", " home if" + result);
+
+				int currentPosition = lv.getFirstVisiblePosition();
+				adt = new MyListAdapter(getActivity(), list);
+				lv.setAdapter(adt);
+				adt.notifyDataSetChanged();
+				lv.setSelectionFromTop(currentPosition + 1, 0);
+
+			} else {
+
+				NoMoredataAvailable = 1;
+
+				Log.v("log", " home else " + result);
+
+				Toast.makeText(getActivity().getApplicationContext(),
 						"No More Items Available ", Toast.LENGTH_LONG).show();
-		    	// btnLoadMore.setVisibility(View.GONE);
-	    	}
-	    	
-	    	if(loadMoreProgress != null)
-	    	{
-	    		loadMoreProgress.dismiss();
-	    	}
-	    	
-	    }
+				// btnLoadMore.setVisibility(View.GONE);
+			}
 
-	    // You'll have to override this method on your other tasks that extend from this one and use your JSONObject as needed
-	   
+			if (loadMoreProgress != null) {
+				loadMoreProgress.dismiss();
+			}
+
+		}
+
+		// You'll have to override this method on your other tasks that extend
+		// from this one and use your JSONObject as needed
+
 	}
-	
+
 	public class MyListAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
-		public MyListAdapter(Context context ,ArrayList<All_list_home_dto> list) {
+		public MyListAdapter(Context context, ArrayList<All_list_home_dto> list) {
 			mInflater = LayoutInflater.from(context);
 		}
 
@@ -356,12 +343,38 @@ public class HomeFragment extends Fragment {
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custom_home_list, null);
 
-			/*ImageButton home_ic_img = (ImageButton) convertView
-					.findViewById(R.id.list_home_logo_image);*/
-			CircularImageView home_ic_img = (CircularImageView)convertView.findViewById(R.id.list_home_logo_image);
-			home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
-			home_ic_img.setBorderWidth(0);
-			//home_ic_img.addShadow();
+			
+			URL url = null;
+			try {
+				url = new URL(list.get(position).picture);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Bitmap bmp = null;
+			try {
+				bmp = BitmapFactory.decodeStream(url.openConnection()
+						.getInputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				CircularImageView home_ic_img = (CircularImageView) convertView
+						.findViewById(R.id.list_home_logo_image);
+				home_ic_img.setImageBitmap(bmp);
+				home_ic_img.setBorderColor(getResources().getColor(
+						R.color.GrayLight));
+				home_ic_img.setBorderWidth(0);
+				
+			} else {
+				Log.v("log", " Below HoneyComb ");
+
+				ImageView imView = (ImageView) convertView.findViewById(R.id.list_home_logo_image);
+				imView.setImageBitmap(bmp);
+			}
+
 			
 			ImageButton home_big_img = (ImageButton) convertView
 					.findViewById(R.id.sarees_big_img);
@@ -379,20 +392,31 @@ public class HomeFragment extends Fragment {
 			ImageView home_view_image = (ImageView) convertView
 					.findViewById(R.id.list_home_text_view);
 
-			home_username_txt.setText(list.get(position).store_name.toString());
-			home_view_txt.setText(" "
-					+ list.get(position).views.toString());
-			itemName_txt.setText(list.get(position).name.toString());
-			closeted_txt.setText(" " + list.get(position).Closeted_item_track.toString());
-			final String uid= app.getUserID();
-			
-			
-			imageLoader.DisplayImage(list.get(position).image, home_big_img);
-			
-			
+			if (!app.getUserID().equals("")) {
 
-			imageLoader.DisplayImage(list.get(position).picture, home_ic_img);
+			    home_view_image.setVisibility(View.VISIBLE);
+			    closeted_txt.setVisibility(View.VISIBLE);
+			    close_btn.setVisibility(View.VISIBLE);
+			    home_view_txt.setVisibility(View.VISIBLE);
+
+			   } else {
+
+			    home_view_image.setVisibility(View.INVISIBLE);
+			    closeted_txt.setVisibility(View.INVISIBLE);
+			    close_btn.setVisibility(View.INVISIBLE);
+			    home_view_txt.setVisibility(View.INVISIBLE);
+			    
+			   }
 			
+			home_username_txt.setText(list.get(position).store_name.toString());
+			home_view_txt.setText(" " + list.get(position).views.toString());
+			itemName_txt.setText(list.get(position).name.toString());
+			closeted_txt.setText(" "
+					+ list.get(position).Closeted_item_track.toString());
+			final String uid = app.getUserID();
+
+			imageLoader.DisplayImage(list.get(position).image, home_big_img);
+
 			home_big_img.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -401,23 +425,27 @@ public class HomeFragment extends Fragment {
 
 					findDoubleClick(list.get(position).store_id,
 							list.get(position).item_id);
-					
+
 					if (mHasDoubleClicked) {
-						new ClosetTask(progress).execute(list.get(position).item_id,list.get(position).store_id,uid);
+						new ClosetTask(progress).execute(
+								list.get(position).item_id,
+								list.get(position).store_id, uid);
 					}
 				}
 			});
+			
 			close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					
-					
-					new ClosetTask(progress).execute(list.get(position).item_id,list.get(position).store_id,uid);
+
+					new ClosetTask(progress).execute(
+							list.get(position).item_id,
+							list.get(position).store_id, uid);
 				}
 			});
-			
+
 			return convertView;
 		}
 	}
@@ -435,9 +463,11 @@ public class HomeFragment extends Fragment {
 				public void handleMessage(Message m) {
 					if (!mHasDoubleClicked) {
 						FragmentManager fm = getFragmentManager();
-						FragmentTransaction fragmentTransaction = fm.beginTransaction();
+						FragmentTransaction fragmentTransaction = fm
+								.beginTransaction();
 						StoreDetailFragment fm2 = new StoreDetailFragment();
-						fragmentTransaction.replace(R.id.rela_home_fragment,fm2, "HELLO");
+						fragmentTransaction.replace(R.id.rela_home_fragment,
+								fm2, "HELLO");
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();
 						Bundle bundle = new Bundle();
@@ -453,7 +483,7 @@ public class HomeFragment extends Fragment {
 		lastPressTime = pressTime;
 		return mHasDoubleClicked;
 	}
-	
+
 	public class ClosetTask extends AsyncTask<String, Void, String> {
 
 		public ClosetTask(ProgressDialog progress) {
@@ -469,12 +499,10 @@ public class HomeFragment extends Fragment {
 			String item_id = arg[0];
 			String store_id = arg[1];
 			String uid = arg[2];
-			
-			String msg = DBAdpter.userClosestStore(
-					item_id,
-					store_id, uid);
-			
-			return msg; 
+
+			String msg = DBAdpter.userClosestStore(item_id, store_id, uid);
+
+			return msg;
 		}
 
 		@Override
@@ -487,18 +515,13 @@ public class HomeFragment extends Fragment {
 		}
 	}
 
-	/*@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (scrollState == SCROLL_STATE_IDLE) {
-			if (lv.getLastVisiblePosition() >= lv.getCount()
-					- visibleThreshold) {
-				new loadMoreListView().execute();
-			}
-		}
-	}*/
+	/*
+	 * @Override public void onScroll(AbsListView view, int firstVisibleItem,
+	 * int visibleItemCount, int totalItemCount) { }
+	 * 
+	 * @Override public void onScrollStateChanged(AbsListView view, int
+	 * scrollState) { if (scrollState == SCROLL_STATE_IDLE) { if
+	 * (lv.getLastVisiblePosition() >= lv.getCount() - visibleThreshold) { new
+	 * loadMoreListView().execute(); } } }
+	 */
 }

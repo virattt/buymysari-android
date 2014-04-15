@@ -1,0 +1,343 @@
+<com.buymysari.layout.MainLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:alpha="0.9"
+    android:background="#221010" >
+
+    <!-- This holds our content -->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <!-- This acts as Actionbar -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="80dip"
+            android:background="@drawable/headerbackground"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/activity_main_content_button_menu"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/menu"
+                android:onClick="toggleMenu" />
+
+            <ImageView
+                android:id="@+id/search_img"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="40dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/search" />
+
+            <TextView
+                android:id="@+id/activity_main_content_title"
+                android:layout_width="146dip"
+                android:layout_height="33dip"
+                android:layout_alignBaseline="@+id/activity_main_content_button_menu"
+                android:layout_alignBottom="@+id/activity_main_content_button_menu"
+                android:layout_marginLeft="45dp"
+                android:layout_toRightOf="@+id/activity_main_content_button_menu"
+                android:background="@drawable/header"
+                android:gravity="center"
+                android:textSize="3dip" />
+        </RelativeLayout>
+
+        <!-- This is where fragment will show up -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <FrameLayout
+                android:id="@+id/activity_main_content_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white" >
+            </FrameLayout>
+        </LinearLayout>
+        <!-- This is where our bottom bar show up -->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="80dip"
+            android:alpha="0.6"
+            android:background="#221010"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/bottom_home_btn_toolbar"
+                android:layout_width="90dip"
+                android:layout_height="80dip"
+                android:alpha="0.6"
+                android:background="@drawable/home2" />
+
+            <Button
+                android:id="@+id/bottom_closet_main_toolbat_btn"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_alignBaseline="@+id/bottom_home_btn_toolbar"
+                android:layout_alignBottom="@+id/bottom_home_btn_toolbar"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:alpha="0.6"
+                android:background="@drawable/door" />
+
+            <Button
+                android:id="@+id/bottom_favourite_btn"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_alignBaseline="@+id/bottom_closet_main_toolbat_btn"
+                android:layout_alignBottom="@+id/bottom_closet_main_toolbat_btn"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/bottom_closet_main_toolbat_btn"
+                android:alpha="0.6"
+                android:background="@drawable/heart1" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- This holds our menu -->
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#221010"
+        android:alpha="0.9"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:alpha="0.9"
+            android:background="#221010"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="15dip" >
+
+                <EditText
+                    android:id="@+id/edtSearchText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/rounded_edt"
+                    android:hint="Search by city or store name"
+                    android:textSize="18sp"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="10dip" >
+                </EditText>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="65dip"
+                android:layout_marginTop="3dip"
+                android:layout_marginRight="20dip"
+                android:layout_marginLeft="20dip"
+                android:orientation="horizontal" >
+
+                <ToggleButton
+                    android:id="@+id/btnCloth"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+        			android:maxWidth="65dip"
+                    android:layout_height="65dip"
+                    android:background="@drawable/clothes_active"
+                    android:textOff=""
+                    android:textOn=""
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/btnShoes"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+        			android:maxWidth="65dip"
+                    android:layout_height="65dip"
+                    android:layout_marginLeft="5dip"
+                    android:background="@drawable/shoes_active"
+                    android:textOff=""
+                    android:textOn=""
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/btnAcce"
+                    android:layout_width="0dip"
+                   android:layout_weight="1"
+        			android:maxWidth="65dip"
+                    android:layout_height="65dip"
+                    android:layout_marginLeft="5dip"
+                    android:background="@drawable/accessories_active"
+                    android:textOff=""
+                    android:textOn=""
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+  <LinearLayout
+                android:id="@+id/personal_linear"
+                android:layout_width="fill_parent"
+                android:layout_height="200dip"
+                android:orientation="vertical"
+                android:visibility="gone" >
+            <RelativeLayout
+                android:id="@+id/line_layout_personal"
+                android:layout_width="fill_parent"
+                android:layout_height="60dip"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dip"
+                android:layout_marginTop="12dip"
+                android:background="@drawable/layout_border"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/person_txt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dip"
+                    android:text="Personal"
+                    android:textColor="@android:color/white"
+                    android:textSize="25sp" />
+
+                <ImageView
+                    android:id="@+id/person_img"
+                    android:layout_width="37dip"
+                    android:layout_height="35dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dip"
+                    android:background="@drawable/userwhite" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/activity_main_menu_listview"
+                android:layout_width="match_parent"
+                android:layout_height="150dip"
+                android:cacheColorHint="#00000000"
+                android:listSelector="@drawable/list_selector" >
+            </ListView>
+</LinearLayout>
+                         
+            <LinearLayout
+                android:id="@+id/StoreProfileOptions"
+                android:layout_width="fill_parent"
+                android:layout_height="220dip"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <RelativeLayout
+                    android:id="@+id/line_layout_store"
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dip"
+                    android:background="@drawable/layout_border"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/store_txt"
+                        android:layout_width="150dip"
+                        android:layout_height="70dip"
+                        android:text="Store"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+
+                    <ImageView
+                        android:id="@+id/store_img"
+                        android:layout_width="40dip"
+                        android:layout_height="35dip"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dip"
+                        android:background="@drawable/shop_white" >
+                    </ImageView>
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/activity_store_menu_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dip"
+                    android:cacheColorHint="#00000000"
+                    android:listSelector="@drawable/list_selector" >
+                </ListView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1" >
+            </View>
+
+            <RelativeLayout
+                android:id="@+id/line_layout_user"
+                android:layout_width="fill_parent"
+                android:layout_height="60dip"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginTop="15dip"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:orientation="horizontal" >
+
+                <com.buymysari.CircularImageView
+                    android:id="@+id/user_img"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp" >
+                </com.buymysari.CircularImageView>
+
+                <TextView
+                    android:id="@+id/user_txt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dip"
+                    android:layout_marginTop="10dip"
+                    android:paddingLeft="80dip"
+                    android:text="Zeeshan Syed"
+                    android:textColor="@android:color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/line_layout_logout"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginBottom="20dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginTop="20dip"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/logout_img"
+                    android:layout_width="40dip"
+                    android:layout_height="60dip"
+                    android:layout_marginLeft="10dip"
+                    android:background="@drawable/logout" />
+
+                <TextView
+                    android:id="@+id/logout_txt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:paddingLeft="80dip"
+                    android:text="Logout"
+                    android:textColor="@android:color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</com.buymysari.layout.MainLayout>

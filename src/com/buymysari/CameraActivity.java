@@ -118,8 +118,7 @@ public class CameraActivity extends Activity {
 				fos.write(data);
 				fos.close();
 
-				Log.v("log_tag", "fos" + fos);
-				// mCamera.startPreview();
+				mCamera.startPreview();
 				Intent returnIntent = new Intent();
 				returnIntent.putExtra("data", data);
 				setResult(RESULT_OK, returnIntent);

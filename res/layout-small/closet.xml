@@ -1,0 +1,169 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white" >
+
+   
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <ImageView
+            android:id="@+id/imgStoreProfileCloset"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_margin="10dip"
+            android:src="@drawable/user_gray" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dip"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtStoreName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sonya Gill"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/Gray" />
+
+            <TextView
+                android:id="@+id/txtStoreWebsite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:text="Large Text"
+                android:textSize="15sp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#2671b9" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="150dip"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dip"
+            android:background="#a09f9f"
+            android:text="EDIT PROFILE"
+            android:textColor="@color/White" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rel_closet"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="35dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="83dp"
+            android:src="@drawable/door" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dip"
+            android:layout_toRightOf="@+id/imageView2"
+            android:text="Sonya&apos;s Closet"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/Gray"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+     <LinearLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="45dip"
+                android:layout_marginTop="3dip"
+                android:layout_marginRight="20dip"
+                android:layout_marginLeft="20dip"
+                android:layout_below="@+id/rel_closet"
+                android:orientation="horizontal"
+                android:gravity="center" >
+
+                <ToggleButton
+                    android:id="@+id/btnClosetList"
+                    android:layout_width="40dip"
+                    android:layout_height="35dip"
+                    android:layout_marginLeft="5dip"
+                    android:background="@drawable/unselected_list"
+                    android:textOff=""
+                    android:textOn=""
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/btnClosetGrid"
+                    android:layout_width="40dip"
+        			android:layout_height="35dip"
+                    android:layout_marginLeft="25dip"
+                    android:background="@drawable/selected_grid"
+                    android:textOff=""
+                    android:textOn=""
+                    android:clickable="true"
+                    android:checked="true"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+     <ListView
+        android:id="@+id/closet_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tab_layout"
+        android:cacheColorHint="#00000000"
+        android:divider="#000000"
+        android:visibility="gone"
+         >
+
+    </ListView>
+     <FrameLayout
+        android:id="@+id/closet_gridview_framelayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tab_layout"
+        android:layout_height="match_parent"
+        
+         >
+
+        <GridView
+            android:id="@+id/closet_gridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" >
+        </GridView>
+
+    </FrameLayout>
+     
+
+</RelativeLayout>

@@ -1,9 +1,15 @@
 package com.buymysari.fragment;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -257,32 +264,44 @@ public class StoreProfileFragment extends Fragment{
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custome_mystorelist, null);
-			/*ImageButton store_Name_img = (ImageButton) convertView
-					.findViewById(R.id.my_Store_logo_image);*/
+			
+			URL url = null;
+			try {
+				url = new URL(list.get(position).image);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Bitmap bmp = null;
+			try {
+				bmp = BitmapFactory.decodeStream(url.openConnection()
+						.getInputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			store_Name_img = (CircularImageView) convertView
-					.findViewById(R.id.my_Store_logo_image);
-			store_Name_img.setBorderColor(getResources().getColor(
-					R.color.GrayLight));
-			store_Name_img.setBorderWidth(0);
-		//	store_Name_img.addShadow();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				store_Name_img = (CircularImageView) convertView.findViewById(R.id.my_Store_logo_image);
+				store_Name_img.setImageBitmap(bmp);
+				store_Name_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+				store_Name_img.setBorderWidth(0);
+			} else {
+				Log.v("log", " Below HoneyComb ");
 
+				ImageView imView = (ImageView) convertView.findViewById(R.id.my_Store_logo_image);
+				imView.setImageBitmap(bmp);
+			}
+			
+			
 			TextView store_Name_txt = (TextView) convertView
 					.findViewById(R.id.mystore_list_name);
-
+			TextView txtClosetnumber = (TextView)convertView.findViewById(R.id.txtClosetnumber);
+			TextView txtAddressSubScribeProfile =(TextView)convertView.findViewById(R.id.txtAddressSubScribeProfile);
+			
 			store_Name_txt.setText(list.get(position).name);
-
-			imageLoader.DisplayImage(list.get(position).image, store_Name_img);
-
-			store_Name_img.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-
-				}
-			});
-
+			txtClosetnumber.setText(list.get(position).closted_items_count);
+			txtAddressSubScribeProfile.setText(list.get(position).address);
 			return convertView;
 		}
 	}

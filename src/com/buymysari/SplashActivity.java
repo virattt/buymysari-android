@@ -10,6 +10,7 @@ public class SplashActivity extends Activity {
 
 	Button login_home_btn;
 	Button register_home_btn;
+	Button register_store_btn;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -17,6 +18,7 @@ public class SplashActivity extends Activity {
 
 		login_home_btn = (Button) findViewById(R.id.login_home_btn);
 		register_home_btn = (Button) findViewById(R.id.register_home_btn);
+		register_store_btn = (Button) findViewById(R.id.register_store_btn);
 		login_home_btn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -32,11 +34,24 @@ public class SplashActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(SplashActivity.this, RegisterActivity.class);
+				Intent i = new Intent(SplashActivity.this,
+						RegisterActivity.class);
+				startActivity(i);
+
+			}
+		});
+		
+		register_store_btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(SplashActivity.this,
+						StoreRegister.class);
 				startActivity(i);
 
 			}
 		});
 	}
-	
+
 }

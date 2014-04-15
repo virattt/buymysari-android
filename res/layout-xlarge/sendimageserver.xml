@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_sendimage_send"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true" >
+
+        <com.buymysari.SegmentedRadioGroup
+            android:id="@+id/segment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:checkedButton="@+id/button_one"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@id/button_one"
+                android:layout_margin="15dip"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="80dip"
+                android:minWidth="80dip"
+                android:text="S"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/button_two"
+                android:layout_margin="15dip"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="80dip"
+                android:minWidth="80dip"
+                android:text="C"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/button_three"
+                android:layout_margin="15dip"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="80dip"
+                android:minWidth="80dip"
+                android:text="A"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+        </com.buymysari.SegmentedRadioGroup>
+
+        <com.buymysari.SegmentedRadioGroupMale
+            android:id="@+id/segment_text_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/segment_text"
+            android:layout_marginTop="20dip"
+            android:checkedButton="@+id/button_one_male"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@id/button_one_male"
+                android:layout_margin="15dip"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="80dip"
+                android:minWidth="80dip"
+                android:text="M"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/button_one_female"
+                android:layout_margin="15dip"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="80dip"
+                android:minWidth="80dip"
+                android:text="F"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+        </com.buymysari.SegmentedRadioGroupMale>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/segment_text_male"
+            android:layout_marginTop="20dip" >
+
+            <EditText
+                android:id="@+id/edt_text_store_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="Name" />
+
+            <Button
+                android:id="@+id/btn_send_image"
+                android:layout_width="80dip"
+                android:layout_height="100dip"
+                android:layout_below="@+id/edt_text_store_name"
+                android:layout_marginTop="20dip"
+                android:text="send" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
