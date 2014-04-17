@@ -53,12 +53,42 @@
         android:text="Crate Store" />
     -->
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="40dip"
+        android:layout_marginRight="40dip"
+        android:layout_marginTop="10dp" >
+
+        <ImageView
+            android:id="@+id/img_user_image"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/user_gray" />
+
+        <TextView
+            android:id="@+id/txt_change_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="Change Profile Picture"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#2671b9"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/lin_regi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentLeft="true"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -203,33 +233,4 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="40dip"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40dip"
-        android:layout_marginRight="40dip"
-        android:layout_marginTop="10dp" >
-
-        <ImageView
-            android:id="@+id/img_user_image"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/user_gray" />
-
-        <TextView
-            android:id="@+id/txt_change_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="Change Profile Picture"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#2671b9"
-            android:textSize="17sp" />
-    </RelativeLayout>
 </RelativeLayout>

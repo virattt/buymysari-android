@@ -204,21 +204,19 @@ public class HomeFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... arg) {
 			String listSize = "";
-			/*Log.v("log_tag", "list DoinBaCK " + cityName);
-			Log.v("log_tag", "DBAdpter.fetch_list_home_data"
-					+ DBAdpter.fetch_list_home_data);
-
-			if (DBAdpter.fetch_list_home_data != null) {
-				Log.v("log", " fetch list Size ---> "
-						+ DBAdpter.fetch_list_home_data.size());
-				list = DBAdpter.fetch_list_home_data;
-				listSize = DBAdpter.fetch_list_home_data.size() + "";
-			} else {
-				list = new ArrayList<All_list_home_dto>();
-				list = DBAdpter.getNewsData(cityName, pageNumber + "");
-
-				Log.v("log_tag", "list_size :: " + list.size());
-			}*/
+			/*
+			 * Log.v("log_tag", "list DoinBaCK " + cityName); Log.v("log_tag",
+			 * "DBAdpter.fetch_list_home_data" + DBAdpter.fetch_list_home_data);
+			 * 
+			 * if (DBAdpter.fetch_list_home_data != null) { Log.v("log",
+			 * " fetch list Size ---> " + DBAdpter.fetch_list_home_data.size());
+			 * list = DBAdpter.fetch_list_home_data; listSize =
+			 * DBAdpter.fetch_list_home_data.size() + ""; } else { list = new
+			 * ArrayList<All_list_home_dto>(); list =
+			 * DBAdpter.getNewsData(cityName, pageNumber + "");
+			 * 
+			 * Log.v("log_tag", "list_size :: " + list.size()); }
+			 */
 			list = new ArrayList<All_list_home_dto>();
 			list = DBAdpter.getNewsData(cityName, pageNumber + "");
 
@@ -343,7 +341,6 @@ public class HomeFragment extends Fragment {
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custom_home_list, null);
 
-			
 			URL url = null;
 			try {
 				url = new URL(list.get(position).picture);
@@ -367,15 +364,15 @@ public class HomeFragment extends Fragment {
 				home_ic_img.setBorderColor(getResources().getColor(
 						R.color.GrayLight));
 				home_ic_img.setBorderWidth(0);
-				
+
 			} else {
 				Log.v("log", " Below HoneyComb ");
 
-				ImageView imView = (ImageView) convertView.findViewById(R.id.list_home_logo_image);
+				ImageView imView = (ImageView) convertView
+						.findViewById(R.id.list_home_logo_image);
 				imView.setImageBitmap(bmp);
 			}
 
-			
 			ImageButton home_big_img = (ImageButton) convertView
 					.findViewById(R.id.sarees_big_img);
 			TextView home_username_txt = (TextView) convertView
@@ -394,20 +391,20 @@ public class HomeFragment extends Fragment {
 
 			if (!app.getUserID().equals("")) {
 
-			    home_view_image.setVisibility(View.VISIBLE);
-			    closeted_txt.setVisibility(View.VISIBLE);
-			    close_btn.setVisibility(View.VISIBLE);
-			    home_view_txt.setVisibility(View.VISIBLE);
+				home_view_image.setVisibility(View.VISIBLE);
+				closeted_txt.setVisibility(View.VISIBLE);
+				close_btn.setVisibility(View.VISIBLE);
+				home_view_txt.setVisibility(View.VISIBLE);
 
-			   } else {
+			} else {
 
-			    home_view_image.setVisibility(View.INVISIBLE);
-			    closeted_txt.setVisibility(View.INVISIBLE);
-			    close_btn.setVisibility(View.INVISIBLE);
-			    home_view_txt.setVisibility(View.INVISIBLE);
-			    
-			   }
-			
+				home_view_image.setVisibility(View.INVISIBLE);
+				closeted_txt.setVisibility(View.INVISIBLE);
+				close_btn.setVisibility(View.INVISIBLE);
+				home_view_txt.setVisibility(View.INVISIBLE);
+
+			}
+
 			home_username_txt.setText(list.get(position).store_name.toString());
 			home_view_txt.setText(" " + list.get(position).views.toString());
 			itemName_txt.setText(list.get(position).name.toString());
@@ -426,14 +423,18 @@ public class HomeFragment extends Fragment {
 					findDoubleClick(list.get(position).store_id,
 							list.get(position).item_id);
 
-					if (mHasDoubleClicked) {
-						new ClosetTask(progress).execute(
-								list.get(position).item_id,
-								list.get(position).store_id, uid);
+					if (!app.getUserID().equals("")) {
+						if (mHasDoubleClicked) {
+							new ClosetTask(progress).execute(
+									list.get(position).item_id,
+									list.get(position).store_id, uid);
+						}
+					} else {
+						
 					}
 				}
 			});
-			
+
 			close_btn.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -473,6 +474,7 @@ public class HomeFragment extends Fragment {
 						Bundle bundle = new Bundle();
 						bundle.putString("position", str_id);
 						fm2.setArguments(bundle);
+						
 						DBAdpter.updateItemView(itemId);
 					}
 				}

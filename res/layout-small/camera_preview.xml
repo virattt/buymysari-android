@@ -4,19 +4,27 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnTakePicture"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/camera" />
-
     <FrameLayout
         android:id="@+id/camera_preview"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/White" >
+
+        <Button
+            android:id="@+id/btnTakePicture"
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/camera" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -36,7 +36,7 @@
             android:text="Change Profile Picture"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#2671b9"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
     </RelativeLayout>
 
     <RelativeLayout

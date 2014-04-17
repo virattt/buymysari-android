@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rela_store_fragment"
+    android:id="@+id/rela_storeprofile_grid_fragment"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white" >
@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/thumbnail_relative"
         android:layout_width="fill_parent"
-        android:layout_height="90dip"
+        android:layout_height="80dip"
         android:orientation="horizontal"
         android:padding="5dip" >
 
@@ -19,13 +19,6 @@
             android:layout_alignParentLeft="true"
             android:layout_marginRight="5dip"
             android:padding="3dip" >
-
-            <!--
-                  <ImageButton
-                android:id="@+id/list_Store_logo_image"
-                android:layout_width="40dip"
-                android:layout_height="40dip" />
-            -->
 
             <com.buymysari.CircularImageView
                 android:id="@+id/list_Store_logo_image"
@@ -40,41 +33,197 @@
             android:id="@+id/store_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@+id/thumbnail_linear"
+            android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/thumbnail_linear"
             android:text=""
-            android:textColor="#466aaf"
-            android:textSize="22dip"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/store_url_detail_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/store_list_name"
+            android:layout_below="@+id/store_list_name"
+            android:layout_toLeftOf="@+id/relativeLayout2"
+            android:text=""
+            android:textColor="#466aaf"
+            android:textSize="16sp" />
+         <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+             >
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/favs" />
+                    
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="30dip"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/door" />
+
+                    
+                </TableRow>
+            </TableLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="30dip"
+            android:layout_alignLeft="@+id/relativeLayout1"
+            android:layout_below="@+id/relativeLayout1" >
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+
+                <TableRow
+                    android:id="@+id/tableRowTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                       android:id="@+id/subscribe_store_detail_profile_txt"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="5" />
+                    
+                    <TextView
+                        android:id="@+id/store_profile_grid_detail_closet_txt"
+                        android:layout_width="30dip"
+                        android:layout_height="wrap_content"
+              			android:gravity="center_horizontal"
+                        android:text="5" />
+                                        
+                </TableRow>
+            </TableLayout>
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rela_location_store"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/thumbnail_relative" >
 
         <Button
             android:id="@+id/store_subscribe_btn"
+            android:layout_width="150dip"
+            android:layout_height="40dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dip"
+            android:background="@color/Gray"
+            android:text="SUBSCRIBED"
+            android:textColor="@color/White" />
+
+        <TextView
+            android:id="@+id/txtStoreProfileGridAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Subscribe"
-            android:textColor="#040404"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:layout_marginLeft="5dip"
+            android:layout_toLeftOf="@+id/button1"
+            android:layout_toRightOf="@+id/imageView3"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#466aaf"
+            android:textSize="14sp" />
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/textView1"
+            android:layout_marginLeft="15dip"
+            android:src="@drawable/point" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="65dip"
+        android:layout_below="@+id/rela_location_store"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="3dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/btnStoreProfileList"
+            android:layout_width="40dip"
+            android:layout_height="35dip"
+            android:layout_marginLeft="5dip"
+            android:background="@drawable/unselected_list"
+            android:textOff=""
+            android:textOn=""
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ToggleButton
+            android:id="@+id/btnStoreProfileGrid"
+            android:layout_width="40dip"
+            android:layout_height="35dip"
+            android:layout_marginLeft="25dip"
+            android:background="@drawable/selected_grid"
+            android:checked="true"
+            android:textOff=""
+            android:textOn=""
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/store_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/thumbnail_relative"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout"
         android:cacheColorHint="#00000000"
         android:divider="#000000"
-        android:dividerHeight="0dip"
-        android:fadingEdge="none"
-        android:focusable="false"
-        android:scrollbars="none" >
+        android:visibility="gone" >
     </ListView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout" >
+
+        <GridView
+            android:id="@+id/gridView_store_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -52,32 +52,40 @@
             android:textColor="#466aaf"
             android:textSize="16sp" />
 
-        <RelativeLayout
+                <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/store_profilegrid_name"
-            android:layout_marginLeft="85dp"
-            android:layout_toRightOf="@+id/store_profilegrid_name" >
+             >
 
-            <ImageView
-                android:id="@+id/imageView2"
+            <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/door" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
 
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="25dip"
-                android:layout_height="30dip"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="14dp"
-                android:layout_toLeftOf="@+id/imageView2"
-                android:src="@drawable/favs" />
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:layout_height="wrap_content" >
 
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/imageView2"
+                        android:src="@drawable/favs" />
+                    
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/door" />
+                    
+                </TableRow>
+            </TableLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,29 +95,36 @@
             android:layout_alignLeft="@+id/relativeLayout1"
             android:layout_below="@+id/store_profilegrid_name" >
 
-            <TextView
-            android:id="@+id/subscribe_store_profile_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="36dp"
-            android:layout_marginTop="10dip"
-            android:gravity="center_horizontal"
-            android:text="TextView" />
-            
-            <TextView
-            android:id="@+id/store_profile_grid_closet_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:layout_alignParentRight="true"
-            android:gravity="center_horizontal"
-            android:text="TextView" />
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
 
+                <TableRow
+                    android:id="@+id/tableRowTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/subscribe_store_profile_txt"
+                        android:layout_width="30dip"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="5" />
+                    
+                    <TextView
+                        android:id="@+id/store_profile_grid_closet_txt"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
+                    	android:gravity="center_horizontal"
+                        android:text="5" />
+                    
+                </TableRow>
+            </TableLayout>
         </RelativeLayout>
-
-        
-
-    </RelativeLayout>
+          
+        </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rela_location_store"
@@ -121,14 +136,14 @@
         
         
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/btnEditStore"
             android:layout_width="150dip"
             android:layout_height="40dip"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dip"
-            android:background="@drawable/headerbackground"
-            android:text="SUBSCRIBE"
+            android:background="@color/Gray"
+            android:text="EDIT STORE"
             android:textColor="@color/White" />
 
         <TextView
@@ -141,14 +156,14 @@
             android:textColor="#466aaf"
             android:textSize="14sp"
             android:layout_toRightOf="@+id/imageView3"
-            android:text="Front Street,Toronto,ON"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip"
+            android:layout_marginLeft="15dip"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/textView1"
             android:src="@drawable/point" />

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.buymysari.Base64;
 import com.buymysari.CameraActivity;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.UserInfo_dto;
@@ -41,7 +43,7 @@ public class ProfileFragment extends Fragment{
 	private String userId;
 	MyApplication app;
 	ImageView imgUser; 
-	String base64string = "";
+	String base64st;
 	byte[] byteArrayimage;
 	CircularImageView imguser1;
 	
@@ -63,7 +65,7 @@ public class ProfileFragment extends Fragment{
 		edtLname = (EditText)rootView.findViewById(R.id.edtProfileLastname);
 		edtEmailID = (EditText)rootView.findViewById(R.id.edtProfileEmail);
 		edtPassword = (EditText)rootView.findViewById(R.id.edtProfilePAssword);
-		imgUser = (ImageView)rootView.findViewById(R.id.img_user_image);
+		
 		
 		Log.v("log", "userId" + userId + " FirstNAme : " + FirstNAme + " LAstName " + lastName + " emailId " + emailId + "Mobile " + Mobile);
 		
@@ -72,8 +74,7 @@ public class ProfileFragment extends Fragment{
 		edtEmailID.setText(emailId);
 		edtPassword.setText("Enter new Password");
 		
-		String img_url = DBAdpter.fetch_UserDetail_data.get(0)
-				.getStrore_profile_image().toString().trim();
+		String img_url = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_image().toString().trim();
 		URL url = null;
 		try {
 			url = new URL(img_url);
@@ -94,14 +95,36 @@ public class ProfileFragment extends Fragment{
 			Log.v("log", " Above HoneyComb ");
 			
 			imguser1 = (CircularImageView)rootView.findViewById(R.id.img_user_image);
-			imguser1.setImageBitmap(bmp);
+					imguser1.setImageBitmap(bmp);
 			imguser1.setBorderColor(getResources().getColor(R.color.GrayLight));
 			imguser1.setBorderWidth(0);
+			
+			
+			final BitmapDrawable bitmapDrawable = (BitmapDrawable) imguser1
+					.getDrawable();
+			final Bitmap yourBitmap = bitmapDrawable.getBitmap();
+
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+			byte[] byteArray = stream.toByteArray();
+			base64st = Base64.encodeBytes(byteArray);
+			Log.v("log_tag", "base64st" + base64st);
+			
+			
 		} else {
 			Log.v("log", " Below HoneyComb ");
 
 			imgUser = (ImageView)rootView.findViewById(R.id.img_user_image);
 			imgUser.setImageBitmap(bmp);
+			final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgUser
+					.getDrawable();
+			final Bitmap yourBitmap = bitmapDrawable.getBitmap();
+
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			yourBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+			byte[] byteArray = stream.toByteArray();
+			base64st = Base64.encodeBytes(byteArray);
+			Log.v("log_tag", "base64st" + base64st);
 		}
 		
 		TextView btnTakeUserPhoto = (TextView)rootView.findViewById(R.id.txt_change_profile);
@@ -130,16 +153,16 @@ public class ProfileFragment extends Fragment{
 				String strEmail = edtEmailID.getText().toString();
 				String strPassword = edtPassword.getText().toString();
 				
-				Log.v("log"," profile UserID --> " + userId);
 				
-				ArrayList<UserInfo_dto>  result_list =  DBAdpter.updateUserInfo(userId,strFname,strLname,strEmail,strPassword);
-				Log.v("log", " resultMesssage --> " + result_list.get(0).getMsg());
+				
+				ArrayList<UserInfo_dto>  result_list =  DBAdpter.updateUserInfo(userId,strFname,strLname,strEmail,strPassword,base64st);
+				
 				
 				if(result_list.get(0).getMsg().equals("User information successfully updated"))
 				{
 					Toast.makeText(getActivity(), result_list.get(0).getMsg() , 1).show();
 					
-					String message = DBAdpter.updateUserImage(userId,base64string);
+					String message = DBAdpter.updateUserImage(userId,base64st);
 					
 					Log.v("log"," message -->  "+ message);
 					
@@ -229,13 +252,17 @@ public class ProfileFragment extends Fragment{
 					imguser1.setScaleType(ScaleType.CENTER);
 					imguser1.setBorderColor(getResources().getColor(R.color.GrayLight));
 					imguser1.setBorderWidth(0);
+					MarketPlaceActivity.imView.setImageBitmap(resizedBitmap);
+					MarketPlaceActivity.imView.setScaleType(ScaleType.CENTER);
 					
 				} else {
 					imgUser.setImageBitmap(resizedBitmap);
 					imgUser.setScaleType(ScaleType.CENTER);
+					MarketPlaceActivity.imView1.setImageBitmap(resizedBitmap);
+					MarketPlaceActivity.imView1.setScaleType(ScaleType.CENTER);
 				}
 				
-				base64string = Base64.encodeBytes(byteArrayimage);
+				base64st = Base64.encodeBytes(byteArrayimage);
 			}
 		}
 	}

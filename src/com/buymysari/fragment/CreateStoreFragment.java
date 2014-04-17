@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.buymysari.Base64;
 import com.buymysari.CameraActivity;
 import com.buymysari.CircularImageView;
@@ -65,6 +65,8 @@ public class CreateStoreFragment extends Fragment {
 	public ImageLoader imageLoader;
 	ImageView imView;
 	CircularImageView imgStorePicture;
+	ArrayList<UserInfo_dto> list_result;
+	private ProgressDialog progress;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -199,6 +201,11 @@ public class CreateStoreFragment extends Fragment {
 						&& (!str_phone_edt.equals(""))
 						&& (!str_city_edt.equals(""))
 						&& (!str_address_edt.equals(""))) {
+
+					progress = new ProgressDialog(getActivity());
+					progress.setMessage("Loading...");
+					
+
 					final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture
 							.getDrawable();
 					final Bitmap yourBitmap = bitmapDrawable.getBitmap();
@@ -208,32 +215,52 @@ public class CreateStoreFragment extends Fragment {
 					byte[] byteArray = stream.toByteArray();
 					base64st = Base64.encodeBytes(byteArray);
 					Log.v("log_tag", "base64st" + base64st);
-					ArrayList<UserInfo_dto> list_result = DBAdpter
-							.updateUserStore(StoreId, str_first_name,
-									str_last_name, str_email_edt,
-									str_store_name_edt, str_website_edt,
-									str_phone_edt, str_city_edt,
-									str_address_edt, base64st);
-
-					Toast.makeText(getActivity(), "sucessfully update",
-							Toast.LENGTH_LONG).show();
-
-				
-					
-					FragmentManager fm = getActivity()
-							.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fm
-							.beginTransaction();
-					StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
-					fragmentTransaction.replace(R.id.rela_createStore, fm2,
-							"HELLO");
-					fragmentTransaction.addToBackStack(null);
-					fragmentTransaction.commit();
-
+					new ConformDataTask(progress).execute("Home");
 				}
 			}
 		});
 		return view;
+	}
+
+	public class ConformDataTask extends AsyncTask<String, Void, String> {
+
+		public ConformDataTask(ProgressDialog progress) {
+			progress = progress;
+		}
+
+		public void onPreExecute() {
+			progress.show();
+
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			String listSize = "";
+			list_result = DBAdpter.updateUserStore(StoreId, str_first_name,
+					str_last_name, str_email_edt, str_store_name_edt,
+					str_website_edt, str_phone_edt, str_city_edt,
+					str_address_edt, base64st);
+
+			listSize = list_result.size() + "";
+			return listSize;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Toast.makeText(getActivity(), "sucessfully update",
+					Toast.LENGTH_LONG).show();
+
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fm.beginTransaction();
+			StoreProfileGridFragment fm2 = new StoreProfileGridFragment();
+			fragmentTransaction.replace(R.id.rela_createStore, fm2, "HELLO");
+			fragmentTransaction.addToBackStack(null);
+			fragmentTransaction.commit();
+			progress.dismiss();
+
+		}
+
 	}
 
 	@Override

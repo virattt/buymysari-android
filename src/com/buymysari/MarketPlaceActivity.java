@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.buymysari.dto.CateDto;
@@ -466,11 +465,11 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
 					// Perform action on key press
-					Toast.makeText(
+				/*	Toast.makeText(
 							MarketPlaceActivity.this,
 							" SearchText --> "
 									+ edtSearchText.getText().toString(),
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();*/
 
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(edtSearchText.getWindowToken(),

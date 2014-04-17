@@ -1,6 +1,5 @@
 package com.buymysari.fragment;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,7 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,13 +24,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
-import com.buymysari.Base64;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
@@ -45,7 +47,8 @@ public class StoreDetailFragment extends Fragment {
 	ArrayList<All_list_Store_dto> list = new ArrayList<All_list_Store_dto>();
 	MyListAdapter adt;
 	View rootView;
-	// ImageButton store_icon;
+	GridView gridView;
+
 	TextView storeName;
 	Button store_subscribe_btn;
 	MyApplication app;
@@ -55,6 +58,12 @@ public class StoreDetailFragment extends Fragment {
 	ImageLoader imageLoader;
 	CircularImageView store_icon;
 	ImageView imView;
+	TextView txtStoreProfileGridAddress;
+	CustomGridViewAdapter adtstore;
+	ToggleButton btnStoreProfileList, btnStoreProfileGrid;
+	TextView store_url_txt, store_profile_grid_closet_txt,
+			subscribe_store_profile_txt;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -66,31 +75,113 @@ public class StoreDetailFragment extends Fragment {
 
 		store_subscribe_btn = (Button) rootView
 				.findViewById(R.id.store_subscribe_btn);
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-		
-			store_icon = (CircularImageView) rootView.findViewById(R.id.list_Store_logo_image);
-			store_icon.setBorderColor(getResources().getColor(R.color.GrayLight));
+
+			store_icon = (CircularImageView) rootView
+					.findViewById(R.id.list_Store_logo_image);
+			store_icon.setBorderColor(getResources()
+					.getColor(R.color.GrayLight));
 			store_icon.setBorderWidth(0);
-			
+
 		} else {
 			Log.v("log", " Below HoneyComb ");
 
-			imView = (ImageView) rootView.findViewById(R.id.list_Store_logo_image);
+			imView = (ImageView) rootView
+					.findViewById(R.id.list_Store_logo_image);
 		}
 
-		
 		storeName = (TextView) rootView.findViewById(R.id.store_list_name);
+		gridView = (GridView) rootView.findViewById(R.id.gridView_store_detail);
+
+		store_url_txt = (TextView) rootView
+				.findViewById(R.id.store_url_detail_txt);
+		store_profile_grid_closet_txt = (TextView) rootView
+				.findViewById(R.id.store_profile_grid_detail_closet_txt);
+		subscribe_store_profile_txt = (TextView) rootView
+				.findViewById(R.id.subscribe_store_detail_profile_txt);
+		txtStoreProfileGridAddress = (TextView) rootView
+				.findViewById(R.id.txtStoreProfileGridAddress);
 		bundle = this.getArguments();
 		myInt = bundle.getString("position");
 		lv = (ListView) rootView.findViewById(R.id.store_listview);
 		Log.v("log_tag", "myInt " + myInt);
 
+		if (!app.getUserID().equals("")) {
+
+			store_subscribe_btn.setVisibility(View.VISIBLE);
+			
+			
+			Boolean msg = DBAdpter.checkSubscribeStore(app.getUserID(), myInt);
+			
+			if(msg == true){
+				store_subscribe_btn.setEnabled(false);
+				store_subscribe_btn.setBackgroundColor(Color.parseColor("#41d845"));
+				store_subscribe_btn.setText("SUBSCRIBED");
+				
+			}else{
+				
+				store_subscribe_btn.setEnabled(true);
+				store_subscribe_btn.setBackgroundColor(Color.parseColor("#d84146"));
+				store_subscribe_btn.setText("SUBSCRIBE");
+			}
+			
+		} else {
+
+			store_subscribe_btn.setVisibility(View.INVISIBLE);
+			
+
+		}
+
+		btnStoreProfileGrid = (ToggleButton) rootView
+				.findViewById(R.id.btnStoreProfileGrid);
+		btnStoreProfileList = (ToggleButton) rootView
+				.findViewById(R.id.btnStoreProfileList);
+		btnStoreProfileGrid.setOnCheckedChangeListener(changeChecker);
+		btnStoreProfileList.setOnCheckedChangeListener(changeChecker);
+		/*btnStoreProfileList
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+
+						if (isChecked) {
+							lv.setVisibility(View.VISIBLE);
+							gridView.setVisibility(View.INVISIBLE);
+							buttonView
+									.setBackgroundResource(R.drawable.unselected_list);
+						} else {
+							buttonView
+									.setBackgroundResource(R.drawable.selected_list);
+						}
+					}
+				});
+
+		btnStoreProfileGrid
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+
+						if (isChecked) {
+							lv.setVisibility(View.INVISIBLE);
+							gridView.setVisibility(View.VISIBLE);
+							buttonView
+									.setBackgroundResource(R.drawable.unselected_grid);
+						} else {
+							buttonView
+									.setBackgroundResource(R.drawable.selected_grid);
+						}
+					}
+				});
+*/
 		if (myInt.trim().equals("")) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				store_icon.setVisibility(View.INVISIBLE);
 			}
-			store_subscribe_btn.setVisibility(View.INVISIBLE);
+			// store_subscribe_btn.setVisibility(View.INVISIBLE);
 			Toast.makeText(getActivity().getApplicationContext(),
 					"No Store Detail Available", Toast.LENGTH_LONG).show();
 
@@ -98,7 +189,7 @@ public class StoreDetailFragment extends Fragment {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				store_icon.setVisibility(View.VISIBLE);
 			}
-			store_subscribe_btn.setVisibility(View.VISIBLE);
+			// store_subscribe_btn.setVisibility(View.VISIBLE);
 			progress = new ProgressDialog(getActivity());
 			progress.setMessage("Loading...");
 			new JSONTask(progress).execute("Home");
@@ -116,20 +207,47 @@ public class StoreDetailFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				
 				new SubscribeTask(progress).execute(app.getUserID(), myInt);
+				
+				
 			}
 		});
 
-		
 		return rootView;
-		
-	}
 
+	}
+	OnCheckedChangeListener changeChecker = new OnCheckedChangeListener() {
+
+	    @Override
+	    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+	        if (isChecked){
+	        	
+	        	Log.v("log_tag", "buttonView ::: "+buttonView);
+	            if (buttonView == btnStoreProfileGrid) {
+	            	btnStoreProfileList.setChecked(false);
+	            	lv.setVisibility(View.INVISIBLE);
+					gridView.setVisibility(View.VISIBLE);
+					btnStoreProfileGrid.setBackgroundResource(R.drawable.selected_grid);
+					btnStoreProfileList.setBackgroundResource(R.drawable.unselected_list);
+	            	
+	              
+	            }
+	            if (buttonView == btnStoreProfileList) {
+	            	btnStoreProfileGrid.setChecked(false);
+	            	lv.setVisibility(View.VISIBLE);
+					gridView.setVisibility(View.INVISIBLE);
+					btnStoreProfileGrid.setBackgroundResource(R.drawable.unselected_grid);
+					btnStoreProfileList.setBackgroundResource(R.drawable.selected_list);
+	                
+	            }
+	           
+	        }
+	    }
+	};
 	public class JSONTask extends AsyncTask<String, Void, String> {
 
 		public JSONTask(ProgressDialog progress) {
-			progress = progress;
 		}
 
 		public void onPreExecute() {
@@ -154,11 +272,19 @@ public class StoreDetailFragment extends Fragment {
 
 			if (Integer.parseInt(result) > 0) {
 				storeName.setText(list.get(0).store_name);
-				Log.v("log_tag", "list.get(0).store_image "
-						+ list.get(0).store_image);
-				updateTableList(list.get(0).store_image);
+				store_url_txt.setText(list.get(0).website);
+				store_profile_grid_closet_txt
+						.setText(list.get(0).closeted_item_count);
+				subscribe_store_profile_txt
+						.setText(list.get(0).subscribed_store_count);
+				txtStoreProfileGridAddress.setText(list.get(0).address);
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
+
+				adtstore = new CustomGridViewAdapter(getActivity()
+						.getApplicationContext());
+				gridView.setAdapter(adtstore);
+				updateTableList(list.get(0).store_image);
 			} else {
 
 				Toast.makeText(getActivity().getApplicationContext(),
@@ -168,6 +294,49 @@ public class StoreDetailFragment extends Fragment {
 
 		}
 
+	}
+
+	class CustomGridViewAdapter extends BaseAdapter {
+		private LayoutInflater mInflater;
+
+		public CustomGridViewAdapter(Context context) {
+			mInflater = LayoutInflater.from(context);
+
+		}
+
+		public int getCount() {
+			return list.size();
+		}
+
+		public Object getItem(int position) {
+			return position;
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			convertView = mInflater.inflate(R.layout.custom_grid_store, null);
+			ImageView store_Name_img = (ImageView) convertView
+					.findViewById(R.id.item_image);
+
+			if (list.get(position).image != "") {
+
+				imageLoader.DisplayImage(list.get(position).image,
+						store_Name_img);
+
+			} else {
+
+				/*
+				 * Toast.makeText(getActivity(), "No Item Available",
+				 * Toast.LENGTH_SHORT).show();
+				 */
+			}
+
+			return convertView;
+		}
 	}
 
 	private void updateTableList(String img) {
@@ -187,16 +356,13 @@ public class StoreDetailFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			store_icon.setImageBitmap(bmp);
-		}
-		else
-		{
+		} else {
 			imView.setImageBitmap(bmp);
 		}
-		
+
 	}
 
 	public class MyListAdapter extends BaseAdapter {
@@ -230,27 +396,36 @@ public class StoreDetailFragment extends Fragment {
 					.findViewById(R.id.store_closet_txt_view);
 			TextView store_item_name_txt = (TextView) convertView
 					.findViewById(R.id.itemName_txt);
+			TextView store_eye_name_txt = (TextView) convertView
+					.findViewById(R.id.textView1);
 
 			Button store_item_close_btn = (Button) convertView
 					.findViewById(R.id.close_home_btn);
-
-			store_closet_txt.setText("Closeted : "
-					+ list.get(position).closeted_item_count);
+			ImageView eye = (ImageView) convertView
+					.findViewById(R.id.items_view);
+			store_closet_txt.setText(" "
+					+ list.get(position).closeted_item_track);
 			store_item_name_txt.setText(list.get(position).name);
+			store_eye_name_txt.setText(" " + list.get(position).views);
 			final String uid = app.getUserID();
 
-			/*
-			 * if (list.get(position).image != null) { byte[] Image_getByte; try
-			 * { Image_getByte = Base64.decode(list.get(position).image);
-			 * ByteArrayInputStream bytes = new ByteArrayInputStream(
-			 * Image_getByte); BitmapDrawable bmd = new BitmapDrawable(bytes);
-			 * Bitmap bm = bmd.getBitmap(); store_item_img.setImageBitmap(bm);
-			 * 
-			 * } catch (IOException e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); } }
-			 */
-
 			imageLoader.DisplayImage(list.get(position).image, store_item_img);
+
+			if (!app.getUserID().equals("")) {
+
+				store_closet_txt.setVisibility(View.VISIBLE);
+				store_item_close_btn.setVisibility(View.VISIBLE);
+				eye.setVisibility(View.VISIBLE);
+				store_eye_name_txt.setVisibility(View.VISIBLE);
+
+			} else {
+
+				store_closet_txt.setVisibility(View.INVISIBLE);
+				store_item_close_btn.setVisibility(View.INVISIBLE);
+				eye.setVisibility(View.INVISIBLE);
+				store_eye_name_txt.setVisibility(View.INVISIBLE);
+
+			}
 
 			store_item_close_btn.setOnClickListener(new View.OnClickListener() {
 
@@ -360,6 +535,9 @@ public class StoreDetailFragment extends Fragment {
 			// Create here your JSONObject...
 
 			progress.dismiss();
+			store_subscribe_btn.setEnabled(false);
+			store_subscribe_btn.setBackgroundColor(Color.parseColor("#41d845"));
+			store_subscribe_btn.setText("SUBSCRIBED");
 			Toast.makeText(getActivity().getApplicationContext(), result,
 					Toast.LENGTH_LONG).show();
 

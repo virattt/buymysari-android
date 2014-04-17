@@ -18,4 +18,5 @@ public class All_list_Store_dto {
 	public String name;
 	public String gender;
 	public String image;
+	public String closeted_item_track;
 }

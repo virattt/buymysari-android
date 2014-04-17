@@ -98,6 +98,58 @@ public class DBAdpter {
 		return msg;
 	}
 
+	public static Boolean checkSubscribeStore(String user_id, String store_id
+			) {
+		// String city, String state,String country, String mobile
+		String result = "";
+		Boolean msg = false ;
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("user_id", user_id));
+		nameValuePairs.add(new BasicNameValuePair("store_id", store_id));
+		
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url + "isStoreSubscribed");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log_tag", "Result :" + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			
+			msg = jObj.getBoolean("success");
+			Log.v("log_tag", "RegisterMsg " + msg);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
 	public static String registerInStore(String str_first_name,
 			String str_password_edt, String str_last_name,
 			String str_email_edt, String str_store_name_edt,
@@ -389,10 +441,8 @@ public class DBAdpter {
 
 			Boolean success_con = jObj.getBoolean("success");
 
-			Boolean isStoreOwner = jObj.getBoolean("isStoreOwner");
-
 			if (success_con == true) {
-
+				Boolean isStoreOwner = jObj.getBoolean("isStoreOwner");
 				if (isStoreOwner == false) {
 
 					JSONArray j_Array = jObj.getJSONArray("info");
@@ -448,6 +498,12 @@ public class DBAdpter {
 
 					}
 				}
+			}
+			else
+			{
+				UserInfo_dto user_info_list = new UserInfo_dto();
+				user_info_list.setMsg(msg);
+				fetch_UserDetail_data.add(user_info_list);
 			}
 
 		} catch (JSONException e) {
@@ -795,6 +851,7 @@ public class DBAdpter {
 					list_store_data.mobile = j_Array.getString("mobile");
 					list_store_data.website = j_Array.getString("website");
 					list_store_data.address = j_Array.getString("address");
+					
 
 					list_store_data.closeted_item_count = j_Array
 							.getString("closeted_item_count");
@@ -809,6 +866,8 @@ public class DBAdpter {
 					list_store_data.gender = json_objs_items
 							.getString("gender");
 					list_store_data.image = json_objs_items.getString("image");
+					list_store_data.closeted_item_track = json_objs_items.getString("Closeted_item_track");
+					list_store_data.views = json_objs_items.getString("views");
 
 					fetch_list_store_data.add(list_store_data);
 
@@ -846,6 +905,7 @@ public class DBAdpter {
 		return fetch_list_store_data;
 
 	}
+
 
 	public static String DeleteItem(String itemId, String StoreId) {
 
@@ -1063,11 +1123,8 @@ public class DBAdpter {
 	}
 
 	public static ArrayList<UserInfo_dto> updateUserInfo(String id,
-			String fname, String lname, String email, String password) {
-		Log.v("log_tag", "fname update " + fname);
-		Log.v("log_tag", "lname update " + lname);
-		Log.v("log_tag", "email update " + email);
-		Log.v("log_tag", "password update " + password);
+			String fname, String lname, String email, String password,String image) {
+		
 
 		fetch_UserDetail_data = new ArrayList<UserInfo_dto>();
 
@@ -1080,7 +1137,7 @@ public class DBAdpter {
 		nameValuePairs.add(new BasicNameValuePair("fname", fname));
 		nameValuePairs.add(new BasicNameValuePair("lname", lname));
 		nameValuePairs.add(new BasicNameValuePair("email", email));
-		nameValuePairs.add(new BasicNameValuePair("password", password));
+		nameValuePairs.add(new BasicNameValuePair("img", image));
 
 		// http post
 		try {
@@ -1120,9 +1177,7 @@ public class DBAdpter {
 			Boolean success_con = jObj.getBoolean("success");
 
 			if (success_con == true) {
-				Log.v("log", "if login ");
 				JSONArray j_Array = jObj.getJSONArray("user_info");
-
 				for (int i = 0; i < j_Array.length(); i++) {
 					JSONObject json_objs = j_Array.getJSONObject(i);
 					UserInfo_dto user_info_list = new UserInfo_dto();
@@ -1135,6 +1190,7 @@ public class DBAdpter {
 					user_info_list.setLast_name(json_objs
 							.getString("last_name"));
 					user_info_list.setMobile(json_objs.getString("mobile"));
+					user_info_list.setStrore_profile_image(json_objs.getString("image"));
 					user_info_list.setMsg(msg);
 
 					fetch_UserDetail_data.add(user_info_list);

@@ -5,7 +5,8 @@
     android:layout_height="fill_parent"
     android:background="@android:color/white" >
 
-<!--      <RelativeLayout
+    <!--
+          <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="60dip"
@@ -28,10 +29,12 @@
             android:layout_centerVertical="true"
             android:text="UserName"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
--->
+    </RelativeLayout>
+    -->
 
-       <!--  <Button
+
+    <!--
+    <Button
         android:id="@+id/btnProfileUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,40 +50,38 @@
         android:layout_alignBaseline="@+id/btnProfileUpdate"
         android:layout_alignBottom="@+id/btnProfileUpdate"
         android:layout_alignRight="@+id/edtProfilePAssword"
-        android:text="Crate Store" />
- -->
+        android:text="Crate Store" />
+    -->
 
     <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-         android:layout_marginLeft="40dip"
-        android:layout_marginRight="40dip"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="40dip"
+        android:layout_marginRight="40dip"
         android:layout_marginTop="48dp" >
 
         <com.buymysari.CircularImageView
             android:id="@+id/img_user_image"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/clothes" />
-       
 
         <TextView
             android:id="@+id/txt_change_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="73dp"
+            android:layout_toRightOf="@+id/img_user_image"
             android:text="Change Profile Picture"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#2671b9"
-            android:textSize="17sp" />
-
-        
-
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -88,7 +89,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginTop="87dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -123,10 +125,7 @@
                 android:paddingLeft="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="19sp"
-                android:textStyle="bold" >
-
-                <requestFocus />
-            </EditText>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -235,5 +234,5 @@
             android:textSize="17sp"
             android:textStyle="bold" />
     </LinearLayout>
-    
+
 </RelativeLayout>

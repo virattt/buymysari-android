@@ -37,6 +37,7 @@ public class CameraActivity extends Activity {
 		setContentView(R.layout.camera_preview);
 
 		mCamera = getCameraInstance();
+		
 		mCameraPreview = new CameraPreview(CameraActivity.this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.addView(mCameraPreview);
@@ -53,7 +54,7 @@ public class CameraActivity extends Activity {
 	}
 
 	@Override
-	protected void onDestroy() {
+	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		releaseCamera();
@@ -66,16 +67,21 @@ public class CameraActivity extends Activity {
 		}
 	}
 
+
 	private Camera getCameraInstance() {
-		Camera camera = null;
+
 		try {
-			camera = Camera.open();
+			Log.v("log_tag", "camera try:::" + mCamera);
+			mCamera = Camera.open();
+
 		} catch (Exception e) {
 			// cannot get camera or does not exist
+			Log.v("log_tag", "camera catch:::" + mCamera);
 			releaseCamera();
 		}
-		return camera;
+		return mCamera;
 	}
+
 
 	private static File getOutputMediaFile() {
 		File mediaStorageDir = new File(
@@ -99,8 +105,7 @@ public class CameraActivity extends Activity {
 		Log.v("log", " FilePAth " + FilePAth);
 
 		File mediaFile;
-		mediaFile = new File(mediaStorageDir.getPath() + File.separator
-				+ "IMG_" + timeStamp + ".jpg");
+		mediaFile = new File(FilePAth);
 
 		return mediaFile;
 	}
@@ -118,12 +123,11 @@ public class CameraActivity extends Activity {
 				fos.write(data);
 				fos.close();
 
-				mCamera.startPreview();
 				Intent returnIntent = new Intent();
 				returnIntent.putExtra("data", data);
 				setResult(RESULT_OK, returnIntent);
 				finish();
-
+				mCamera.startPreview();
 			} catch (FileNotFoundException e) {
 
 			} catch (IOException e) {

@@ -280,6 +280,7 @@ public class SearchItemsFragment extends Fragment{
 			public TextView itemName_txt;
 			public Button close_btn;
 			public TextView close_txt;
+			public ImageView subscribe_img;
 		}
 		
 		public int getCount() {
@@ -338,6 +339,7 @@ public class SearchItemsFragment extends Fragment{
 			holder.itemName_txt = (TextView) convertView.findViewById(R.id.itemName_txt);
 			holder.close_btn = (Button) convertView.findViewById(R.id.close_home_btn);
 			holder.close_txt = (TextView) convertView.findViewById(R.id.closeted_view_txt_view);
+			holder.subscribe_img=(ImageView)convertView.findViewById(R.id.list_home_text_view);
 			
 			
 			holder.home_username_txt.setText(list.get(position).getStore_name().toString());
@@ -345,6 +347,23 @@ public class SearchItemsFragment extends Fragment{
 			holder.home_view_txt.setText(" " + list.get(position).getViews().toString());
 			holder.itemName_txt.setText(list.get(position).getItem_name().toString());
 			final String uid = app.getUserID();
+			
+			if (!app.getUserID().equals("")) {
+
+				holder.subscribe_img.setVisibility(View.VISIBLE);
+				holder.close_txt.setVisibility(View.VISIBLE);
+				holder.close_btn.setVisibility(View.VISIBLE);
+				holder.home_view_txt.setVisibility(View.VISIBLE);
+
+			} else {
+
+				holder.subscribe_img.setVisibility(View.INVISIBLE);
+				holder.close_txt.setVisibility(View.INVISIBLE);
+				holder.close_btn.setVisibility(View.INVISIBLE);
+				holder.home_view_txt.setVisibility(View.INVISIBLE);
+
+			}
+
 			
 			Log.v("log_tag", "Item image :::: " + list.get(position).getItem_image());
 			

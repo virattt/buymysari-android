@@ -84,7 +84,7 @@ public class StoreProfileFragment extends Fragment{
 					long id) {
 				FragmentManager fm = getFragmentManager();
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				MyStoreItemFragment fm2 = new MyStoreItemFragment();
+				StoreDetailFragment fm2 = new StoreDetailFragment();
 				fragmentTransaction.replace(R.id.rela_myStore_fragment, fm2,
 						"HELLO");
 				fragmentTransaction.addToBackStack(null);
