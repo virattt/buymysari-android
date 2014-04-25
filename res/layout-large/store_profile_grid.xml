@@ -81,7 +81,6 @@
                         android:layout_width="40dip"
                         android:layout_height="wrap_content"
                         android:src="@drawable/door" />
-
                 </TableRow>
             </TableLayout>
         </RelativeLayout>
@@ -162,6 +161,15 @@
             android:layout_marginLeft="15dip"
             android:src="@drawable/point" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_below="@+id/rela_location_store"
+        android:layout_marginBottom="2dip"
+        android:layout_marginTop="5dip"
+        android:background="#eae9e9" />
 
     <LinearLayout
         android:id="@+id/tab_layout"

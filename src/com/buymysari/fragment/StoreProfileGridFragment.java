@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -75,6 +76,14 @@ public class StoreProfileGridFragment extends Fragment {
 
 		View rootView = inflater.inflate(R.layout.store_profile_grid,
 				container, false);
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+
+		
 		app = (MyApplication) getActivity().getApplicationContext();
 		st_id = app.getStoreId();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
@@ -197,10 +206,9 @@ public class StoreProfileGridFragment extends Fragment {
 						// TODO Auto-generated method stub
 
 						_listposition = position;
-						
+
 						return false;
 					}
-
 				});
 
 		gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -211,7 +219,7 @@ public class StoreProfileGridFragment extends Fragment {
 				// TODO Auto-generated method stub
 
 				_listposition = position;
-				
+
 				return false;
 			}
 		});
@@ -327,32 +335,19 @@ public class StoreProfileGridFragment extends Fragment {
 								+ gridlist.get(0).store_image);
 
 				String img_url = gridlist.get(0).store_image.toString().trim();
-				URL url = null;
-				try {
-					url = new URL(img_url);
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Bitmap bmp = null;
-				try {
-					bmp = BitmapFactory.decodeStream(url.openConnection()
-							.getInputStream());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				imageLoader = new ImageLoader(getActivity());
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					Log.v("log", " Above HoneyComb ");
 
-					MarketPlaceActivity.imView.setImageBitmap(bmp);
-					MarketPlaceActivity.imView.setBorderColor(getResources()
-							.getColor(R.color.GrayLight));
+					Bitmap b = getBitmapFromUrl(img_url);
+					MarketPlaceActivity.imView.setImageBitmap(b);
+					MarketPlaceActivity.imView.setBorderColor(getResources().getColor(R.color.GrayLight));
 					MarketPlaceActivity.imView.setBorderWidth(0);
-
-					list_Store_profile_grid_logo_image.setImageBitmap(bmp);
+					list_Store_profile_grid_logo_image.setImageBitmap(b);
 				} else {
-
+					Log.v("log", " Below HoneyComb ");
+					Bitmap bmp = getBitmapFromUrl(img_url);
 					MarketPlaceActivity.imView1.setImageBitmap(bmp);
 					imView.setImageBitmap(bmp);
 				}
@@ -365,9 +360,7 @@ public class StoreProfileGridFragment extends Fragment {
 			}
 
 			progress.dismiss();
-
 		}
-
 	}
 
 	class CustomGridViewAdapter extends BaseAdapter {
@@ -494,6 +487,26 @@ public class StoreProfileGridFragment extends Fragment {
 		}
 	}
 
+	public Bitmap getBitmapFromUrl(String urlStore) {
+		URL url = null;
+		try {
+			url = new URL(urlStore);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap bmp = null;
+		try {
+			bmp = BitmapFactory.decodeStream(url.openConnection()
+					.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bmp;
+	}
+	
+	
 	public class DeletDataTask extends AsyncTask<String, Void, String> {
 
 		public DeletDataTask(ProgressDialog progress) {
@@ -521,8 +534,8 @@ public class StoreProfileGridFragment extends Fragment {
 			adt.notifyDataSetChanged();
 			adtstore.notifyDataSetChanged();
 			progress.dismiss();
-			Toast.makeText(getActivity().getApplicationContext(), " DELETED ITEM ",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity().getApplicationContext(),
+					" DELETED ITEM ", Toast.LENGTH_LONG).show();
 
 		}
 

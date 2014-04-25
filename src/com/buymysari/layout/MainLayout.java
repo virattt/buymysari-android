@@ -138,13 +138,13 @@ public class MainLayout extends LinearLayout {
             // menu View occupies the full height, but certain width
             LayoutParams menuLayoutParams = (LayoutParams)menu.getLayoutParams();
             menuLayoutParams.height = this.getHeight();
-            menuLayoutParams.width = (int)(mainLayoutWidth * 0.7);
+            menuLayoutParams.width = mainLayoutWidth;
             
         }
         
         // Layout the child views    
         
-        menu.layout(left, top, (int)(mainLayoutWidth * 0.7), bottom);
+        menu.layout(left, top, mainLayoutWidth , bottom);
         content.layout(left + contentXOffset, top, right + contentXOffset, bottom);
         
     }

@@ -30,10 +30,10 @@
     <View
         android:id="@+id/view1"
         android:layout_width="fill_parent"
-        android:layout_height="1dip"
+        android:layout_height="2dip"
         android:layout_below="@+id/close_home_btn"
         android:layout_marginBottom="2dip"
-        android:background="#999592" />
+        android:background="#eae9e9" />
 
     <TextView
         android:id="@+id/store_closet_txt_view"
@@ -69,8 +69,8 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
         android:layout_alignBottom="@+id/itemName_txt"
+        android:layout_marginLeft="10dip"
         android:layout_toRightOf="@+id/items_view"
         android:text="" />
 

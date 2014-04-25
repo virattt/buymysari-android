@@ -392,6 +392,126 @@ public class DBAdpter {
 		return msg;
 	}
 
+	// first AuthUser http://imprintingdesign.com/Indian_Stores/users/userLogin
+	public static ArrayList<UserInfo_dto> AuthUserInfo(String id,String userType) {
+		fetch_UserDetail_data = new ArrayList<UserInfo_dto>();
+		
+		String result = "";
+		String msg = "";
+		// String success_txt = "";
+		InputStream is = null;
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("id", id));
+		nameValuePairs.add(new BasicNameValuePair("type", userType));
+
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url + "userLogin");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+
+			is = entity.getContent();
+		} catch (Exception e) {
+			Log.e("log_tag", "Error in http connection " + e.toString());
+		}
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.v("log", "Result Auth User --> : " + result);
+		} catch (Exception e) {
+			Log.e("log_tag", "Error converting result " + e.toString());
+		}
+
+		try {
+			JSONObject jObj = new JSONObject(result);
+			msg = jObj.getString("message");
+
+			Boolean success_con = jObj.getBoolean("success");
+
+			if (success_con == true) {
+				Boolean isStoreOwner = jObj.getBoolean("isStoreOwner");
+				if (isStoreOwner == false) {
+
+					JSONArray j_Array = jObj.getJSONArray("info");
+					for (int i = 0; i < j_Array.length(); i++) {
+						JSONObject json_objs = j_Array.getJSONObject(i);
+						UserInfo_dto user_info_list = new UserInfo_dto();
+						user_info_list.setUser_id(json_objs
+								.getString("user_id"));
+						user_info_list.setFirst_name(json_objs
+								.getString("first_name"));
+						user_info_list.setEmail(json_objs.getString("email"));
+						user_info_list.setLast_name(json_objs
+								.getString("last_name"));
+						user_info_list.setIsStoreOwner(isStoreOwner + "");
+						user_info_list.setMobile(json_objs.getString("mobile"));
+						user_info_list.setStrore_profile_image(json_objs
+								.getString("image"));
+						user_info_list.setUser_password("");
+						user_info_list.setMsg(msg);
+						fetch_UserDetail_data.add(user_info_list);
+					}
+				} else if (isStoreOwner == true) {
+
+					JSONArray j_Array = jObj.getJSONArray("info");
+					for (int i = 0; i < j_Array.length(); i++) {
+						JSONObject json_objs = j_Array.getJSONObject(i);
+						UserInfo_dto user_info_list = new UserInfo_dto();
+
+						user_info_list.setStrore_profile_Address(json_objs
+								.getString("Address"));
+						user_info_list.setStrore_profile_city(json_objs
+								.getString("store_city"));
+						user_info_list.setStrore_profile_email(json_objs
+								.getString("store_email"));
+						user_info_list.setStrore_profile_firstName(json_objs
+								.getString("first_name"));
+						user_info_list.setStrore_profile_id(json_objs
+								.getString("store_id"));
+						user_info_list.setStrore_profile_image(json_objs
+								.getString("store_image"));
+						user_info_list.setStrore_profile_lastName(json_objs
+								.getString("last_name"));
+						user_info_list.setStrore_profile_mobile(json_objs
+								.getString("store_mobile"));
+						user_info_list.setStrore_profile_name(json_objs
+								.getString("store_name"));
+						user_info_list.setStrore_profile_website(json_objs
+								.getString("website"));
+						user_info_list.setStrore_profile_password("");
+						user_info_list.setMsg(msg);
+						user_info_list.setIsStoreOwner(isStoreOwner + "");
+						fetch_UserDetail_data.add(user_info_list);
+
+					}
+				}
+			}
+			else
+			{
+				UserInfo_dto user_info_list = new UserInfo_dto();
+				user_info_list.setMsg(msg);
+				fetch_UserDetail_data.add(user_info_list);
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return fetch_UserDetail_data;
+
+	}
+	
 	// public static String loginInUser(String username, String password) {
 	public static ArrayList<UserInfo_dto> getAllUserInfo(String username,
 			String password) {
@@ -410,7 +530,7 @@ public class DBAdpter {
 		// http post
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost(url + "temp");
+			HttpPost httppost = new HttpPost(url + "login");
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity entity = response.getEntity();
@@ -654,40 +774,40 @@ public class DBAdpter {
 
 				for (int i = 0; i < j_Array.length(); i++) {
 					JSONObject json_objs = j_Array.getJSONObject(i);
-					JSONArray itemInfo = json_objs.getJSONArray("item_Info");
+				//	JSONArray itemInfo = json_objs.getJSONArray("item_Info");
 
-					for (int j = 0; j < itemInfo.length(); j++) {
+				//	for (int j = 0; j < itemInfo.length(); j++) {
 						All_list_home_dto list_home_data = new All_list_home_dto();
 						Log.v("log_tag",
 								"Storename ::000  "
 										+ json_objs.getString("store_name"));
+						
 						list_home_data.store_id = json_objs.getString("id");
-						list_home_data.store_name = json_objs
-								.getString("store_name");
+						list_home_data.store_name = json_objs.getString("store_name");
 						list_home_data.city = json_objs.getString("city");
 						list_home_data.website = json_objs.getString("website");
 						list_home_data.state = json_objs.getString("state");
 						list_home_data.picture = json_objs.getString("picture");
 
-						JSONObject json_objs_items = itemInfo.getJSONObject(j);
+					//	JSONObject json_objs_items = itemInfo.getJSONObject(j);
 						Log.v("log_tag",
 								"json_objs_items "
-										+ json_objs_items.getString("name"));
-						list_home_data.item_id = json_objs_items
+										+ json_objs.getString("name"));
+						
+						list_home_data.item_id = json_objs
 								.getString("item_id");
-						list_home_data.name = json_objs_items.getString("name");
-						list_home_data.gender = json_objs_items
+						list_home_data.name = json_objs.getString("name");
+						list_home_data.gender = json_objs
 								.getString("gender");
 						// list_home_data.category_name =
 						// json_objs_items.getString("category_name");
-						list_home_data.image = json_objs_items
+						list_home_data.image = json_objs
 								.getString("image");
-						list_home_data.views = json_objs_items
+						list_home_data.views = json_objs
 								.getString("views");
-						list_home_data.Closeted_item_track = json_objs_items
-								.getString("Closeted_item_track");
+						list_home_data.Closeted_item_track = json_objs.getString("Closeted_item_track");
 						fetch_list_home_data.add(list_home_data);
-					}
+				//	}
 				}
 			}
 		} catch (JSONException e) {
@@ -1138,6 +1258,7 @@ public class DBAdpter {
 		nameValuePairs.add(new BasicNameValuePair("lname", lname));
 		nameValuePairs.add(new BasicNameValuePair("email", email));
 		nameValuePairs.add(new BasicNameValuePair("img", image));
+		nameValuePairs.add(new BasicNameValuePair("password", password));
 
 		// http post
 		try {
@@ -1475,7 +1596,7 @@ public class DBAdpter {
 			String str_first_name, String str_last_name, String str_email_edt,
 			String str_store_name_edt, String str_website_edt,
 			String str_phone_edt, String str_city_edt, String str_address_edt,
-			String base64st) {
+			String base64st , String str_edtStoreProfilePassword) {
 
 		fetch_UserDetail_data = new ArrayList<UserInfo_dto>();
 
@@ -1494,8 +1615,8 @@ public class DBAdpter {
 		nameValuePairs.add(new BasicNameValuePair("city", str_city_edt));
 		nameValuePairs.add(new BasicNameValuePair("phone", str_phone_edt));
 		nameValuePairs.add(new BasicNameValuePair("img", base64st));
-		nameValuePairs
-				.add(new BasicNameValuePair("first_name", str_first_name));
+		nameValuePairs.add(new BasicNameValuePair("password", str_edtStoreProfilePassword));
+		nameValuePairs.add(new BasicNameValuePair("first_name", str_first_name));
 		nameValuePairs.add(new BasicNameValuePair("last_name", str_last_name));
 
 		// http post

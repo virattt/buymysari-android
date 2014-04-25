@@ -3,111 +3,119 @@
     android:id="@+id/relative_sendimage_send"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true" >
+        android:background="#221010" >
 
-        <com.buymysari.SegmentedRadioGroup
-            android:id="@+id/segment_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dip"
-            android:checkedButton="@+id/button_one"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@id/button_one"
-                android:layout_margin="15dip"
-                android:button="@null"
-                android:gravity="center"
-                android:minHeight="80dip"
-                android:minWidth="80dip"
-                android:text="S"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/radio_colors" />
-
-            <RadioButton
-                android:id="@+id/button_two"
-                android:layout_margin="15dip"
-                android:button="@null"
-                android:gravity="center"
-                android:minHeight="80dip"
-                android:minWidth="80dip"
-                android:text="C"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/radio_colors" />
-
-            <RadioButton
-                android:id="@+id/button_three"
-                android:layout_margin="15dip"
-                android:button="@null"
-                android:gravity="center"
-                android:minHeight="80dip"
-                android:minWidth="80dip"
-                android:text="A"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/radio_colors" />
-        </com.buymysari.SegmentedRadioGroup>
-
-        <com.buymysari.SegmentedRadioGroupMale
-            android:id="@+id/segment_text_male"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/segment_text"
-            android:layout_marginTop="20dip"
-            android:checkedButton="@+id/button_one_male"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@id/button_one_male"
-                android:layout_margin="15dip"
-                android:button="@null"
-                android:gravity="center"
-                android:minHeight="80dip"
-                android:minWidth="80dip"
-                android:text="M"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/radio_colors" />
-
-            <RadioButton
-                android:id="@+id/button_one_female"
-                android:layout_margin="15dip"
-                android:button="@null"
-                android:gravity="center"
-                android:minHeight="80dip"
-                android:minWidth="80dip"
-                android:text="F"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/radio_colors" />
-        </com.buymysari.SegmentedRadioGroupMale>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/segment_text_male"
-            android:layout_marginTop="20dip" >
+            android:orientation="vertical"
+           >
 
             <EditText
                 android:id="@+id/edt_text_store_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
+                android:layout_width="270dip"
+                android:layout_height="50dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="80dp"
+                android:ems="10"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:hint="Name" />
+                android:hint="Item Name" >
+
+                
+            </EditText>
+
+            <LinearLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dip"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <ToggleButton
+                    android:id="@+id/button_cloth_send_img"
+                    android:layout_width="80dip"
+                    android:layout_height="90dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/clothes_active"
+                    android:textOff=""
+                    android:textOn="" />
+
+                <ToggleButton
+                    android:id="@+id/button_shoes_send_img"
+                    android:layout_width="80dip"
+                    android:layout_height="90dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/shoes_active"
+                    android:textOff=""
+                    android:textOn="" />
+
+                <ToggleButton
+                    android:id="@+id/button_acce_send_img"
+                    android:layout_width="80dip"
+                    android:layout_height="90dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/accessories_active"
+                    android:textOff=""
+                    android:textOn="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_layout_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dip"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <ToggleButton
+                    android:id="@+id/button_one_male"
+                    android:layout_width="80dip"
+                    android:layout_height="90dip"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:background="#221010"
+                    android:textColor="@color/White"
+                    android:textOff="M"
+                    android:textOn="M"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/button_one_female"
+                    android:layout_width="80dip"
+                    android:layout_height="90dip"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginRight="15dip"
+                    android:background="#221010"
+                    android:textColor="@color/White"
+                    android:textOff="F"
+                    android:textOn="F"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_send_image"
-                android:layout_width="80dip"
-                android:layout_height="100dip"
-                android:layout_below="@+id/edt_text_store_name"
-                android:layout_marginTop="20dip"
-                android:text="send" />
-        </RelativeLayout>
-    </RelativeLayout>
+                android:layout_width="270dip"
+                android:layout_height="50dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:background="#41d845"
+                android:text="UPLOAD IMAGE"
+                android:textColor="@color/White" />
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

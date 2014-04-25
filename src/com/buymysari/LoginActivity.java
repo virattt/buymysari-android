@@ -6,9 +6,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import com.buymysari.dto.UserInfo_dto;
 
 public class LoginActivity extends Activity {
+	
 	EditText uname;
 	EditText pass;
 	Button login;
@@ -32,12 +36,14 @@ public class LoginActivity extends Activity {
 	ConnectionDetector cd;
 	Boolean isInternetPresent = false;
 	private ProgressDialog progress;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		app = (MyApplication) LoginActivity.this.getApplicationContext();
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -123,6 +129,8 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 		       
 		        app.setStoreId(store_id);	
 		        app.setUserID("");
+		        savePreferences("store_id" , store_id);
+		        savePreferences("user_id" , "");
 		        
 		        Log.v("log_tag","list DoinBaCK if "+user_id);
 			}
@@ -130,8 +138,12 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 				app.setStoreId("");	
 		        app.setUserID(user_id);
 		        
+		        savePreferences("user_id" , user_id);
+		        savePreferences("store_id" , "");
+		        
 		        Log.v("log_tag","list DoinBaCK else"+list.get(0).strore_profile_id);
 			}
+			
 	        if (resultNew.equals("success fully login")) {
 				
 	        	Toast.makeText(LoginActivity.this, resultNew, Toast.LENGTH_LONG).show();
@@ -148,4 +160,13 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 	        	progress.dismiss();
 	    	}
 	}
+
+	private void savePreferences(String key, String value) {
+       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+       Editor editor = sharedPreferences.edit();
+       editor.putString(key, value);
+       editor.commit();
+   }
+
+
 }

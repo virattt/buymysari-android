@@ -15,8 +15,7 @@
             android:id="@+id/camera_preview_fragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/conform" >
+            android:layout_alignParentLeft="true" >
         </FrameLayout>
     </RelativeLayout>
 

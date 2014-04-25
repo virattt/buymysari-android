@@ -12,7 +12,7 @@
         android:id="@+id/my_Store_logo_image"
         android:layout_width="60dip"
         android:layout_height="60dip"
-        android:layout_margin="5dip" />
+        android:layout_margin="5dip" />
     -->
 
     <TextView
@@ -28,7 +28,7 @@
         android:textStyle="bold"
         android:typeface="sans" />
 
-   <ImageView
+    <ImageView
         android:id="@+id/my_Store_logo_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -37,21 +37,21 @@
 
     <TextView
         android:id="@+id/txtAddressSubScribeProfile"
-        android:layout_width="80dip"
-        android:layout_height="30dip"
+        android:layout_width="100dip"
+        android:layout_height="50dip"
         android:layout_alignParentRight="true"
-        android:textColor="#466aaf"
+        android:layout_marginLeft="5dip"
         android:layout_marginTop="25dip"
         android:text="Toronto"
-        android:layout_marginLeft="5dip"
-        android:textSize="16sp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#466aaf"
+        android:textSize="16sp" />
 
     <RelativeLayout
+        android:id="@+id/rel_lay"
         android:layout_width="fill_parent"
         android:layout_height="40dip"
         android:layout_alignParentLeft="true"
-        
         android:layout_below="@+id/my_Store_logo_image" >
 
         <Button
@@ -60,8 +60,8 @@
             android:layout_height="40dip"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="4dp"
             android:layout_marginBottom="10dip"
+            android:layout_marginRight="4dp"
             android:background="#41d845"
             android:text="SUBSCRIBED"
             android:textColor="@color/White" />
@@ -73,8 +73,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="46dp"
             android:layout_toLeftOf="@+id/button1"
-            android:paddingBottom="10dip"
             android:gravity="center_vertical"
+            android:paddingBottom="10dip"
             android:text="200"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/Gray"
@@ -86,18 +86,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:paddingBottom="10dip"
             android:layout_toLeftOf="@+id/txtClosetnumber"
+            android:paddingBottom="10dip"
             android:src="@drawable/door" />
-
     </RelativeLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_below="@+id/rel_lay"
+        android:layout_marginBottom="2dip"
+        android:background="#eae9e9" />
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dip"
-        android:layout_alignBottom="@+id/txtAddressSubScribeProfile"
+        android:layout_alignTop="@+id/txtAddressSubScribeProfile"
         android:layout_toLeftOf="@+id/txtAddressSubScribeProfile"
         android:src="@drawable/point" />
 

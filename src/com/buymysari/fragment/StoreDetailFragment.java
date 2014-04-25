@@ -70,6 +70,13 @@ public class StoreDetailFragment extends Fragment {
 
 		rootView = inflater.inflate(R.layout.store_detail_list, container,
 				false);
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		
 		app = (MyApplication) getActivity().getApplicationContext();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
@@ -125,12 +132,8 @@ public class StoreDetailFragment extends Fragment {
 				store_subscribe_btn.setBackgroundColor(Color.parseColor("#d84146"));
 				store_subscribe_btn.setText("SUBSCRIBE");
 			}
-			
 		} else {
-
 			store_subscribe_btn.setVisibility(View.INVISIBLE);
-			
-
 		}
 
 		btnStoreProfileGrid = (ToggleButton) rootView
@@ -196,12 +199,7 @@ public class StoreDetailFragment extends Fragment {
 
 		}
 
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-
+		
 		store_subscribe_btn.setOnClickListener(new View.OnClickListener() {
 
 			@Override

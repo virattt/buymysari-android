@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,12 +40,13 @@ import android.widget.ToggleButton;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
 import com.buymysari.dto.Closet_dto;
 
-public class ClosetFragment extends Fragment  {
+public class ClosetFragment extends Fragment {
 
 	ListView lv;
 	ArrayList<Closet_dto> list = new ArrayList<Closet_dto>();
@@ -62,88 +64,105 @@ public class ClosetFragment extends Fragment  {
 	Button btnLoadMore;
 	int pageNumber = 1;
 	int NoMoredataAvailable = 0;
-	TextView txtName ,txtWebSite, txt_closet_text;
-	
+	TextView txtName, txtWebSite, txt_closet_text;
+
 	CustomGridViewAdapter adtstore;
 	FrameLayout closet_grid_layout;
 	GridView closet_gridView;
-	
+
 	ToggleButton btnClosetList, btnClosetGrid;
 	String userId;
-	
+
 	Button btnEditUserProfile;
-	
+	View rootView;
+
+	int myLastVisiblePos;
+	private int mPreviousTotal = 0;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.closet, container, false);
+		rootView = inflater.inflate(R.layout.closet, container, false);
 		lv = (ListView) rootView.findViewById(R.id.closet_listview);
-
-		txtName = (TextView)rootView.findViewById(R.id.txtStoreName);
-		txtWebSite = (TextView)rootView.findViewById(R.id.txtStoreWebsite);
-		txt_closet_text = (TextView)rootView.findViewById(R.id.txt_closet_text);
-		app = (MyApplication) getActivity().getApplicationContext();
-		
-		String FirstNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name();
-		
-		 userId = app.getUserID();
-		String lastName = DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
-		String userImage = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_image();
-		String emailId = DBAdpter.fetch_UserDetail_data.get(0).getEmail();
-		String Mobile = DBAdpter.fetch_UserDetail_data.get(0).getMobile();
-		
-		Log.v("log"," userName " + FirstNAme+" "+lastName + " emailId "+ emailId + " mobile " + Mobile);
-		txtName.setText(FirstNAme+" "+lastName);
-		txtWebSite.setText(emailId);
-		txt_closet_text.setText(FirstNAme+"'s Closet");
-		
-		closet_grid_layout = (FrameLayout) rootView
-				.findViewById(R.id.closet_gridview_framelayout);
-		closet_gridView = (GridView) rootView
-				.findViewById(R.id.closet_gridView);
-		
-		btnEditUserProfile = (Button)rootView.findViewById(R.id.btnEditUserProfile);
-		btnEditUserProfile.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-			
-				FragmentManager fm = getFragmentManager();
-				FragmentTransaction fragmentTransaction = fm
-						.beginTransaction();
-				ProfileFragment fm2 = new ProfileFragment();
-				fragmentTransaction.replace(
-						R.id.rela_closet_view, fm2,
-						"HELLO");
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-				
-			}
-		});
-		
-		Bitmap store_bmp = getBitmapFromUrl(userImage);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			CircularImageView Store_ic_img = (CircularImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
-			Store_ic_img.setImageBitmap(store_bmp);
-			Store_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
-			Store_ic_img.setBorderWidth(0);
-		} else {
-			Log.v("log", " Below HoneyComb ");
-
-			ImageView imView = (ImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
-			imView.setImageBitmap(store_bmp);
-		}
-		
-		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		
+		txtName = (TextView) rootView.findViewById(R.id.txtStoreName);
+		txtWebSite = (TextView) rootView.findViewById(R.id.txtStoreWebsite);
+		txt_closet_text = (TextView) rootView
+				.findViewById(R.id.txt_closet_text);
+		app = (MyApplication) getActivity().getApplicationContext();
+
+		String FirstNAme = DBAdpter.fetch_UserDetail_data.get(0)
+				.getFirst_name();
+
+		userId = app.getUserID();
+		String lastName = DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
+		String userImage = DBAdpter.fetch_UserDetail_data.get(0)
+				.getStrore_profile_image();
+		String emailId = DBAdpter.fetch_UserDetail_data.get(0).getEmail();
+		String Mobile = DBAdpter.fetch_UserDetail_data.get(0).getMobile();
+
+		Log.v("log", " userName " + FirstNAme + " " + lastName + " emailId "
+				+ emailId + " mobile " + Mobile);
+		txtName.setText(FirstNAme + " " + lastName);
+		txtWebSite.setText(emailId);
+		txt_closet_text.setText(FirstNAme + "'s Closet");
+
+		closet_grid_layout = (FrameLayout) rootView
+				.findViewById(R.id.closet_gridview_framelayout);
+		closet_gridView = (GridView) rootView
+				.findViewById(R.id.closet_gridView);
+
+		myLastVisiblePos = closet_gridView.getFirstVisiblePosition();
+
+		btnEditUserProfile = (Button) rootView
+				.findViewById(R.id.btnEditUserProfile);
+		btnEditUserProfile.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				FragmentManager fm = getFragmentManager();
+				FragmentTransaction fragmentTransaction = fm.beginTransaction();
+				ProfileFragment fm2 = new ProfileFragment();
+				fragmentTransaction
+						.replace(R.id.rela_closet_view, fm2, "HELLO");
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+
+			}
+		});
+
+		String img_url = userImage;
+		imageLoader = new ImageLoader(getActivity());
+		Bitmap bmp =  getBitmapFromUrl(img_url);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			Log.v("log", " Above HoneyComb ");
+
+			CircularImageView Store_ic_img = (CircularImageView) rootView
+					.findViewById(R.id.imgStoreProfileCloset);
+		//	imageLoader.DisplayImage(img_url, Store_ic_img);
+			Store_ic_img.setImageBitmap(bmp);
+			Store_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+			Store_ic_img.setBorderWidth(0);
+		} else {
+			Log.v("log", " Below HoneyComb ");
+
+			ImageView imView = (ImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
+			imView.setImageBitmap(bmp);
+			//imageLoader.DisplayImage(img_url, imView);
+		}
+
+		imageLoader = new ImageLoader(getActivity().getApplicationContext());
+
+		
 
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -151,84 +170,142 @@ public class ClosetFragment extends Fragment  {
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
 
-		btnClosetGrid = (ToggleButton) rootView.findViewById(R.id.btnClosetGrid);
-		btnClosetList = (ToggleButton) rootView.findViewById(R.id.btnClosetList);
+		btnClosetGrid = (ToggleButton) rootView
+				.findViewById(R.id.btnClosetGrid);
+		btnClosetList = (ToggleButton) rootView
+				.findViewById(R.id.btnClosetList);
 		btnClosetGrid.setOnCheckedChangeListener(changeChecker);
 		btnClosetList.setOnCheckedChangeListener(changeChecker);
-		
-		
-		
-		
+
 		new JSONTask(progress).execute("Home");
 
-		lv.setOnScrollListener(new OnScrollListener(){
+		lv.setOnScrollListener(new OnScrollListener() {
 			private int mLastFirstVisibleItem;
-			
-		    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		      // TODO Auto-generated method stub
-		    }
-		    public void onScrollStateChanged(AbsListView view, int scrollState) {
-		      // TODO Auto-generated method stub
-		      
-		       if(scrollState == 0) 
-		      Log.i("a", "scrolling stopped...");
 
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+			}
 
-		        if (view.getId() == lv.getId()) {
-		        final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
-		         if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-		           // mIsScrollingUp = false;
-		            Log.i("a", "scrolling down...");
-		            
-		            Log.v("log"," NOMOreData  " + NoMoredataAvailable);
-			        if (NoMoredataAvailable != 1) 
-			        {
-			        	new loadMoreListView().execute();
-			        	Log.v("log"," NOMOreData if " + NoMoredataAvailable);
-			        }
-		            
-		        } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-		           // mIsScrollingUp = true;
-		            Log.i("a", "scrolling up...");
-		        }
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
 
-		        mLastFirstVisibleItem = currentFirstVisibleItem;
-		    } 
-		    }
-		  });
-		
-		
+				if (scrollState == 0)
+					Log.i("a", "scrolling stopped...");
+
+				if (view.getId() == lv.getId()) {
+					final int currentFirstVisibleItem = lv
+							.getFirstVisiblePosition();
+					if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+						// mIsScrollingUp = false;
+						Log.i("a", "scrolling down...");
+
+						Log.v("log", " NOMOreData  " + NoMoredataAvailable);
+						if (NoMoredataAvailable != 1) {
+							new loadMoreListView().execute();
+							Log.v("log", " NOMOreData if "
+									+ NoMoredataAvailable);
+						}
+
+					} else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+						// mIsScrollingUp = true;
+						Log.i("a", "scrolling up...");
+					}
+
+					mLastFirstVisibleItem = currentFirstVisibleItem;
+				}
+			}
+		});
+
+		closet_gridView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+				// TODO Auto-generated method stub
+				if (scrollState == 0)
+					Log.v("log", " Gridview scrolling stopped...");
+
+				if (view.getId() == closet_gridView.getId()) {
+					Log.v("log",
+							" getFirstVisiblePosition "
+									+ view.getFirstVisiblePosition()
+									+ " myLastVisiblePos " + myLastVisiblePos);
+									}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+				final int currentFirstVisibleItem = view.getFirstVisiblePosition();
+
+					Log.v("log"," Prev Total " + mPreviousTotal + " total count " + totalItemCount);
+				
+				  if (totalItemCount > mPreviousTotal) {
+
+					  	mPreviousTotal = totalItemCount;
+					  	Log.v("log"," Prev Total if " + mPreviousTotal + " total count " + totalItemCount);
+				  }
+				
+				if (currentFirstVisibleItem > myLastVisiblePos) {
+					// mIsScrollingUp = false;
+					Log.v("log", " Gridview scrolling down... NOMOreData  "
+							+ NoMoredataAvailable);
+
+					if (NoMoredataAvailable != 1) {
+						new loadMoreListView().execute();
+						Log.v("log", " NOMOreData if "
+								+ NoMoredataAvailable);
+					}
+
+				} else if (currentFirstVisibleItem < myLastVisiblePos) {
+					// mIsScrollingUp = true;
+					Log.v("log", " Gridview... scrolling up...");
+				}
+
+				myLastVisiblePos = currentFirstVisibleItem;
+
+			}
+		});
 
 		return rootView;
 	}
+
 	OnCheckedChangeListener changeChecker = new OnCheckedChangeListener() {
 
-	    @Override
-	    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-	        if (isChecked){
-	        	
-	        	Log.v("log_tag", "buttonView ::: "+buttonView);
-	            if (buttonView == btnClosetGrid) {
-	            	btnClosetList.setChecked(false);
-	            	lv.setVisibility(View.INVISIBLE);
-	            	closet_gridView.setVisibility(View.VISIBLE);
-					btnClosetGrid.setBackgroundResource(R.drawable.selected_grid);
-					btnClosetList.setBackgroundResource(R.drawable.unselected_list);
-	            	
-	              
-	            }
-	            if (buttonView == btnClosetList) {
-	            	btnClosetGrid.setChecked(false);
-	            	lv.setVisibility(View.VISIBLE);
-	            	closet_gridView.setVisibility(View.INVISIBLE);
-					btnClosetGrid.setBackgroundResource(R.drawable.unselected_grid);
-					btnClosetList.setBackgroundResource(R.drawable.selected_list);
-	                
-	            }
-	           
-	        }
-	    }
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (isChecked) {
+
+				Log.v("log_tag", "buttonView ::: " + buttonView);
+				if (buttonView == btnClosetGrid) {
+					btnClosetList.setChecked(false);
+					lv.setVisibility(View.INVISIBLE);
+					closet_gridView.setVisibility(View.VISIBLE);
+					btnClosetGrid
+							.setBackgroundResource(R.drawable.selected_grid);
+					btnClosetList
+							.setBackgroundResource(R.drawable.unselected_list);
+
+				}
+				if (buttonView == btnClosetList) {
+					btnClosetGrid.setChecked(false);
+					lv.setVisibility(View.VISIBLE);
+					closet_gridView.setVisibility(View.INVISIBLE);
+					btnClosetGrid
+							.setBackgroundResource(R.drawable.unselected_grid);
+					btnClosetList
+							.setBackgroundResource(R.drawable.selected_list);
+
+				}
+
+			}
+		}
 	};
+
 	public class loadMoreListView extends AsyncTask<String, Void, String> {
 
 		public void onPreExecute() {
@@ -267,12 +344,17 @@ public class ClosetFragment extends Fragment  {
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
 				adt.notifyDataSetChanged();
-				lv.setSelectionFromTop(currentPosition + 1, 0); 
-				
-				
+				lv.setSelectionFromTop(currentPosition + 1, 0);
+
+				adtstore = new CustomGridViewAdapter(getActivity()
+						.getApplicationContext());
+				closet_gridView.setAdapter(adtstore);
+				adtstore.notifyDataSetChanged();
+				closet_gridView.setSelection(currentPosition + 1);
+
 			} else {
 				Log.v("log", " Search else" + result);
-				NoMoredataAvailable  = 1;
+				NoMoredataAvailable = 1;
 				Toast.makeText(getActivity().getApplicationContext(),
 						"No More Closeted Items Available ", Toast.LENGTH_LONG)
 						.show();
@@ -319,8 +401,9 @@ public class ClosetFragment extends Fragment  {
 			if (Integer.parseInt(result) > 0) {
 				adt = new MyListAdapter(getActivity().getApplicationContext());
 				lv.setAdapter(adt);
-				
-				adtstore = new CustomGridViewAdapter(getActivity().getApplicationContext());
+
+				adtstore = new CustomGridViewAdapter(getActivity()
+						.getApplicationContext());
 				closet_gridView.setAdapter(adtstore);
 			} else {
 				Toast.makeText(getActivity().getApplicationContext(),
@@ -328,15 +411,15 @@ public class ClosetFragment extends Fragment  {
 						.show();
 			}
 			progress.dismiss();
-
 		}
 
 		// You'll have to override this method on your other tasks that extend
 		// from this one and use your JSONObject as needed
 
 	}
+
 	// list.get(position).getStore_image()
-	public Bitmap getBitmapFromUrl (String urlStore) {
+	public Bitmap getBitmapFromUrl(String urlStore) {
 		URL url = null;
 		try {
 			url = new URL(urlStore);
@@ -354,7 +437,7 @@ public class ClosetFragment extends Fragment  {
 		}
 		return bmp;
 	}
-	
+
 	public class MyListAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
@@ -378,20 +461,26 @@ public class ClosetFragment extends Fragment  {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custom_home_list, null);
 
-			URL url = null;
-				Bitmap bmp = getBitmapFromUrl(list.get(position).getStore_image());
+			String img_url = list.get(position).getStore_image().trim();
+			imageLoader = new ImageLoader(getActivity());
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				CircularImageView home_ic_img = (CircularImageView) convertView.findViewById(R.id.list_home_logo_image);
-				home_ic_img.setImageBitmap(bmp);
-				home_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+				Log.v("log", " Above HoneyComb ");
+
+				CircularImageView home_ic_img = (CircularImageView) convertView
+						.findViewById(R.id.list_home_logo_image);
+				imageLoader.DisplayImage(img_url, home_ic_img);
+				home_ic_img.setBorderColor(getResources().getColor(
+						R.color.GrayLight));
 				home_ic_img.setBorderWidth(0);
 			} else {
 				Log.v("log", " Below HoneyComb ");
 
-				ImageView imView = (ImageView) convertView.findViewById(R.id.list_home_logo_image);
-				imView.setImageBitmap(bmp);
+				ImageView imView = (ImageView) convertView
+						.findViewById(R.id.list_home_logo_image);
+				imageLoader.DisplayImage(img_url, imView);
 			}
-			
+
 			ImageButton home_big_img = (ImageButton) convertView
 					.findViewById(R.id.sarees_big_img);
 			TextView home_username_txt = (TextView) convertView
@@ -421,7 +510,7 @@ public class ClosetFragment extends Fragment  {
 			return convertView;
 		}
 	}
-	
+
 	public class CustomGridViewAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
@@ -445,13 +534,12 @@ public class ClosetFragment extends Fragment  {
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.closet_custom_grid, null);
-			
+
 			ImageView closet_big_img = (ImageView) convertView
 					.findViewById(R.id.closet_item_image);
 			if (list.get(position).getImage() != "") {
 
-				imageLoader.DisplayImage(list.get(position).getImage(),
-						closet_big_img);
+				imageLoader.DisplayImage(list.get(position).getImage(),closet_big_img);
 
 			} else {
 
@@ -464,5 +552,7 @@ public class ClosetFragment extends Fragment  {
 			return convertView;
 		}
 	}
+
+	
 	
 }

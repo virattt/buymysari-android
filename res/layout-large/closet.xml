@@ -1,11 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-     android:id="@+id/rela_closet_view"
+    android:id="@+id/rela_closet_view"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white" >
 
-   
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
@@ -17,8 +16,8 @@
         <com.buymysari.CircularImageView
             android:id="@+id/imgStoreProfileCloset"
             android:layout_width="60dip"
-            android:layout_margin="10dip"
             android:layout_height="60dip"
+            android:layout_margin="10dip"
             android:src="@drawable/user_gray" />
 
         <LinearLayout
@@ -31,12 +30,12 @@
                 android:id="@+id/txtStoreName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sonya Gill"
-                android:textStyle="bold"
-                android:textSize="18sp"
                 android:layout_marginTop="15dip"
+                android:text="Sonya Gill"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/Gray" />
+                android:textColor="@color/Gray"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtStoreWebsite"
@@ -44,9 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dip"
                 android:text="Large Text"
-                android:textSize="15sp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#2671b9" />
+                android:textColor="#2671b9"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -57,7 +56,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout1" >
 
-          <Button
+        <Button
             android:id="@+id/btnEditUserProfile"
             android:layout_width="150dip"
             android:layout_height="40dip"
@@ -74,8 +73,8 @@
         android:layout_width="fill_parent"
         android:layout_height="60dip"
         android:layout_alignParentLeft="true"
-        android:gravity="center"
-        android:layout_below="@+id/relativeLayout1" >
+        android:layout_below="@+id/relativeLayout1"
+        android:gravity="center" >
 
         <ImageView
             android:id="@+id/imageView2"
@@ -89,70 +88,75 @@
             android:id="@+id/txt_closet_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
             android:layout_toRightOf="@+id/imageView2"
             android:text="Sonya&apos;s Closet"
-            android:layout_marginLeft="10dip"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/Gray"
             android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
-     <LinearLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="65dip"
-                android:layout_marginTop="3dip"
-                android:layout_marginRight="20dip"
-                android:layout_marginLeft="20dip"
-                android:layout_below="@+id/rel_closet"
-                android:orientation="horizontal"
-                android:gravity="center" >
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_below="@+id/rel_closet"
+        android:layout_marginBottom="2dip"
+        android:background="#eae9e9" />
 
-                <ToggleButton
-                    android:id="@+id/btnClosetList"
-                    android:layout_width="40dip"
-                    android:layout_height="35dip"
-                    android:layout_marginLeft="5dip"
-                    android:background="@drawable/unselected_list"
-                    android:textOff=""
-                    android:textOn=""
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+    <LinearLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="65dip"
+        android:layout_below="@+id/rel_closet"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="3dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
 
-                <ToggleButton
-                    android:id="@+id/btnClosetGrid"
-                    android:layout_width="40dip"
-        			android:layout_height="35dip"
-                    android:layout_marginLeft="25dip"
-                    android:background="@drawable/selected_grid"
-                    android:textOff=""
-                    android:textOn=""
-                    android:checked="true"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+        <ToggleButton
+            android:id="@+id/btnClosetList"
+            android:layout_width="40dip"
+            android:layout_height="35dip"
+            android:layout_marginLeft="5dip"
+            android:background="@drawable/unselected_list"
+            android:textOff=""
+            android:textOn=""
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-     <ListView
+        <ToggleButton
+            android:id="@+id/btnClosetGrid"
+            android:layout_width="40dip"
+            android:layout_height="35dip"
+            android:layout_marginLeft="25dip"
+            android:background="@drawable/selected_grid"
+            android:checked="true"
+            android:textOff=""
+            android:textOn=""
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView
         android:id="@+id/closet_listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tab_layout"
         android:cacheColorHint="#00000000"
         android:divider="#000000"
-        android:visibility="gone"
-         >
-
+        android:visibility="gone" >
     </ListView>
-     <FrameLayout
+
+    <FrameLayout
         android:id="@+id/closet_gridview_framelayout"
         android:layout_width="match_parent"
-        android:layout_below="@+id/tab_layout"
         android:layout_height="match_parent"
-        
-         >
+        android:layout_below="@+id/tab_layout" >
 
         <GridView
             android:id="@+id/closet_gridView"
@@ -163,8 +167,6 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="10dp" >
         </GridView>
-
     </FrameLayout>
-     
 
 </RelativeLayout>

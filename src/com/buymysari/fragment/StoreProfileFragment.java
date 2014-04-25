@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.MyStore_list_dto;
@@ -62,6 +64,14 @@ public class StoreProfileFragment extends Fragment{
 
 		View rootView = inflater.inflate(R.layout.fragment_store_profile,
 				container, false);
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+
+		
 		app = (MyApplication) getActivity().getApplicationContext();
 		lv = (ListView) rootView.findViewById(R.id.myStore_listview);
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
@@ -178,13 +188,12 @@ public class StoreProfileFragment extends Fragment{
 			} else {
 
 				Toast.makeText(getActivity().getApplicationContext(),
-						"No Profile Data Available ", Toast.LENGTH_LONG).show();
+						"No Store Available ", Toast.LENGTH_LONG).show();
 			}
 
 			progress.dismiss();
 
 		}
-
 	}
 
 	public class loadMoreListView extends AsyncTask<String, Void, String> {
@@ -230,7 +239,7 @@ public class StoreProfileFragment extends Fragment{
 			} else {
 				NoMoredataAvailable  = 1;
 				Toast.makeText(getActivity().getApplicationContext(),
-						"No Store Data Available ", Toast.LENGTH_LONG).show();
+						"No more Store Available ", Toast.LENGTH_LONG).show();
 			//	btnLoadMore.setVisibility(View.GONE);
 			}
 
@@ -265,24 +274,16 @@ public class StoreProfileFragment extends Fragment{
 				ViewGroup parent) {
 			convertView = mInflater.inflate(R.layout.custome_mystorelist, null);
 			
-			URL url = null;
-			try {
-				url = new URL(list.get(position).image);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Bitmap bmp = null;
-			try {
-				bmp = BitmapFactory.decodeStream(url.openConnection()
-						.getInputStream());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			String img_url = list.get(position).image.trim();
+			imageLoader = new ImageLoader(getActivity());
+			
+			Bitmap bmp = getBitmapFromUrl(img_url);
+			
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				Log.v("log", " Above HoneyComb ");
+
 				store_Name_img = (CircularImageView) convertView.findViewById(R.id.my_Store_logo_image);
+			//	imageLoader.DisplayImage(img_url, store_Name_img);
 				store_Name_img.setImageBitmap(bmp);
 				store_Name_img.setBorderColor(getResources().getColor(R.color.GrayLight));
 				store_Name_img.setBorderWidth(0);
@@ -290,12 +291,11 @@ public class StoreProfileFragment extends Fragment{
 				Log.v("log", " Below HoneyComb ");
 
 				ImageView imView = (ImageView) convertView.findViewById(R.id.my_Store_logo_image);
+			//	imageLoader.DisplayImage(img_url, imView);
 				imView.setImageBitmap(bmp);
 			}
 			
-			
-			TextView store_Name_txt = (TextView) convertView
-					.findViewById(R.id.mystore_list_name);
+			TextView store_Name_txt = (TextView) convertView.findViewById(R.id.mystore_list_name);
 			TextView txtClosetnumber = (TextView)convertView.findViewById(R.id.txtClosetnumber);
 			TextView txtAddressSubScribeProfile =(TextView)convertView.findViewById(R.id.txtAddressSubScribeProfile);
 			
@@ -306,19 +306,23 @@ public class StoreProfileFragment extends Fragment{
 		}
 	}
 	
-	/*@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (scrollState == SCROLL_STATE_IDLE) {
-			if (lv.getLastVisiblePosition() >= lv.getCount()
-					- visibleThreshold) {
-				new loadMoreListView().execute();
-			}
+	public Bitmap getBitmapFromUrl(String urlStore) {
+		URL url = null;
+		try {
+			url = new URL(urlStore);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	}*/
+		Bitmap bmp = null;
+		try {
+			bmp = BitmapFactory.decodeStream(url.openConnection()
+					.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bmp;
+	}
 	
 }

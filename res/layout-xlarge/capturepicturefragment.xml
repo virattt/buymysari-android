@@ -7,24 +7,48 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/conform"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="Conform" />
-
-   
-
     <ImageView
         android:id="@+id/camera_preview_fragment_imageview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout1"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/conform"
-        android:layout_margin="10dip"
+        android:layout_alignParentTop="true"
         android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="150dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="42dp" >
+
+        <Button
+            android:id="@+id/conform"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dip"
+            android:layout_marginBottom="27dp"
+            android:background="#41d845"
+            android:text="CONFIRM"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnChangePicture"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_alignLeft="@+id/conform"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/conform"
+            android:layout_marginBottom="24dp"
+            android:background="#41d845"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:text="CHANGE PICTURE" />
+    </RelativeLayout>
 
 </RelativeLayout>

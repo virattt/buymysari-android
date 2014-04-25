@@ -111,10 +111,9 @@
         android:textSize="16sp" />
 
     <View
+        android:layout_below="@+id/list_home_text_view"
         android:layout_width="fill_parent"
         android:layout_height="2dip"
-        android:layout_below="@+id/list_home_text_view"
         android:layout_marginBottom="2dip"
-        android:background="#999592" />
-
+        android:background="#eae9e9" />
 </RelativeLayout>

@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,9 +49,9 @@ import com.buymysari.fragment.CreateStoreFragment;
 import com.buymysari.fragment.HomeFragment;
 import com.buymysari.fragment.ProfileFragment;
 import com.buymysari.fragment.SearchItemsFragment;
+import com.buymysari.fragment.SetPictureImageFragment;
 import com.buymysari.fragment.StoreProfileFragment;
 import com.buymysari.fragment.StoreProfileGridFragment;
-import com.buymysari.fragment.TakeCameraFragment;
 import com.buymysari.layout.MainLayout;
 
 public class MarketPlaceActivity extends FragmentActivity implements
@@ -65,7 +71,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 	String cityName;
 	GPSTracker gps;
 	List<Button> buttons = new ArrayList<Button>();
-
+	ImageLoader imageLoader;
 	public static LinearLayout storeOptions, personOptions;
 
 	ArrayAdapter<String> adapter;
@@ -73,80 +79,119 @@ public class MarketPlaceActivity extends FragmentActivity implements
 	EditText edtSearchText;
 	String searchText;
 
-	MyApplication app;
+	private MyApplication app;
 	String cateIdSelected = "";
 
 	Boolean clothStataus = false;
 
-	TextView txtUserName;
+	TextView txtUserName , logout_txt;
 	String UserNAme;
 	ToggleButton btnCl, btnSh, btnAcc;
 	float downXValue, downYValue;
 	ImageView search_img;
-
+	
+	LinearLayout.LayoutParams layoutParams;
+	public static FrameLayout activityMain_content_fragment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_market_place);
-		mainLayout = (MainLayout) this.getLayoutInflater().inflate(R.layout.activity_market_place, null);
+		mainLayout = (MainLayout) this.getLayoutInflater().inflate(
+				R.layout.activity_market_place, null);
 		setContentView(mainLayout);
 
-		app = (MyApplication) this.getApplicationContext();
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		
+		layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(0, 70, 0, 0);
+		
+		activityMain_content_fragment = (FrameLayout)findViewById(R.id.activity_main_content_fragment);
+		
+		app = (MyApplication)this.getApplication();
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		logout_txt = (TextView)findViewById(R.id.logout_txt);
+		logout_txt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+			
+				 savePreferences("user_id" , "");
+				 savePreferences("store_id" , "");
+				 app.setStoreId("");
+				 app.setUserID("");
+				 	
+				 Intent i = new Intent(MarketPlaceActivity.this, SplashActivity.class);
+				 MarketPlaceActivity.this.finish();
+				 startActivity(i);
+				 
+			}
+		});
+		
 		edtSearchText = (EditText) findViewById(R.id.edtSearchText);
 		bottom_home_btn_toolbar = (Button) findViewById(R.id.bottom_home_btn_toolbar);
-		search_img = (ImageView)findViewById(R.id.search_img);
+		search_img = (ImageView) findViewById(R.id.search_img);
 		bottom_closet_main_toolbat_btn = (Button) findViewById(R.id.bottom_closet_main_toolbat_btn);
 		bottom_favourite_btn = (Button) findViewById(R.id.bottom_favourite_btn);
 
 		txtUserName = (TextView) findViewById(R.id.user_txt);
+		
+		Log.v("log", " UserID " + app.getUserID());
+		Log.v("log", " StoreID " + app.getStoreId());
 
-		if(!app.getUserID().equals("")){
-			
-			UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name() + " "
+		String userID = sharedPreferences.getString("user_id","");
+		String store_id = sharedPreferences.getString("store_id", "");
+		
+		Log.v("log", " UserID "+ userID +" store_id --> " + store_id);
+
+		if (!userID.equals("")) {
+
+			UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getFirst_name()
+					+ " "
 					+ DBAdpter.fetch_UserDetail_data.get(0).getLast_name();
-			
-			}else{
+
+		} else {
+
+			Log.v("log"," Store -->  " + DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName());
 				
-				UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName() + " "
-						+ DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_lastName();
-			}
-			
-			txtUserName.setText(UserNAme);
-			
-			String img_url = DBAdpter.fetch_UserDetail_data.get(0)
-				.getStrore_profile_image().toString().trim();
-		URL url = null;
-		try {
-			url = new URL(img_url);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Bitmap bmp = null;
-		try {
-			bmp = BitmapFactory.decodeStream(url.openConnection()
-					.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName()
+					+ " "
+					+ DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_lastName();
 		}
 
+		txtUserName.setText(UserNAme);
+		
+		
+		String img_url = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_image().toString().trim();
+		Log.v("log"," marketplace img_url " + img_url );
+		
+		imageLoader = new ImageLoader(MarketPlaceActivity.this);
+		Bitmap bm = getBitmapFromUrl(img_url);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			Log.v("log", " Above HoneyComb ");
-			
+
 			imView = (CircularImageView) findViewById(R.id.user_img);
-			imView.setImageBitmap(bmp);
+		
+			imView.setImageBitmap(bm);
+			//imageLoader.DisplayImage(img_url, imView);
 			imView.setBorderColor(getResources().getColor(R.color.GrayLight));
 			imView.setBorderWidth(0);
 		} else {
 			Log.v("log", " Below HoneyComb ");
 
 			imView1 = (ImageView) findViewById(R.id.user_img);
-			imView1.setImageBitmap(bmp);
+			imView1.setImageBitmap(bm);
+			//imageLoader.DisplayImage(img_url, imView1);
 		}
 		
 		search_img.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -154,7 +199,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				edtSearchText.setFocusable(true);
 			}
 		});
-		
+
 		gps = new GPSTracker(MarketPlaceActivity.this);
 
 		// check if GPS enabled
@@ -184,7 +229,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 			gps.showSettingsAlert();
 		}
 
-		
 		bottom_home_btn_toolbar.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -199,7 +243,9 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-
+				LinearLayout.LayoutParams HomelayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				HomelayoutParams.setMargins(0, 0, 0, 0);
+				activityMain_content_fragment.setLayoutParams(HomelayoutParams);
 				// mainLayout.toggleMenu();
 			}
 		});
@@ -221,7 +267,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();
-
+						activityMain_content_fragment.setLayoutParams(layoutParams);
 						// mainLayout.toggleMenu();
 					}
 				});
@@ -240,7 +286,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-
+				activityMain_content_fragment.setLayoutParams(layoutParams);
 				// mainLayout.toggleMenu();
 			}
 		});
@@ -277,13 +323,10 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				fragmentTransaction.replace(
 						R.id.activity_main_content_fragment, fm2, "HELLO");
 				Bundle bundle = new Bundle();
-				if(!edtSearchText.getText().toString().equals(""))
-				{
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				}
-				else
-				{
+				if (!edtSearchText.getText().toString().equals("")) {
+					bundle.putString("searchText", edtSearchText.getText()
+							.toString());
+				} else {
 					bundle.putString("searchText", cityName);
 				}
 				bundle.putString("searchCateId", cateIdSelected);
@@ -321,13 +364,10 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				fragmentTransaction.replace(
 						R.id.activity_main_content_fragment, fm2, "HELLO");
 				Bundle bundle = new Bundle();
-				if(!edtSearchText.getText().toString().equals(""))
-				{
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				}
-				else
-				{
+				if (!edtSearchText.getText().toString().equals("")) {
+					bundle.putString("searchText", edtSearchText.getText()
+							.toString());
+				} else {
 					bundle.putString("searchText", cityName);
 				}
 				bundle.putString("searchCateId", cateIdSelected);
@@ -366,13 +406,10 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				fragmentTransaction.replace(
 						R.id.activity_main_content_fragment, fm2, "HELLO");
 				Bundle bundle = new Bundle();
-				if(!edtSearchText.getText().toString().equals(""))
-				{
-				bundle.putString("searchText", edtSearchText.getText()
-						.toString());
-				}
-				else
-				{
+				if (!edtSearchText.getText().toString().equals("")) {
+					bundle.putString("searchText", edtSearchText.getText()
+							.toString());
+				} else {
 					bundle.putString("searchText", cityName);
 				}
 				bundle.putString("searchCateId", cateIdSelected);
@@ -410,19 +447,20 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				onStoreMenuItemClick(parent, view, position, id);
 			}
 		});
-		
-		/*CreateMenuItems = getResources().getStringArray(R.array.create_store_items);
-		CreateMenu = (ListView) findViewById(R.id.create_activity_store_menu_listview);
-		CreateMenu.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.custom_textview, CreateMenuItems));
-		CreateMenu.setDivider(null);
-		CreateMenu.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				onCreateStoreMenuItemClick(parent, view, position, id);
-			}
-		});*/
+
+		/*
+		 * CreateMenuItems =
+		 * getResources().getStringArray(R.array.create_store_items); CreateMenu
+		 * = (ListView) findViewById(R.id.create_activity_store_menu_listview);
+		 * CreateMenu.setAdapter(new ArrayAdapter<String>(this,
+		 * R.layout.custom_textview, CreateMenuItems));
+		 * CreateMenu.setDivider(null); CreateMenu.setOnItemClickListener(new
+		 * OnItemClickListener() {
+		 * 
+		 * @Override public void onItemClick(AdapterView<?> parent, View view,
+		 * int position, long id) { onCreateStoreMenuItemClick(parent, view,
+		 * position, id); } });
+		 */
 
 		tvTitle = (TextView) findViewById(R.id.activity_main_content_title);
 		storeOptions = (LinearLayout) findViewById(R.id.StoreProfileOptions);
@@ -430,17 +468,14 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		Log.v("log", " Marketplace activty storeId --> " + app.getStoreId());
 
-		
-		Log.v("log", " Marketplace StoreID ====>  " + app.getStoreId());
-
-		if (!app.getStoreId().equals("") && app.getUserID().equals("")) {
+		if (!store_id.equals("") && userID.equals("")) {
 			Log.v("log", " StoreId  if ");
 
 			storeOptions.setVisibility(View.VISIBLE);
 			personOptions.setVisibility(View.GONE);
 			bottom_closet_main_toolbat_btn.setVisibility(View.GONE);
 			bottom_favourite_btn.setVisibility(View.GONE);
-			
+
 		} else {
 			Log.v("log", " StoreId  else ");
 
@@ -448,14 +483,36 @@ public class MarketPlaceActivity extends FragmentActivity implements
 			personOptions.setVisibility(View.VISIBLE);
 		}
 
-
-			FragmentManager fm = this.getSupportFragmentManager();
+		FragmentManager fm = this.getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 
 		HomeFragment fragment = new HomeFragment();
 		ft.add(R.id.activity_main_content_fragment, fragment);
+		ft.addToBackStack(null);
 		ft.commit();
-
+		
+		Intent intent = getIntent();
+		if (intent.hasExtra("data")) {
+			Log.v("log"," if intent " + intent.getByteArrayExtra("data"));
+			byte[] data = intent.getByteArrayExtra("data");
+			FragmentManager fManager = MarketPlaceActivity.this
+					.getSupportFragmentManager();
+			android.support.v4.app.FragmentTransaction fTransaction = fManager
+					.beginTransaction();
+			SetPictureImageFragment setPictureFragment = new SetPictureImageFragment();
+			fTransaction.replace(R.id.activity_main_content_fragment,
+					setPictureFragment);
+			fTransaction.addToBackStack(null);
+			Bundle bundle = new Bundle();
+			if(intent.hasExtra("image_from"))
+			{
+				bundle.putString("image_from", intent.getStringExtra("image_from"));	
+			}
+			bundle.putByteArray("data", data);
+			setPictureFragment.setArguments(bundle);
+			fTransaction.commit();
+		}
+		
 		edtSearchText.setOnKeyListener(new OnKeyListener() {
 
 			@Override
@@ -464,13 +521,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					// Perform action on key press
-				/*	Toast.makeText(
-							MarketPlaceActivity.this,
-							" SearchText --> "
-									+ edtSearchText.getText().toString(),
-							Toast.LENGTH_SHORT).show();*/
-
+					
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(edtSearchText.getWindowToken(),
 							0);
@@ -478,10 +529,11 @@ public class MarketPlaceActivity extends FragmentActivity implements
 					tvTitle.setText("Search Reuslts View");
 
 					if (edtSearchText.getText().toString().equals("")) {
-						
-						Log.v("log_tag", "cityName"+ cityName);
-						Log.v("log_tag", "cityName else :: cateid "+ cateIdSelected);
-						
+
+						Log.v("log_tag", "cityName" + cityName);
+						Log.v("log_tag", "cityName else :: cateid "
+								+ cateIdSelected);
+
 						FragmentManager fm = MarketPlaceActivity.this
 								.getSupportFragmentManager();
 						FragmentTransaction fragmentTransaction = fm
@@ -500,9 +552,9 @@ public class MarketPlaceActivity extends FragmentActivity implements
 						return true;
 
 					} else {
-						Log.v("lig_tag", "cityName else ::"+ edtSearchText.getText()
-								.toString());
-						
+						Log.v("lig_tag", "cityName else ::"
+								+ edtSearchText.getText().toString());
+
 						FragmentManager fm = MarketPlaceActivity.this
 								.getSupportFragmentManager();
 						FragmentTransaction fragmentTransaction = fm
@@ -537,6 +589,8 @@ public class MarketPlaceActivity extends FragmentActivity implements
 				toggleMenu(v);
 			}
 		});
+
+		
 	}
 
 	public void toggleMenu(View v) {
@@ -562,12 +616,25 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 		Fragment fragment = null;
 
+		
 		if (selectedItem.compareTo("Store Profile") == 0) {
 			fragment = new CreateStoreFragment();
+			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("Store Gallery") == 0) {
 			fragment = new StoreProfileGridFragment();
+			if (android.os.Build.VERSION.SDK_INT > 9) {
+				activityMain_content_fragment.setLayoutParams(layoutParams);
+			}
+			else
+			{
+				LinearLayout.LayoutParams Small_layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				Small_layoutParams.setMargins(0, 50, 0, 0);
+				activityMain_content_fragment.setLayoutParams(Small_layoutParams);
+			}
 		} else if (selectedItem.compareTo("Add Picture") == 0) {
-			fragment = new TakeCameraFragment();
+			Intent cameraAct = new Intent(MarketPlaceActivity.this,CameraActivity.class);
+			cameraAct.putExtra("ImageType", "AddPicture");
+			startActivity(cameraAct);	
 		} else {
 			fragment = new HomeFragment();
 		}
@@ -604,17 +671,15 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 		Fragment fragment = null;
 
-		/*
-		 * if (selectedItem.compareTo("Home") == 0) { fragment = new
-		 * HomeFragment(); } else
-		 */
-
 		if (selectedItem.compareTo("My Profile") == 0) {
 			fragment = new ProfileFragment();
+			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("My Stores") == 0) {
 			fragment = new StoreProfileFragment();
+			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("My Closet") == 0) {
 			fragment = new ClosetFragment();
+			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else {
 			fragment = new HomeFragment();
 		}
@@ -706,8 +771,34 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		return true;
 	}
 
+	
+	private void savePreferences(String key, String value) {
+	       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+	       Editor editor = sharedPreferences.edit();
+	       editor.putString(key, value);
+	       editor.commit();
+	   }
+
+	public Bitmap getBitmapFromUrl(String urlStore) {
+		URL url = null;
+		try {
+			url = new URL(urlStore);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Bitmap bmp = null;
+		try {
+			bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bmp;
+	}
+	
 	/*
 	 * @Override public void onBackPressed() { // TODO Auto-generated method
-	 * stub android.os.Process.killProcess(android.os.Process.myPid()); }
+	 * 	stub android.os.Process.killProcess(android.os.Process.myPid()); }
 	 */
 }

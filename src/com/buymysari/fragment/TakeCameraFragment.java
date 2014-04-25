@@ -6,14 +6,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.buymysari.R;
-import com.buymysari.camera.CameraPreview;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +24,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
+import com.buymysari.R;
+import com.buymysari.camera.CameraPreview;
 
 public class TakeCameraFragment extends Fragment {
 	Camera mCamera = null;
@@ -49,8 +52,7 @@ public class TakeCameraFragment extends Fragment {
 		FrameLayout preview = (FrameLayout) rootView
 				.findViewById(R.id.camera_preview_fragment);
 
-		preview.addView(mCameraPreview);
-
+		
 		takePicture = (Button) rootView
 				.findViewById(R.id.btnTakePicturefragment);
 		takePicture.setOnClickListener(new OnClickListener() {
@@ -63,7 +65,8 @@ public class TakeCameraFragment extends Fragment {
 
 			}
 		});
-
+		mCamera.startPreview();
+		preview.addView(mCameraPreview);
 		return rootView;
 
 	}
@@ -97,7 +100,16 @@ public class TakeCameraFragment extends Fragment {
 
 		try {
 			Log.v("log_tag", "camera try:::" + mCamera);
-			mCamera = Camera.open();
+			
+			int numberOfCameras = Camera.getNumberOfCameras();
+			for (int i = 0; i < numberOfCameras; i++) {
+			    CameraInfo info = new CameraInfo();
+			    Camera.getCameraInfo(i, info);
+			    if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
+			    	mCamera = Camera.open(i);
+			    }
+			}
+			
 
 		} catch (Exception e) {
 			// cannot get camera or does not exist
@@ -117,7 +129,7 @@ public class TakeCameraFragment extends Fragment {
 			if (!mediaStorageDir.mkdirs()) {
 				Log.d("MyCameraApp", "failed to create directory");
 				return null;
-			}
+			}	
 		}
 		// Create a media file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
@@ -147,7 +159,6 @@ public class TakeCameraFragment extends Fragment {
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
-
 				
 				FragmentManager fm = getFragmentManager();
 
@@ -160,7 +171,8 @@ public class TakeCameraFragment extends Fragment {
 				Bundle bundle = new Bundle();
 				bundle.putByteArray("position", data);
 				fm2.setArguments(bundle);
-				mCamera.startPreview();
+				
+			/*	mCamera.startPreview();*/
 
 			} catch (FileNotFoundException e) {
 
@@ -168,5 +180,4 @@ public class TakeCameraFragment extends Fragment {
 			}
 		}
 	};
-
 }

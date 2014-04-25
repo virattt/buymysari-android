@@ -51,6 +51,7 @@
  -->
 
     <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
          android:layout_marginLeft="40dip"
@@ -86,9 +87,11 @@
     <LinearLayout
         android:id="@+id/lin_regi"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop="20dip"
+        android:layout_below="@+id/relativeLayout1"
         android:orientation="vertical" >
 
         <LinearLayout

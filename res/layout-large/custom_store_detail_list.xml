@@ -27,14 +27,13 @@
         android:textColor="#466aaf"
         android:textSize="16sp" />
 
-    <View
+  <View
         android:id="@+id/view1"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
         android:layout_below="@+id/close_home_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
         android:layout_marginBottom="2dip"
-        android:background="#999592" />
-
+        android:background="#eae9e9"  />
     <TextView
         android:id="@+id/store_closet_txt_view"
         android:layout_width="20dip"

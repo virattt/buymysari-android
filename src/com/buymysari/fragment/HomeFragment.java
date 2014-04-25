@@ -32,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.GPSTracker;
 import com.buymysari.ImageLoader;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
@@ -79,6 +81,12 @@ public class HomeFragment extends Fragment {
 		lv = (ListView) rootView.findViewById(R.id.home_listview);
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		
 		/*
 		 * btnLoadMore = new Button(getActivity());
 		 * btnLoadMore.setText("Load More"); lv.addFooterView(btnLoadMore);
@@ -90,12 +98,7 @@ public class HomeFragment extends Fragment {
 		// cityName =
 		// getActivity().getIntent().getExtras().getString("cityName").toString();
 
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-
+		
 		if (savedInstanceState != null) {
 			// Restore last state for checked position.
 			mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
@@ -238,7 +241,7 @@ public class HomeFragment extends Fragment {
 				lv.setAdapter(adt);
 			} else {
 
-				Toast.makeText(getActivity().getApplicationContext(),
+				Toast.makeText(getActivity(),
 						"No Items Available ", Toast.LENGTH_LONG).show();
 			}
 
@@ -291,7 +294,7 @@ public class HomeFragment extends Fragment {
 				Log.v("log", " home if" + result);
 
 				int currentPosition = lv.getFirstVisiblePosition();
-				adt = new MyListAdapter(getActivity(), list);
+				adt = new MyListAdapter(getActivity().getApplicationContext(), list);
 				lv.setAdapter(adt);
 				adt.notifyDataSetChanged();
 				lv.setSelectionFromTop(currentPosition + 1, 0);
@@ -425,9 +428,18 @@ public class HomeFragment extends Fragment {
 
 					if (!app.getUserID().equals("")) {
 						if (mHasDoubleClicked) {
-							new ClosetTask(progress).execute(
-									list.get(position).item_id,
-									list.get(position).store_id, uid);
+							
+							if(app.getStoreId().equals("")){
+								
+								new ClosetTask(progress).execute(
+										list.get(position).item_id,
+										list.get(position).store_id, uid);
+							}else{
+								
+								
+							}
+							
+							
 						}
 					} else {
 						
@@ -441,9 +453,15 @@ public class HomeFragment extends Fragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					new ClosetTask(progress).execute(
-							list.get(position).item_id,
-							list.get(position).store_id, uid);
+					if(app.getStoreId().equals("")){
+								
+								new ClosetTask(progress).execute(
+										list.get(position).item_id,
+										list.get(position).store_id, uid);
+							}else{
+								
+								
+							}
 				}
 			});
 
@@ -474,7 +492,9 @@ public class HomeFragment extends Fragment {
 						Bundle bundle = new Bundle();
 						bundle.putString("position", str_id);
 						fm2.setArguments(bundle);
-						
+						LinearLayout.LayoutParams  layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+						layoutParams.setMargins(0, 70, 0, 0);
+						MarketPlaceActivity.activityMain_content_fragment.setLayoutParams(layoutParams);
 						DBAdpter.updateItemView(itemId);
 					}
 				}

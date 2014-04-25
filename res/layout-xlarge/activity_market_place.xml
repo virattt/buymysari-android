@@ -6,14 +6,31 @@
 
     <!-- This holds our content -->
 
-    <LinearLayout
+    <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-        <!-- This acts as Actionbar -->
+           <!-- This is where fragment will show up -->
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <FrameLayout
+                android:id="@+id/activity_main_content_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white" >
+            </FrameLayout>
+        </LinearLayout>
+        
+        <!-- This acts as Actionbar -->
+	 <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="80dip"
@@ -52,20 +69,7 @@
                 android:textSize="3dip" />
         </RelativeLayout>
 
-        <!-- This is where fragment will show up -->
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <FrameLayout
-                android:id="@+id/activity_main_content_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white" >
-            </FrameLayout>
-        </LinearLayout>
+     
         <!-- This is where our bottom bar show up -->
 
         <RelativeLayout
@@ -73,6 +77,7 @@
             android:layout_height="80dip"
             android:alpha="0.6"
             android:background="#221010"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal" >
 
             <Button
@@ -104,15 +109,26 @@
                 android:alpha="0.6"
                 android:background="@drawable/heart1" />
         </RelativeLayout>
-    </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
     <!-- This holds our menu -->
 
+  <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#221010"
+        android:layout_weight="0.3"
         android:alpha="0.9"
         android:orientation="vertical" >
 
@@ -303,7 +319,7 @@
                     android:layout_height="60dip"
                     android:layout_marginTop="10dip"
                     android:paddingLeft="80dip"
-                    android:text="Zeeshan Syed"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="bold" />
@@ -338,6 +354,20 @@
                     android:textStyle="bold" />
             </RelativeLayout>
         </LinearLayout>
-    </ScrollView>
+   </ScrollView>
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.7"
+                android:alpha="0.5"
+                android:background="#000" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </com.buymysari.layout.MainLayout>

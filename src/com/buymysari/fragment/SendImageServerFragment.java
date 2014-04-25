@@ -3,6 +3,7 @@ package com.buymysari.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -16,18 +17,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+
 import com.buymysari.DBAdpter;
+import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
+import com.buymysari.R.color;
 import com.buymysari.SegmentedRadioGroup;
 import com.buymysari.SegmentedRadioGroupMale;
 
 public class SendImageServerFragment extends Fragment {
-	SegmentedRadioGroup segmentText;
-	SegmentedRadioGroupMale segmentTextMale;
+
 	Button sendImg;
 	EditText edt_txt;
 	MyApplication app;
@@ -38,8 +45,12 @@ public class SendImageServerFragment extends Fragment {
 	Bitmap b;
 	String cat_id = "";
 	String gender = "";
+	String item_edt_text="";
 	private ProgressDialog progress;
 	InputMethodManager mgr;
+	ToggleButton button_cloth_send_img, button_shoes_send_img,
+			button_acce_send_img;
+	ToggleButton button_one_male, button_one_female;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -51,69 +62,156 @@ public class SendImageServerFragment extends Fragment {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
+		
 		view = inflater.inflate(R.layout.sendimageserver, null);
 
-		// view.setFocusableInTouchMode(true);
-		// view.requestFocus();
 		bundle = this.getArguments();
 		path = bundle.getByteArray("position");
-		segmentText = (SegmentedRadioGroup) view
-				.findViewById(R.id.segment_text);
-		segmentTextMale = (SegmentedRadioGroupMale) view
-				.findViewById(R.id.segment_text_male);
+
 		sendImg = (Button) view.findViewById(R.id.btn_send_image);
 		edt_txt = (EditText) view.findViewById(R.id.edt_text_store_name);
-
+		
+		button_cloth_send_img = (ToggleButton) view
+				.findViewById(R.id.button_cloth_send_img);
+		button_shoes_send_img = (ToggleButton) view
+				.findViewById(R.id.button_shoes_send_img);
+		button_acce_send_img = (ToggleButton) view
+				.findViewById(R.id.button_acce_send_img);
+		button_one_male = (ToggleButton) view
+				.findViewById(R.id.button_one_male);
+		button_one_female = (ToggleButton) view
+				.findViewById(R.id.button_one_female);
 		edt_txt.requestFocus();
+		
 		mgr = (InputMethodManager) getActivity().getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 		mgr.showSoftInput(edt_txt, InputMethodManager.SHOW_IMPLICIT);
 		app = (MyApplication) getActivity().getApplicationContext();
 
+		button_cloth_send_img.setOnCheckedChangeListener(changeChecker);
+		button_shoes_send_img.setOnCheckedChangeListener(changeChecker);
+		button_acce_send_img.setOnCheckedChangeListener(changeChecker);
+
+		button_one_male.setOnCheckedChangeListener(changeCheckerMale);
+		button_one_female.setOnCheckedChangeListener(changeCheckerMale);
+
+		
+		
 		sendImg.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				int segTxt = segmentText.getCheckedRadioButtonId();
-				RadioButton radiocatButton = (RadioButton) view
-						.findViewById(segTxt);
-				int segmentTextMaleTxt = segmentTextMale
-						.getCheckedRadioButtonId();
-				RadioButton radioSexButton = (RadioButton) view
-						.findViewById(segmentTextMaleTxt);
 				hideKeybord(edt_txt);
+				item_edt_text = edt_txt.getText().toString();
 
 				// b = BitmapFactory.decodeByteArray(path, 0, path.length);
 				base64string = Base64.encodeToString(path, Base64.DEFAULT);
-
-				if (radiocatButton.getText().toString().equals("S")) {
-					cat_id = "4";
-
-				} else if (radiocatButton.getText().toString().equals("C")) {
-					cat_id = "1";
-				} else if (radiocatButton.getText().toString().equals("A")) {
-					cat_id = "5";
+				Log.v("log_tag", "Check the Null Value catid"+cat_id.equals(""));
+				Log.v("log_tag", "Check the Null Value gender"+gender.equals(""));
+				
+				if (!cat_id.equals("") && !gender.equals("") && !item_edt_text.equals("")) {
+					Log.v("log_tag", "Check the Null Value");
+					progress = new ProgressDialog(getActivity());
+					progress.setMessage("Loading...");
+					new SendImageServerTask(progress).execute("Home");
+					
+				} else {
+					
+					Toast.makeText(getActivity(), "Plese Select Item",
+							Toast.LENGTH_LONG).show();
 				}
-
-				if (radioSexButton.getText().toString().equals("M")) {
-					gender = "Male";
-
-				} else if (radioSexButton.getText().toString().equals("F")) {
-					gender = "Female";
-				}
-
-				progress = new ProgressDialog(getActivity());
-				progress.setMessage("Loading...");
-				new SendImageServerTask(progress).execute("Home");
 
 			}
 		});
 
 		return view;
 	}
+
+	
+
+	OnCheckedChangeListener changeChecker = new OnCheckedChangeListener() {
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (isChecked) {
+
+				Log.v("log_tag", "buttonView ::: " + buttonView);
+				if (buttonView == button_cloth_send_img) {
+					Log.v("log_tag", "button_cloth_send_img ::: ");
+					cat_id = "1";
+					button_cloth_send_img.setChecked(false);
+					button_cloth_send_img
+							.setBackgroundResource(R.drawable.clothes);
+					button_shoes_send_img
+							.setBackgroundResource(R.drawable.shoes_active);
+					button_acce_send_img
+							.setBackgroundResource(R.drawable.accessories_active);
+
+				}
+				if (buttonView == button_shoes_send_img) {
+					button_shoes_send_img.setChecked(false);
+					cat_id = "4";
+					Log.v("log_tag", "button_cloth_send_img ::: ");
+					button_cloth_send_img
+							.setBackgroundResource(R.drawable.clothes_active);
+					button_shoes_send_img
+							.setBackgroundResource(R.drawable.shoes);
+					button_acce_send_img
+							.setBackgroundResource(R.drawable.accessories_active);
+
+				}
+				if (buttonView == button_acce_send_img) {
+					button_acce_send_img.setChecked(false);
+					cat_id = "5";
+					Log.v("log_tag", "button_acce_send_img ::: ");
+					button_cloth_send_img
+							.setBackgroundResource(R.drawable.clothes_active);
+					button_shoes_send_img
+							.setBackgroundResource(R.drawable.shoes_active);
+					button_acce_send_img
+							.setBackgroundResource(R.drawable.accessories);
+
+				}
+
+			}
+		}
+	};
+
+	OnCheckedChangeListener changeCheckerMale = new OnCheckedChangeListener() {
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (isChecked) {
+
+				Log.v("log_tag", "buttonView ::: " + buttonView);
+				if (buttonView == button_one_male) {
+					Log.v("log_tag", "button_one_male ::: ");
+					gender = "Male";
+					button_one_male.setChecked(false);
+
+					button_one_male.setBackgroundColor(Color
+							.parseColor("#8e2124"));
+					button_one_female.setBackgroundColor(Color
+							.parseColor("#221010"));
+				}
+				if (buttonView == button_one_female) {
+					button_one_female.setChecked(false);
+					gender = "Female";
+					Log.v("log_tag", "button_one_female ::: ");
+
+					button_one_male.setBackgroundColor(Color
+							.parseColor("#221010"));
+					button_one_female.setBackgroundColor(Color
+							.parseColor("#8e2124"));
+
+				}
+			}
+		}
+	};
 
 	public class SendImageServerTask extends AsyncTask<String, Void, String> {
 
@@ -130,7 +228,7 @@ public class SendImageServerFragment extends Fragment {
 		protected String doInBackground(String... arg) {
 
 			String msg = DBAdpter.userUpdateImageStore(app.getStoreId(),
-					edt_txt.getText().toString(), cat_id, base64string, gender);
+					item_edt_text, cat_id, base64string, gender);
 			Log.v("log_tag", " Msg " + msg);
 			return msg;
 		}
@@ -152,7 +250,9 @@ public class SendImageServerFragment extends Fragment {
 			// fragmentTransaction.commit();
 			fragmentTransaction.commitAllowingStateLoss();
 			// hideKeybord(edt_txt);
-
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			layoutParams.setMargins(0, 70, 0, 0);
+			MarketPlaceActivity.activityMain_content_fragment.setLayoutParams(layoutParams);
 		}
 
 	}

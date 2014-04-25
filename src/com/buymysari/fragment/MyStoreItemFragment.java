@@ -65,6 +65,12 @@ public class MyStoreItemFragment extends Fragment {
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
 		app = (MyApplication) getActivity().getApplicationContext();
 
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+		
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
 
@@ -74,11 +80,7 @@ public class MyStoreItemFragment extends Fragment {
 		myInt = bundle.getString("position");
 		new JSONTask(progress).execute("Home");
 
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
+		
 
 		lv = (ListView) rootView.findViewById(R.id.mystoreitem_listview);
 		

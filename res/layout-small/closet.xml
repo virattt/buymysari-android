@@ -99,6 +99,13 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
+     <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_below="@+id/rel_closet"
+        android:layout_marginBottom="2dip"
+        android:background="#eae9e9" />
 
      <LinearLayout
                 android:id="@+id/tab_layout"
