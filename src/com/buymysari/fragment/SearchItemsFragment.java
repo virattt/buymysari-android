@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
@@ -40,6 +42,7 @@ import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.search_items_dto;
 import com.buymysari.fragment.ClosetFragment.loadMoreListView;
+import com.buymysari.fragment.HomeFragment.ClosetTask;
 
 public class SearchItemsFragment extends Fragment {
 
@@ -412,17 +415,14 @@ public class SearchItemsFragment extends Fragment {
 								if (mHasDoubleClicked) {
 
 									if (app.getStoreId().equals("")) {
-										String msg = DBAdpter
-												.userClosestStore(
-														list.get(position)
-																.getItem_id(),
-														list.get(position)
-																.getStore_id(),
-														uid);
-										Toast.makeText(
-												getActivity()
-														.getApplicationContext(),
-												msg, 1).show();
+										
+										new ClosetTask(progress).execute(
+												list.get(position)
+												.getItem_id(),
+										list.get(position)
+												.getStore_id(),
+										uid);
+										
 									}
 
 								}
@@ -452,6 +452,40 @@ public class SearchItemsFragment extends Fragment {
 			return convertView;
 		}
 	}
+	
+	public class ClosetTask extends AsyncTask<String, Void, String> {
+		final Dialog dialog;
+		public ClosetTask(ProgressDialog progress) {
+			dialog = new Dialog(getActivity());
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.setContentView(R.layout.custom_dialog);
+		}
+
+		public void onPreExecute() {
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg) {
+			String item_id = arg[0];
+			String store_id = arg[1];
+			String uid = arg[2];
+
+			String msg = DBAdpter.userClosestStore(item_id, store_id, uid);
+
+			return msg;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			dialog.dismiss();
+			Toast.makeText(getActivity().getApplicationContext(), result,
+					Toast.LENGTH_LONG).show();
+
+		}
+	}
+	
 
 	private boolean findDoubleClick(final String str_id) {
 		// Get current time in nano seconds.
@@ -479,9 +513,6 @@ public class SearchItemsFragment extends Fragment {
 						Bundle bundle = new Bundle();
 						bundle.putString("position", str_id);
 						fm2.setArguments(bundle);
-						LinearLayout.LayoutParams  layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-						layoutParams.setMargins(0, 70, 0, 0);
-						MarketPlaceActivity.activityMain_content_fragment.setLayoutParams(layoutParams);
 					}
 				}
 			};

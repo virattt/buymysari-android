@@ -156,8 +156,7 @@ public class CreateStoreFragment extends Fragment {
 					progress.setMessage("Loading...");
 					
 
-					final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture
-							.getDrawable();
+					final BitmapDrawable bitmapDrawable = (BitmapDrawable) imgStorePicture.getDrawable();
 					final Bitmap yourBitmap = bitmapDrawable.getBitmap();
 
 					ByteArrayOutputStream stream = new ByteArrayOutputStream();

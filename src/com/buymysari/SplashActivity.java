@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -11,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class SplashActivity extends Activity {
 
@@ -99,6 +100,12 @@ public class SplashActivity extends Activity {
 
 			}
 		});
+		
+		Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/ITCAvantGardeStd-BkCn.otf");
+		login_home_btn.setTypeface(tf);
+		register_home_btn.setTypeface(tf);
+		register_store_btn.setTypeface(tf);
+		
 	}
 	
 	public class AuthTask extends AsyncTask<String, Void, String> {

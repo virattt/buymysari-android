@@ -47,10 +47,10 @@
     <ImageButton
         android:id="@+id/sarees_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:layout_alignLeft="@+id/thumbnail_relative"
         android:layout_alignTop="@+id/thumbnail_relative"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY" />
 
@@ -60,7 +60,7 @@
         android:layout_height="35dip"
         android:layout_alignLeft="@+id/sarees_big_img"
         android:layout_below="@+id/sarees_big_img"
-        android:layout_margin="20dip"
+        android:layout_margin="10dip"
         android:background="@drawable/eye"
         android:scaleType="fitCenter" />
 

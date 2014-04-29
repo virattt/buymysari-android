@@ -47,7 +47,7 @@
     <ImageButton
         android:id="@+id/sarees_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="240dp"
         android:layout_alignLeft="@+id/thumbnail_relative"
         android:layout_alignTop="@+id/thumbnail_relative"
         android:layout_marginTop="100dp"

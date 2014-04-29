@@ -1,10 +1,10 @@
 package com.buymysari;
 
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -90,6 +90,19 @@ public class StoreRegister extends Activity {
 			}
 		});
 
+		Typeface tf = Typeface.createFromAsset(this.getAssets(),
+				"fonts/ITCAvantGardeStd-BkCn.otf");
+		first_name.setTypeface(tf);
+		last_name.setTypeface(tf);
+		email_edt.setTypeface(tf);
+		password_edt.setTypeface(tf);
+		store_name_edt.setTypeface(tf);
+		website_edt.setTypeface(tf);
+		phone_edt.setTypeface(tf);
+		city_edt.setTypeface(tf);
+		address_edt.setTypeface(tf);
+		register_store_btn.setTypeface(tf);
+
 	}
 
 	private class PostTask extends AsyncTask<String, Integer, String> {
@@ -103,7 +116,9 @@ public class StoreRegister extends Activity {
 			String result = "";
 
 			result = DBAdpter.registerInStore(str_first_name, str_password_edt,
-					str_last_name, str_email_edt,str_store_name_edt,str_website_edt,str_phone_edt,str_city_edt,str_address_edt);
+					str_last_name, str_email_edt, str_store_name_edt,
+					str_website_edt, str_phone_edt, str_city_edt,
+					str_address_edt);
 			return result;
 		}
 

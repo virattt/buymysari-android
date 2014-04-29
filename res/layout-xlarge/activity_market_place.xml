@@ -23,6 +23,7 @@
                 android:id="@+id/activity_main_content_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="80dip"
                 android:background="@android:color/white" >
             </FrameLayout>
         </LinearLayout>
@@ -60,13 +61,14 @@
                 android:id="@+id/activity_main_content_title"
                 android:layout_width="146dip"
                 android:layout_height="33dip"
-                android:layout_alignBaseline="@+id/activity_main_content_button_menu"
-                android:layout_alignBottom="@+id/activity_main_content_button_menu"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="45dp"
                 android:layout_toRightOf="@+id/activity_main_content_button_menu"
-                android:background="@drawable/header"
+                android:background="@drawable/bms_logo_white"
                 android:gravity="center"
                 android:textSize="3dip" />
+
         </RelativeLayout>
 
      
@@ -75,7 +77,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="80dip"
-            android:alpha="0.6"
+            android:alpha="0.8"
             android:background="#221010"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal" >
@@ -84,7 +86,7 @@
                 android:id="@+id/bottom_home_btn_toolbar"
                 android:layout_width="90dip"
                 android:layout_height="80dip"
-                android:alpha="0.6"
+                android:alpha="0.8"
                 android:background="@drawable/home2" />
 
             <Button
@@ -95,7 +97,7 @@
                 android:layout_alignBottom="@+id/bottom_home_btn_toolbar"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:alpha="0.6"
+                android:alpha="0.8"
                 android:background="@drawable/door" />
 
             <Button
@@ -106,7 +108,7 @@
                 android:layout_alignBottom="@+id/bottom_closet_main_toolbat_btn"
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@+id/bottom_closet_main_toolbat_btn"
-                android:alpha="0.6"
+                android:alpha="0.8"
                 android:background="@drawable/heart1" />
         </RelativeLayout>
         </RelativeLayout>
@@ -225,7 +227,7 @@
                     android:id="@+id/person_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="50dip"
-                    android:text="Personal"
+                    android:text="PERSONAL"
                     android:textColor="@android:color/white"
                     android:textSize="25sp" />
 
@@ -267,7 +269,7 @@
                         android:id="@+id/store_txt"
                         android:layout_width="150dip"
                         android:layout_height="70dip"
-                        android:text="Store"
+                        android:text="STORE"
                         android:textColor="@android:color/white"
                         android:textSize="25sp" />
 

@@ -23,6 +23,7 @@
                 android:id="@+id/activity_main_content_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="70dip"
                 android:background="@android:color/white" >
             </FrameLayout>
         </LinearLayout>
@@ -62,14 +63,15 @@
                 <TextView
                     android:id="@+id/activity_main_content_title"
                     android:layout_width="146dip"
-                    android:layout_height="40dip"
-                    android:layout_alignBaseline="@+id/activity_main_content_button_menu"
-                    android:layout_alignBottom="@+id/activity_main_content_button_menu"
+                    android:layout_height="70dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginLeft="45dp"
                     android:layout_toRightOf="@+id/activity_main_content_button_menu"
-                    android:background="@drawable/header"
+                    android:background="@drawable/bms_logo_white"
                     android:gravity="center"
                     android:textSize="5dip" />
+
             </RelativeLayout>
 
             <!-- This is where our bottom bar show up -->
@@ -224,7 +226,7 @@
                                 android:id="@+id/person_txt"
                                 android:layout_width="fill_parent"
                                 android:layout_height="50dip"
-                                android:text="Personal"
+                                android:text="PERSONAL"
                                 android:textColor="@android:color/white"
                                 android:textSize="22sp" />
 
@@ -271,7 +273,7 @@
                                 android:id="@+id/store_txt"
                                 android:layout_width="150dip"
                                 android:layout_height="70dip"
-                                android:text="Store"
+                                android:text="STORE"
                                 android:textColor="@android:color/white"
                                 android:textSize="25sp" />
 
@@ -369,6 +371,9 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="0.7"
                 android:alpha="0.5"
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:scrollbars="none"
                 android:background="#000" >
 
                 <LinearLayout

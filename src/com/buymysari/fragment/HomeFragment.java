@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,13 +27,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,6 @@ import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.GPSTracker;
 import com.buymysari.ImageLoader;
-import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
@@ -492,9 +492,6 @@ public class HomeFragment extends Fragment {
 						Bundle bundle = new Bundle();
 						bundle.putString("position", str_id);
 						fm2.setArguments(bundle);
-						LinearLayout.LayoutParams  layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-						layoutParams.setMargins(0, 70, 0, 0);
-						MarketPlaceActivity.activityMain_content_fragment.setLayoutParams(layoutParams);
 						DBAdpter.updateItemView(itemId);
 					}
 				}
@@ -507,13 +504,15 @@ public class HomeFragment extends Fragment {
 	}
 
 	public class ClosetTask extends AsyncTask<String, Void, String> {
-
+		final Dialog dialog;
 		public ClosetTask(ProgressDialog progress) {
-			progress = progress;
+			dialog = new Dialog(getActivity());
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.setContentView(R.layout.custom_dialog);
 		}
 
 		public void onPreExecute() {
-			progress.show();
+			dialog.show();
 		}
 
 		@Override
@@ -530,7 +529,7 @@ public class HomeFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			// Create here your JSONObject...
-			progress.dismiss();
+			dialog.dismiss();
 			Toast.makeText(getActivity().getApplicationContext(), result,
 					Toast.LENGTH_LONG).show();
 

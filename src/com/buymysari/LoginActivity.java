@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -84,6 +85,13 @@ public class LoginActivity extends Activity {
 
 			}
 		});
+		
+		Typeface tf = Typeface.createFromAsset(this.getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
+			  uname.setTypeface(tf);
+			  pass.setTypeface(tf);
+			  login.setTypeface(tf);
+		
 	}
 	
 	@Override

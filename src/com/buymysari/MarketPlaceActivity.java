@@ -6,12 +6,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -66,7 +68,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 	public static CircularImageView imView;
 	public static ImageView imView1;
-
 	public static TextView tvTitle;
 	String cityName;
 	GPSTracker gps;
@@ -90,7 +91,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 	float downXValue, downYValue;
 	ImageView search_img;
 	
-	LinearLayout.LayoutParams layoutParams;
 	public static FrameLayout activityMain_content_fragment;
 	
 	@Override
@@ -100,22 +100,27 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		mainLayout = (MainLayout) this.getLayoutInflater().inflate(
 				R.layout.activity_market_place, null);
 		setContentView(mainLayout);
-
+		
+		Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/ITCAvantGardeStd-BkCn.otf");
+		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-		layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		layoutParams.setMargins(0, 70, 0, 0);
+
+		TextView store_txt =(TextView)findViewById(R.id.store_txt);
+		TextView person_txt =(TextView)findViewById(R.id.person_txt);
+		store_txt.setTypeface(tf);
+		person_txt.setTypeface(tf);
 		
 		activityMain_content_fragment = (FrameLayout)findViewById(R.id.activity_main_content_fragment);
-		
 		app = (MyApplication)this.getApplication();
 		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		logout_txt = (TextView)findViewById(R.id.logout_txt);
+		logout_txt.setTypeface(tf);
+		
 		logout_txt.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -243,9 +248,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-				LinearLayout.LayoutParams HomelayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-				HomelayoutParams.setMargins(0, 0, 0, 0);
-				activityMain_content_fragment.setLayoutParams(HomelayoutParams);
+				
 				// mainLayout.toggleMenu();
 			}
 		});
@@ -267,7 +270,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();
-						activityMain_content_fragment.setLayoutParams(layoutParams);
 						// mainLayout.toggleMenu();
 					}
 				});
@@ -286,7 +288,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-				activityMain_content_fragment.setLayoutParams(layoutParams);
 				// mainLayout.toggleMenu();
 			}
 		});
@@ -619,18 +620,8 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		
 		if (selectedItem.compareTo("Store Profile") == 0) {
 			fragment = new CreateStoreFragment();
-			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("Store Gallery") == 0) {
 			fragment = new StoreProfileGridFragment();
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				activityMain_content_fragment.setLayoutParams(layoutParams);
-			}
-			else
-			{
-				LinearLayout.LayoutParams Small_layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-				Small_layoutParams.setMargins(0, 50, 0, 0);
-				activityMain_content_fragment.setLayoutParams(Small_layoutParams);
-			}
 		} else if (selectedItem.compareTo("Add Picture") == 0) {
 			Intent cameraAct = new Intent(MarketPlaceActivity.this,CameraActivity.class);
 			cameraAct.putExtra("ImageType", "AddPicture");
@@ -673,13 +664,10 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		if (selectedItem.compareTo("My Profile") == 0) {
 			fragment = new ProfileFragment();
-			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("My Stores") == 0) {
 			fragment = new StoreProfileFragment();
-			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else if (selectedItem.compareTo("My Closet") == 0) {
 			fragment = new ClosetFragment();
-			activityMain_content_fragment.setLayoutParams(layoutParams);
 		} else {
 			fragment = new HomeFragment();
 		}

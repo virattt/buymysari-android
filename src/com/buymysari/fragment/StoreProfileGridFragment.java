@@ -1,5 +1,8 @@
 package com.buymysari.fragment;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,11 +10,14 @@ import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,10 +33,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -205,6 +211,7 @@ public class StoreProfileGridFragment extends Fragment {
 							View arg1, int position, long arg3) {
 						// TODO Auto-generated method stub
 
+						Log.v("log" ," position list" + position);
 						_listposition = position;
 
 						return false;
@@ -218,6 +225,8 @@ public class StoreProfileGridFragment extends Fragment {
 					int position, long arg3) {
 				// TODO Auto-generated method stub
 
+				Log.v("log" ," position grid " + position);
+				
 				_listposition = position;
 
 				return false;
@@ -281,8 +290,63 @@ public class StoreProfileGridFragment extends Fragment {
 		case R.id.delete: {
 
 			new DeletDataTask(progress).execute("Home");
-
+			break;
 		}
+		case R.id.share : {
+			
+			   // Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+			    Log.v("log", " path --> " + gridlist.get(_listposition).image);
+			    
+			    String imgPath = gridlist.get(_listposition).image;
+			   // File imageFile = new File(imgPath);
+			    Bitmap bmp = getBitmapFromUrl(imgPath);
+			    
+			    Intent share = new Intent(Intent.ACTION_SEND);
+			    share.setType("image/jpeg");
+			    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			    bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+			    
+			 /*   try{
+		        	File pictureFile = new File(getActivity().getApplicationContext().getFilesDir(),"/prvteyes.jpeg");
+		        	 try {
+		        		 	pictureFile.createNewFile();
+					        FileOutputStream fo = new FileOutputStream(pictureFile);
+					        fo.write(bytes.toByteArray());
+					    } catch (IOException e1) {                       
+					            e1.printStackTrace();
+					    }
+		            String imPath = getActivity().getApplicationContext().getFilesDir()+"/prvteyes.jpeg";
+		            Log.v("log", "sdcard mounted readonly " + imPath);
+		            
+		            share.putExtra(Intent.EXTRA_STREAM, Uri.parse(imPath));
+		        }catch(Exception e){
+		        	Log.v("log","Error " + e.toString());
+		       */ 
+		        	  File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpeg");
+					    try {
+					        f.createNewFile();
+					        FileOutputStream fo = new FileOutputStream(f);
+					        fo.write(bytes.toByteArray());
+					    } catch (IOException e1) {                       
+					            e1.printStackTrace();
+					    }
+					    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpeg"));
+			    // }
+			  
+			    startActivity(Intent.createChooser(share, "Share Image"));
+			   /* sharingIntent.setType("image/jpeg");
+		        Uri screenshotUri = Uri.fromFile(imageFile);
+		        try {
+		            InputStream stream = getActivity().getContentResolver().openInputStream(screenshotUri);
+		        } catch (FileNotFoundException e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		        
+		        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+		        startActivity(Intent.createChooser(sharingIntent, "Share image"));*/
+			    break;
+			}
 		}
 		return super.onContextItemSelected(item);
 	}

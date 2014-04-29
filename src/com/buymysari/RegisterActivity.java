@@ -1,11 +1,10 @@
 package com.buymysari;
 
-import com.buymysari.R;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -68,6 +67,15 @@ public class RegisterActivity extends Activity {
 
 			}
 		});
+		
+		Typeface tf = Typeface.createFromAsset(this.getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
+			  first_name.setTypeface(tf);
+			  last_name.setTypeface(tf);
+			  email_edt.setTypeface(tf);
+			  password_edt.setTypeface(tf);
+			  register.setTypeface(tf);
+		
 	}
 
 	private class PostTask extends AsyncTask<String, Integer, String> {

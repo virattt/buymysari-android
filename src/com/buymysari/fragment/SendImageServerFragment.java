@@ -250,9 +250,7 @@ public class SendImageServerFragment extends Fragment {
 			// fragmentTransaction.commit();
 			fragmentTransaction.commitAllowingStateLoss();
 			// hideKeybord(edt_txt);
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			layoutParams.setMargins(0, 70, 0, 0);
-			MarketPlaceActivity.activityMain_content_fragment.setLayoutParams(layoutParams);
+			
 		}
 
 	}
