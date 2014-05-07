@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -25,7 +26,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AbsListView;
@@ -35,6 +38,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +50,7 @@ import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
 
-public class HomeFragment extends Fragment {
+public  class HomeFragment extends Fragment {
 
 	ListView lv;
 	ArrayList<All_list_home_dto> list;
@@ -71,7 +75,13 @@ public class HomeFragment extends Fragment {
 	public ImageLoader imageLoader;
 
 	int NoMoredataAvailable = 0;
+	private PopupWindow pwindo;
 
+	int currentX;
+	int currentY;
+	
+	public static boolean listLoaded = false;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -86,28 +96,19 @@ public class HomeFragment extends Fragment {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-		/*
-		 * btnLoadMore = new Button(getActivity());
-		 * btnLoadMore.setText("Load More"); lv.addFooterView(btnLoadMore);
-		 */
 
 		loadMoreProgress = new ProgressDialog(getActivity());
 		loadMoreProgress.setMessage("Loading...");
 
-		// cityName =
-		// getActivity().getIntent().getExtras().getString("cityName").toString();
-
-		
-		if (savedInstanceState != null) {
-			// Restore last state for checked position.
-			mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
-			Log.v("log", " get Save Status if --> " + mCurCheckPosition);
-		} else {
-			Log.v("log", " get Save Status else --> " + mCurCheckPosition);
+		/*if(listLoaded)
+		{
+			Log.v("log", " get Save Status if --> ");
+		} else {*/
+			Log.v("log", " get Save Status else --> " );
 			new JSONTask().execute();
-		}
-
+			listLoaded = true;
+		//}
+		
 		lv.setOnScrollListener(new OnScrollListener() {
 			private int mLastFirstVisibleItem;
 
@@ -145,23 +146,35 @@ public class HomeFragment extends Fragment {
 				}
 			}
 		});
-		/*
-		 * btnLoadMore.setOnClickListener(new View.OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // Starting a new async
-		 * task new loadMoreListView().execute(); } });
-		 */
+		
+		lv.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				
+				final int action = event.getAction();
+				
+				if (action == MotionEvent.ACTION_DOWN ) {
+					Log.v("Log", " Action Down ") ;
+				} else if (action == MotionEvent.ACTION_UP) {
+					Log.v("", " Action Up ");
+					currentX = (int) event.getX();
+					currentY = (int) event.getY();
+					Log.v("Log", " Action Up  currentX --> " + currentX +"  currenty -- >" + currentX) ;
+				}
+								
+				return false;
+			}
+		});
+		
 		return rootView;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-
-		this.getActivity().getSupportFragmentManager()
-				.putFragment(outState, "listAdded", HomeFragment.this);
-
-		outState.putInt("curChoice", mCurCheckPosition);
+		outState.putString("message", "This is my message to be reloaded");
 	}
 
 	public class JSONTask extends AsyncTask<String, Void, String> {
@@ -201,7 +214,7 @@ public class HomeFragment extends Fragment {
 				gps.showSettingsAlert();
 			}
 
-			// cityName = "ahmedabad";
+			//	cityName = "ahmedabad";
 		}
 
 		@Override
@@ -241,8 +254,8 @@ public class HomeFragment extends Fragment {
 				lv.setAdapter(adt);
 			} else {
 
-				Toast.makeText(getActivity(),
-						"No Items Available ", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "No Items Available ",
+						Toast.LENGTH_LONG).show();
 			}
 
 			if (progress != null) {
@@ -294,7 +307,8 @@ public class HomeFragment extends Fragment {
 				Log.v("log", " home if" + result);
 
 				int currentPosition = lv.getFirstVisiblePosition();
-				adt = new MyListAdapter(getActivity().getApplicationContext(), list);
+				adt = new MyListAdapter(getActivity().getApplicationContext(),
+						list);
 				lv.setAdapter(adt);
 				adt.notifyDataSetChanged();
 				lv.setSelectionFromTop(currentPosition + 1, 0);
@@ -392,6 +406,14 @@ public class HomeFragment extends Fragment {
 			ImageView home_view_image = (ImageView) convertView
 					.findViewById(R.id.list_home_text_view);
 
+			Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+					"fonts/ITCAvantGardeStd-BkCn.otf");
+			home_username_txt.setTypeface(tf);
+			home_view_txt.setTypeface(tf);
+			itemName_txt.setTypeface(tf);
+			closeted_txt.setTypeface(tf);
+			close_btn.setTypeface(tf);
+
 			if (!app.getUserID().equals("")) {
 
 				home_view_image.setVisibility(View.VISIBLE);
@@ -423,26 +445,19 @@ public class HomeFragment extends Fragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					findDoubleClick(list.get(position).store_id,
-							list.get(position).item_id);
+					findDoubleClick(list.get(position).store_id,list.get(position).item_id);
 
 					if (!app.getUserID().equals("")) {
 						if (mHasDoubleClicked) {
-							
-							if(app.getStoreId().equals("")){
-								
+							if (app.getStoreId().equals("")) {
 								new ClosetTask(progress).execute(
 										list.get(position).item_id,
 										list.get(position).store_id, uid);
-							}else{
-								
-								
+							//	initiatePopupWindow();
+							} else {
 							}
-							
-							
 						}
 					} else {
-						
 					}
 				}
 			});
@@ -453,20 +468,35 @@ public class HomeFragment extends Fragment {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					if(app.getStoreId().equals("")){
-								
-								new ClosetTask(progress).execute(
-										list.get(position).item_id,
-										list.get(position).store_id, uid);
-							}else{
-								
-								
-							}
+					if (app.getStoreId().equals("")) {
+						new ClosetTask(progress).execute(
+								list.get(position).item_id,
+								list.get(position).store_id, uid);
+					} else {
+
+					}
 				}
 			});
 
 			return convertView;
 		}
+	}
+
+	private void initiatePopupWindow() {
+		try {
+			// We need to get the instance of the LayoutInflater
+			LayoutInflater inflater = (LayoutInflater) this.getActivity()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = inflater.inflate(R.layout.custom_dialog,
+					(ViewGroup) rootView.findViewById(R.id.popup_element));
+			pwindo = new PopupWindow(layout, 80, 80, true);
+			pwindo.showAsDropDown(lv , currentX , currentY);
+			//pwindo.showAtLocation(layout, Gravity.CENTER, currentX, currentY);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private boolean findDoubleClick(final String str_id, final String itemId) {
@@ -505,6 +535,7 @@ public class HomeFragment extends Fragment {
 
 	public class ClosetTask extends AsyncTask<String, Void, String> {
 		final Dialog dialog;
+
 		public ClosetTask(ProgressDialog progress) {
 			dialog = new Dialog(getActivity());
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -512,7 +543,7 @@ public class HomeFragment extends Fragment {
 		}
 
 		public void onPreExecute() {
-			dialog.show();
+		//	dialog.show();
 		}
 
 		@Override

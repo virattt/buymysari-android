@@ -10,19 +10,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
-import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import com.buymysari.camera.CameraPreview;
 
 public class CameraActivity extends Activity {
@@ -45,6 +46,7 @@ public class CameraActivity extends Activity {
 
 		mCamera = getCameraInstance();
 
+		mCamera.startPreview();
 		mCameraPreview = new CameraPreview(CameraActivity.this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.addView(mCameraPreview);
@@ -55,7 +57,7 @@ public class CameraActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				mCamera.takePicture(null, null, mPicture);
+				mCamera.takePicture(null, null,null, mPicture);
 			}
 		});
 
@@ -122,12 +124,11 @@ public class CameraActivity extends Activity {
 		return mCamera;
 	}
 
-/*	private static File getOutputMediaFile() {
+	private static File getOutputMediaFile() {
+		
 		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				Environment.getExternalStorageDirectory(),
 				"MyCameraApp");
-
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
 				Log.d("MyCameraApp", "failed to create directory");
@@ -145,30 +146,37 @@ public class CameraActivity extends Activity {
 
 		File mediaFile;
 		mediaFile = new File(FilePAth);
-
+		
 		return mediaFile;
-	}*/
+	}
 
 	 PictureCallback mPicture = new PictureCallback() {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 			/*File pictureFile = getOutputMediaFile();
 			if (pictureFile == null) {
-				return;
+				
+				ContextWrapper cw = new ContextWrapper(getApplicationContext());
+		         // path to /data/data/yourapp/app_data/imageDir
+		        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+		        // Create imageDir
+		        pictureFile =new File(directory,"profile.jpg");
+				
+			//	return;
 			}
+			
 			try {
 
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
 
-				
-
 				// mCamera.startPreview();
 			} catch (FileNotFoundException e) {
 
 			} catch (IOException e) {
 			}*/
+			
 			if (ImageType.equals("AddPicture")) {
 				Intent i = new Intent(CameraActivity.this,MarketPlaceActivity.class);
 				i.putExtra("data", data);
@@ -243,7 +251,6 @@ public class CameraActivity extends Activity {
 		};
 		*/
 
-	
 
 	public void onBackPressed() {
 		Intent returnIntent = new Intent();
@@ -257,13 +264,13 @@ public class CameraActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+          /*  String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             Log.v("log"," picturePath --> selected Gallary Image path --> " + picturePath);
-            cursor.close();
+            cursor.close();*/
             
             InputStream iStream;
             byte[] inputData = null;
@@ -294,7 +301,6 @@ public class CameraActivity extends Activity {
 				setResult(RESULT_OK, returnIntent);
 				CameraActivity.this.finish();
 			}
-
 			//    ImageView imageView = (ImageView) findViewById(R.id.imgView);
             //    imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
@@ -311,5 +317,5 @@ public class CameraActivity extends Activity {
 	      }
 	      return byteBuffer.toByteArray();
 	    }
-	
+  
 }

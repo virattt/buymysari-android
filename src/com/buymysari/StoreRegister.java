@@ -1,13 +1,20 @@
 package com.buymysari;
 
+import java.util.ArrayList;
+import com.buymysari.dto.UserInfo_dto;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,6 +29,8 @@ public class StoreRegister extends Activity {
 			str_store_name_edt, str_website_edt, str_phone_edt, str_city_edt,
 			str_address_edt;
 	private ProgressDialog progress;
+	ArrayList<UserInfo_dto> list = new ArrayList<UserInfo_dto>();
+	MyApplication app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,13 @@ public class StoreRegister extends Activity {
 		city_edt = (EditText) findViewById(R.id.store_address_edt);
 		address_edt = (EditText) findViewById(R.id.store_city_edt);
 
+		
+		progress = new ProgressDialog(StoreRegister.this);
+		progress.setMessage("Loading...");
+		
+		
+		app = (MyApplication) StoreRegister.this.getApplicationContext();
+		
 		register_store_btn = (Button) findViewById(R.id.register_btn_store);
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -81,8 +97,7 @@ public class StoreRegister extends Activity {
 
 				} else {
 
-					progress = new ProgressDialog(StoreRegister.this);
-					progress.setMessage("Loading...");
+					
 
 					new PostTask().execute("Home");
 				}
@@ -129,9 +144,14 @@ public class StoreRegister extends Activity {
 			if (result.equals("successfully Registered")) {
 				Toast.makeText(StoreRegister.this, result, Toast.LENGTH_LONG)
 						.show();
-				Intent i = new Intent(StoreRegister.this, LoginActivity.class);
+				
+				
+				new JSONTask().execute("Home");
+				
+				
+				/*Intent i = new Intent(StoreRegister.this, LoginActivity.class);
 				startActivity(i);
-
+				*/
 			} else {
 				Toast.makeText(StoreRegister.this, result, Toast.LENGTH_LONG)
 						.show();
@@ -139,4 +159,78 @@ public class StoreRegister extends Activity {
 			progress.dismiss();
 		}
 	}
+	
+public class JSONTask extends AsyncTask<String, Void, String> {
+		
+		public void onPreExecute() {
+		    progress.show();
+		}
+		
+			
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String listSize = "";
+	        Log.v("log_tag","list DoinBaCK wwww ");
+	        
+	        list = DBAdpter.getAllUserInfo(str_email_edt, str_password_edt);
+	        
+	       return listSize; // This value will be returned to your onPostExecute(result) method
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	Log.v("log_tag","list ON Post");
+	    		
+	    	String resultNew = list.get(0).msg;
+			String user_id = list.get(0).user_id;	
+			/*Log.v("log_tag","list DoinBaCK "+user_id);
+			 app.setUserID(user_id);
+			 Log.v("log_tag","list DoinBaCK storeId "+list.get(0).strore_profile_id );*/
+			 
+			if(list.get(0).strore_profile_id != null )
+			{
+				String store_id = list.get(0).strore_profile_id;
+		       
+		        app.setStoreId(store_id);	
+		        app.setUserID("");
+		        savePreferences("store_id" , store_id);
+		        savePreferences("user_id" , "");
+		        
+		        Log.v("log_tag","list DoinBaCK if "+user_id);
+			}
+			else if(user_id != null){
+				app.setStoreId("");	
+		        app.setUserID(user_id);
+		        
+		        savePreferences("user_id" , user_id);
+		        savePreferences("store_id" , "");
+		        
+		        Log.v("log_tag","list DoinBaCK else"+list.get(0).strore_profile_id);
+			}
+			
+	        if (resultNew.equals("success fully login")) {
+				
+	        	Toast.makeText(StoreRegister.this, resultNew, Toast.LENGTH_LONG).show();
+	        	
+	        	Intent inew = new Intent(StoreRegister.this, MarketPlaceActivity.class);
+				finish();
+				startActivity(inew);
+
+			} else {
+				Toast.makeText(StoreRegister.this, resultNew, Toast.LENGTH_LONG).show();
+			}
+	        
+	        if(progress != null)
+	        	progress.dismiss();
+	    	}
+	}
+
+private void savePreferences(String key, String value) {
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    Editor editor = sharedPreferences.edit();
+    editor.putString(key, value);
+    editor.commit();
+}
+
 }

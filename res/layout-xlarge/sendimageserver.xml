@@ -25,9 +25,10 @@
                 android:ems="10"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:textColorHint="@color/Black"
                 android:hint="Item Name" >
 
-                
+                <requestFocus />
             </EditText>
 
             <LinearLayout
@@ -110,7 +111,7 @@
                 android:layout_height="50dip"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:background="#41d845"
                 android:text="UPLOAD IMAGE"

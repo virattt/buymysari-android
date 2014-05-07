@@ -25,6 +25,7 @@
                 android:ems="10"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:textColorHint="@color/Black"
                 android:hint="Item Name" >
 
                 <requestFocus />

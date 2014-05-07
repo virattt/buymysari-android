@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -15,7 +14,6 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -73,8 +71,8 @@ public class LoginActivity extends Activity {
 					strUname = uname.getText().toString().trim();
 					strPass = pass.getText().toString().trim();
 
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				    imm.hideSoftInputFromWindow(login.getWindowToken(), 0);
+				//	  InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				//    imm.hideSoftInputFromWindow(login.getWindowToken(), 0);
 					
 					new JSONTask().execute("Home");
 					
@@ -157,7 +155,6 @@ public class JSONTask extends AsyncTask<String, Void, String> {
 	        	Toast.makeText(LoginActivity.this, resultNew, Toast.LENGTH_LONG).show();
 	        	
 	        	Intent inew = new Intent(LoginActivity.this, MarketPlaceActivity.class);
-				finish();
 				startActivity(inew);
 
 			} else {

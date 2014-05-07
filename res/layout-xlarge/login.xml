@@ -19,6 +19,7 @@
         android:hint="EMAIL ADDRESS"
         android:singleLine="true"
         android:textColor="@android:color/black"
+        android:textColorHint="@color/Black"
         android:textStyle="bold"
         android:textSize="19sp" >
 
@@ -42,6 +43,7 @@
         android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:textColor="@android:color/black"
+        android:textColorHint="@color/Black"
         android:textStyle="bold"
         android:textSize="19sp" />
 

@@ -64,6 +64,7 @@
             android:layout_marginRight="4dp"
             android:background="#41d845"
             android:text="SUBSCRIBED"
+            android:textSize="16sp"
             android:textColor="@color/White" />
 
         <TextView

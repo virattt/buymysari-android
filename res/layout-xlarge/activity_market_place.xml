@@ -12,111 +12,122 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-           <!-- This is where fragment will show up -->
+        <!-- This is where fragment will show up -->
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="70dip"
+            android:layout_marginTop="70dip"
             android:layout_weight="1" >
 
             <FrameLayout
                 android:id="@+id/activity_main_content_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="80dip"
                 android:background="@android:color/white" >
             </FrameLayout>
-        </LinearLayout>
-        
+
+            <LinearLayout
+                android:id="@+id/shadow_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:alpha="0.5"
+                android:background="#000" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
         <!-- This acts as Actionbar -->
-	 <RelativeLayout
+
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="80dip"
-            android:background="@drawable/headerbackground"
-            android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/activity_main_content_button_menu"
-                android:layout_width="40dip"
-                android:layout_height="40dip"
-                android:layout_marginBottom="10dip"
-                android:layout_marginTop="20dip"
-                android:background="@drawable/menu"
-                android:onClick="toggleMenu" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="70dip"
+                android:background="#d84047"
+                android:orientation="horizontal" >
 
-            <ImageView
-                android:id="@+id/search_img"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="40dip"
-                android:layout_marginRight="15dip"
-                android:layout_marginTop="20dip"
-                android:background="@drawable/search" />
+                <Button
+                    android:id="@+id/activity_main_content_button_menu"
+                    android:layout_width="30dip"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginTop="18dip"
+                    android:background="@drawable/menu"
+                    android:onClick="toggleMenu" />
 
-            <TextView
-                android:id="@+id/activity_main_content_title"
-                android:layout_width="146dip"
-                android:layout_height="33dip"
+                <ImageView
+                    android:id="@+id/search_img"
+                    android:layout_width="30dip"
+                    android:layout_height="30dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="40dip"
+                    android:layout_marginRight="15dip"
+                    android:layout_marginTop="18dip"
+                    android:background="@drawable/search" />
+
+                <TextView
+                    android:id="@+id/activity_main_content_title"
+                    android:layout_width="146dip"
+                    android:layout_height="70dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="45dp"
+                    android:layout_toRightOf="@+id/activity_main_content_button_menu"
+                    android:background="@drawable/bms_logo_white"
+                    android:gravity="center"
+                    android:textSize="5dip" />
+            </RelativeLayout>
+
+            <!-- This is where our bottom bar show up -->
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="70dip"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="45dp"
-                android:layout_toRightOf="@+id/activity_main_content_button_menu"
-                android:background="@drawable/bms_logo_white"
-                android:gravity="center"
-                android:textSize="3dip" />
+                android:layout_marginTop="200dip"
+                android:background="#221010"
+                android:orientation="horizontal" >
 
-        </RelativeLayout>
+                <Button
+                    android:id="@+id/bottom_home_btn_toolbar"
+                    android:layout_width="80dip"
+                    android:layout_height="70dip"
+                    android:background="@drawable/home2" />
 
-     
-        <!-- This is where our bottom bar show up -->
+                <Button
+                    android:id="@+id/bottom_closet_main_toolbat_btn"
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:layout_alignBaseline="@+id/bottom_home_btn_toolbar"
+                    android:layout_alignBottom="@+id/bottom_home_btn_toolbar"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/door" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="80dip"
-            android:alpha="0.8"
-            android:background="#221010"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/bottom_home_btn_toolbar"
-                android:layout_width="90dip"
-                android:layout_height="80dip"
-                android:alpha="0.8"
-                android:background="@drawable/home2" />
-
-            <Button
-                android:id="@+id/bottom_closet_main_toolbat_btn"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:layout_alignBaseline="@+id/bottom_home_btn_toolbar"
-                android:layout_alignBottom="@+id/bottom_home_btn_toolbar"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:alpha="0.8"
-                android:background="@drawable/door" />
-
-            <Button
-                android:id="@+id/bottom_favourite_btn"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:layout_alignBaseline="@+id/bottom_closet_main_toolbat_btn"
-                android:layout_alignBottom="@+id/bottom_closet_main_toolbat_btn"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/bottom_closet_main_toolbat_btn"
-                android:alpha="0.8"
-                android:background="@drawable/heart1" />
-        </RelativeLayout>
+                <Button
+                    android:id="@+id/bottom_favourite_btn"
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:layout_alignBaseline="@+id/bottom_closet_main_toolbat_btn"
+                    android:layout_alignBottom="@+id/bottom_closet_main_toolbat_btn"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@+id/bottom_closet_main_toolbat_btn"
+                    android:background="@drawable/heart1" />
+            </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
 
     <!-- This holds our menu -->
 
-  <LinearLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
@@ -126,244 +137,253 @@
             android:layout_height="fill_parent"
             android:orientation="horizontal" >
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#221010"
-        android:layout_weight="0.3"
-        android:alpha="0.9"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:alpha="0.9"
-            android:background="#221010"
-            android:orientation="vertical" >
-
-            <RelativeLayout
+            <ScrollView
+                android:id="@+id/mainMenuScrollView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="15dip" >
+                android:layout_weight="0.3"
+                android:alpha="0.9"
+                android:background="#221010"
+                android:orientation="vertical" >
 
-                <EditText
-                    android:id="@+id/edtSearchText"
+                <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:background="@drawable/rounded_edt"
-                    android:hint="Search by city or store name"
-                    android:textSize="18sp"
-                    android:inputType="textPersonName"
-                    android:paddingLeft="10dip" >
-                </EditText>
-            </RelativeLayout>
+                    android:layout_height="fill_parent"
+                    android:alpha="0.9"
+                    android:background="#221010"
+                    android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="65dip"
-                android:layout_marginTop="3dip"
-                android:layout_marginRight="20dip"
-                android:layout_marginLeft="20dip"
-                android:orientation="horizontal" >
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="15dip" >
 
-                <ToggleButton
-                    android:id="@+id/btnCloth"
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-        			android:maxWidth="65dip"
-                    android:layout_height="65dip"
-                    android:background="@drawable/clothes_active"
-                    android:textOff=""
-                    android:textOn=""
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                        <EditText
+                            android:id="@+id/edtSearchText"
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dip"
+                            android:layout_marginLeft="10dip"
+                            android:layout_marginRight="10dip"
+                            android:background="@drawable/rounded_edt"
+                            android:hint="Search by city or store name"
+                            android:inputType="textPersonName"
+                            android:paddingLeft="10dip"
+                            android:textColorHint="@color/Black"
+                            android:textSize="18sp" >
+                        </EditText>
+                    </RelativeLayout>
 
-                <ToggleButton
-                    android:id="@+id/btnShoes"
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-        			android:maxWidth="65dip"
-                    android:layout_height="65dip"
-                    android:layout_marginLeft="5dip"
-                    android:background="@drawable/shoes_active"
-                    android:textOff=""
-                    android:textOn=""
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <ToggleButton
-                    android:id="@+id/btnAcce"
-                    android:layout_width="0dip"
-                   android:layout_weight="1"
-        			android:maxWidth="65dip"
-                    android:layout_height="65dip"
-                    android:layout_marginLeft="5dip"
-                    android:background="@drawable/accessories_active"
-                    android:textOff=""
-                    android:textOn=""
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-  <LinearLayout
-                android:id="@+id/personal_linear"
-                android:layout_width="fill_parent"
-                android:layout_height="200dip"
-                android:orientation="vertical"
-                android:visibility="gone" >
-            <RelativeLayout
-                android:id="@+id/line_layout_personal"
-                android:layout_width="fill_parent"
-                android:layout_height="60dip"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dip"
-                android:layout_marginTop="12dip"
-                android:background="@drawable/layout_border"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/person_txt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dip"
-                    android:text="PERSONAL"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp" />
-
-                <ImageView
-                    android:id="@+id/person_img"
-                    android:layout_width="37dip"
-                    android:layout_height="35dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="10dip"
-                    android:background="@drawable/userwhite" />
-            </RelativeLayout>
-
-            <ListView
-                android:id="@+id/activity_main_menu_listview"
-                android:layout_width="match_parent"
-                android:layout_height="150dip"
-                android:cacheColorHint="#00000000"
-                android:listSelector="@drawable/list_selector" >
-            </ListView>
-</LinearLayout>
-                         
-            <LinearLayout
-                android:id="@+id/StoreProfileOptions"
-                android:layout_width="fill_parent"
-                android:layout_height="220dip"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <RelativeLayout
-                    android:id="@+id/line_layout_store"
-                    android:layout_width="fill_parent"
-                    android:layout_height="100dip"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dip"
-                    android:background="@drawable/layout_border"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@+id/store_txt"
-                        android:layout_width="150dip"
+                    <LinearLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="fill_parent"
                         android:layout_height="70dip"
-                        android:text="STORE"
-                        android:textColor="@android:color/white"
-                        android:textSize="25sp" />
+                        android:layout_marginLeft="20dip"
+                        android:layout_marginRight="20dip"
+                        android:layout_marginTop="3dip"
+                        android:orientation="horizontal" >
 
-                    <ImageView
-                        android:id="@+id/store_img"
-                        android:layout_width="40dip"
-                        android:layout_height="35dip"
-                        android:layout_alignParentRight="true"
+                        <ToggleButton
+                            android:id="@+id/btnCloth"
+                            android:layout_width="67dip"
+                            android:layout_height="70dip"
+                            android:background="@drawable/clothes_active"
+                            android:textOff=""
+                            android:textOn=""
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ToggleButton
+                            android:id="@+id/btnShoes"
+                            android:layout_width="67dip"
+                            android:layout_height="70dip"
+                            android:layout_marginLeft="5dip"
+                            android:background="@drawable/shoes_active"
+                            android:textOff=""
+                            android:textOn=""
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ToggleButton
+                            android:id="@+id/btnAcce"
+                            android:layout_width="67dip"
+                            android:layout_height="70dip"
+                            android:layout_marginLeft="5dip"
+                            android:background="@drawable/accessories_active"
+                            android:textOff=""
+                            android:textOn=""
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/personal_linear"
+                        android:layout_width="fill_parent"
+                        android:layout_height="200dip"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <RelativeLayout
+                            android:id="@+id/line_layout_personal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="60dip"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dip"
+                            android:layout_marginTop="12dip"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:id="@+id/person_txt"
+                                android:layout_width="fill_parent"
+                                android:layout_height="50dip"
+                                android:text="PERSONAL"
+                                android:textColor="@android:color/white"
+                                android:textSize="25sp" />
+
+                            <ImageView
+                                android:id="@+id/person_img"
+                                android:layout_width="37dip"
+                                android:layout_height="35dip"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginBottom="10dip"
+                                android:background="@drawable/userwhite" />
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_below="@+id/person_img"
+                                android:background="#a28d85" />
+                        </RelativeLayout>
+
+                        <ListView
+                            android:id="@+id/activity_main_menu_listview"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dip"
+                            android:cacheColorHint="#00000000"
+                            android:listSelector="@drawable/list_selector" >
+                        </ListView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/StoreProfileOptions"
+                        android:layout_width="fill_parent"
+                        android:layout_height="200dip"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <RelativeLayout
+                            android:id="@+id/line_layout_store"
+                            android:layout_width="fill_parent"
+                            android:layout_height="60dip"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dip"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:id="@+id/store_txt"
+                                android:layout_width="150dip"
+                                android:layout_height="70dip"
+                                android:text="STORE"
+                                android:textColor="@android:color/white"
+                                android:textSize="25sp" />
+
+                            <ImageView
+                                android:id="@+id/store_img"
+                                android:layout_width="40dip"
+                                android:layout_height="35dip"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginBottom="10dip"
+                                android:background="@drawable/shop_white" >
+                            </ImageView>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_below="@+id/store_img"
+                                android:background="#a28d85" />
+                        </RelativeLayout>
+
+                        <ListView
+                            android:id="@+id/activity_store_menu_listview"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dip"
+                            android:cacheColorHint="#00000000"
+                            android:listSelector="@drawable/list_selector" >
+                        </ListView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="152dip" />
+
+                    <RelativeLayout
+                        android:id="@+id/line_layout_user"
+                        android:layout_width="fill_parent"
+                        android:layout_height="60dip"
+                        android:layout_gravity="bottom"
                         android:layout_marginBottom="10dip"
-                        android:background="@drawable/shop_white" >
-                    </ImageView>
-                </RelativeLayout>
+                        android:layout_marginLeft="15dip"
+                        android:layout_marginTop="10dip"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
 
-                <ListView
-                    android:id="@+id/activity_store_menu_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dip"
-                    android:cacheColorHint="#00000000"
-                    android:listSelector="@drawable/list_selector" >
-                </ListView>
-            </LinearLayout>
+                        <com.buymysari.CircularImageView
+                            android:id="@+id/user_img"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp" >
+                        </com.buymysari.CircularImageView>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:layout_weight="1" >
-            </View>
+                        <TextView
+                            android:id="@+id/user_txt"
+                            android:layout_width="fill_parent"
+                            android:layout_height="60dip"
+                            android:layout_marginTop="10dip"
+                            android:paddingLeft="80dip"
+                            android:text="Zeeshan Syed"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/line_layout_user"
-                android:layout_width="fill_parent"
-                android:layout_height="60dip"
-                android:layout_marginBottom="10dip"
-                android:layout_marginLeft="15dip"
-                android:layout_marginTop="15dip"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="horizontal" >
+                    <RelativeLayout
+                        android:id="@+id/line_layout_logout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dip"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="20dip"
+                        android:layout_marginLeft="15dip"
+                        android:layout_marginTop="20dip"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
 
-                <com.buymysari.CircularImageView
-                    android:id="@+id/user_img"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp" >
-                </com.buymysari.CircularImageView>
+                        <ImageView
+                            android:id="@+id/logout_img"
+                            android:layout_width="40dip"
+                            android:layout_height="60dip"
+                            android:layout_marginLeft="10dip"
+                            android:background="@drawable/logout" />
 
-                <TextView
-                    android:id="@+id/user_txt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dip"
-                    android:layout_marginTop="10dip"
-                    android:paddingLeft="80dip"
-                    android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/line_layout_logout"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:layout_marginBottom="20dip"
-                android:layout_marginLeft="15dip"
-                android:layout_marginTop="20dip"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:id="@+id/logout_img"
-                    android:layout_width="40dip"
-                    android:layout_height="60dip"
-                    android:layout_marginLeft="10dip"
-                    android:background="@drawable/logout" />
-
-                <TextView
-                    android:id="@+id/logout_txt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="40dip"
-                    android:paddingLeft="80dip"
-                    android:text="Logout"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-        </LinearLayout>
-   </ScrollView>
+                        <TextView
+                            android:id="@+id/logout_txt"
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dip"
+                            android:paddingLeft="80dip"
+                            android:text="Logout"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.7"
                 android:alpha="0.5"
-                android:background="#000" >
+                android:background="#000"
+                android:clickable="false"
+                android:focusableInTouchMode="false"
+                android:scrollbars="none" >
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -372,4 +392,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </com.buymysari.layout.MainLayout>

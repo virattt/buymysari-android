@@ -26,15 +26,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -85,14 +88,15 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 	Boolean clothStataus = false;
 
-	TextView txtUserName , logout_txt;
+	TextView txtUserName, logout_txt;
 	String UserNAme;
 	ToggleButton btnCl, btnSh, btnAcc;
 	float downXValue, downYValue;
 	ImageView search_img;
-	
+	Typeface tf;
+
 	public static FrameLayout activityMain_content_fragment;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,45 +104,49 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		mainLayout = (MainLayout) this.getLayoutInflater().inflate(
 				R.layout.activity_market_place, null);
 		setContentView(mainLayout);
-		
-		Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/ITCAvantGardeStd-BkCn.otf");
-		
+
+		tf = Typeface.createFromAsset(this.getAssets(),
+				"fonts/ITCAvantGardeStd-BkCn.otf");
+
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		TextView store_txt =(TextView)findViewById(R.id.store_txt);
-		TextView person_txt =(TextView)findViewById(R.id.person_txt);
+		TextView store_txt = (TextView) findViewById(R.id.store_txt);
+		TextView person_txt = (TextView) findViewById(R.id.person_txt);
 		store_txt.setTypeface(tf);
 		person_txt.setTypeface(tf);
-		
-		activityMain_content_fragment = (FrameLayout)findViewById(R.id.activity_main_content_fragment);
-		app = (MyApplication)this.getApplication();
-		
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		logout_txt = (TextView)findViewById(R.id.logout_txt);
+
+		activityMain_content_fragment = (FrameLayout) findViewById(R.id.activity_main_content_fragment);
+		app = (MyApplication) this.getApplication();
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		logout_txt = (TextView) findViewById(R.id.logout_txt);
 		logout_txt.setTypeface(tf);
-		
+
 		logout_txt.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-			
-				 savePreferences("user_id" , "");
-				 savePreferences("store_id" , "");
-				 app.setStoreId("");
-				 app.setUserID("");
-				 	
-				 Intent i = new Intent(MarketPlaceActivity.this, SplashActivity.class);
-				 MarketPlaceActivity.this.finish();
-				 startActivity(i);
-				 
+
+				savePreferences("user_id", "");
+				savePreferences("store_id", "");
+				app.setStoreId("");
+				app.setUserID("");
+
+				Intent i = new Intent(MarketPlaceActivity.this,
+						SplashActivity.class);
+				MarketPlaceActivity.this.finish();
+				startActivity(i);
+
 			}
 		});
-		
+
 		edtSearchText = (EditText) findViewById(R.id.edtSearchText);
 		bottom_home_btn_toolbar = (Button) findViewById(R.id.bottom_home_btn_toolbar);
 		search_img = (ImageView) findViewById(R.id.search_img);
@@ -146,14 +154,14 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		bottom_favourite_btn = (Button) findViewById(R.id.bottom_favourite_btn);
 
 		txtUserName = (TextView) findViewById(R.id.user_txt);
-		
+
 		Log.v("log", " UserID " + app.getUserID());
 		Log.v("log", " StoreID " + app.getStoreId());
 
-		String userID = sharedPreferences.getString("user_id","");
+		String userID = sharedPreferences.getString("user_id", "");
 		String store_id = sharedPreferences.getString("store_id", "");
-		
-		Log.v("log", " UserID "+ userID +" store_id --> " + store_id);
+
+		Log.v("log", " UserID " + userID + " store_id --> " + store_id);
 
 		if (!userID.equals("")) {
 
@@ -163,28 +171,33 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		} else {
 
-			Log.v("log"," Store -->  " + DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName());
-				
-			UserNAme = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_firstName()
+			Log.v("log", " Store -->  "
+					+ DBAdpter.fetch_UserDetail_data.get(0)
+							.getStrore_profile_firstName());
+
+			UserNAme = DBAdpter.fetch_UserDetail_data.get(0)
+					.getStrore_profile_firstName()
 					+ " "
-					+ DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_lastName();
+					+ DBAdpter.fetch_UserDetail_data.get(0)
+							.getStrore_profile_lastName();
 		}
 
 		txtUserName.setText(UserNAme);
-		
-		
-		String img_url = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_image().toString().trim();
-		Log.v("log"," marketplace img_url " + img_url );
-		
+		txtUserName.setTypeface(tf);
+
+		String img_url = DBAdpter.fetch_UserDetail_data.get(0)
+				.getStrore_profile_image().toString().trim();
+		Log.v("log", " marketplace img_url " + img_url);
+
 		imageLoader = new ImageLoader(MarketPlaceActivity.this);
 		Bitmap bm = getBitmapFromUrl(img_url);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			Log.v("log", " Above HoneyComb ");
 
 			imView = (CircularImageView) findViewById(R.id.user_img);
-		
+
 			imView.setImageBitmap(bm);
-			//imageLoader.DisplayImage(img_url, imView);
+			// imageLoader.DisplayImage(img_url, imView);
 			imView.setBorderColor(getResources().getColor(R.color.GrayLight));
 			imView.setBorderWidth(0);
 		} else {
@@ -192,9 +205,9 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 			imView1 = (ImageView) findViewById(R.id.user_img);
 			imView1.setImageBitmap(bm);
-			//imageLoader.DisplayImage(img_url, imView1);
+			// imageLoader.DisplayImage(img_url, imView1);
 		}
-		
+
 		search_img.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -234,21 +247,33 @@ public class MarketPlaceActivity extends FragmentActivity implements
 			gps.showSettingsAlert();
 		}
 
+		// cityName = "ahmedabad";
+
 		bottom_home_btn_toolbar.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+
 				FragmentManager fm = MarketPlaceActivity.this
 						.getSupportFragmentManager();
+
 				FragmentTransaction fragmentTransaction = fm.beginTransaction();
-				HomeFragment fm2 = new HomeFragment();
-				fragmentTransaction.replace(
-						R.id.activity_main_content_fragment, fm2, "HELLO");
+				Fragment homeFrag = fm.findFragmentByTag("HOME");
+				if (homeFrag != null) {
+					Log.v("fragment", "got fragement");
+					fragmentTransaction.replace(
+							R.id.activity_main_content_fragment, homeFrag,
+							"HOME");
+				} else {
+					HomeFragment hoFrag = new HomeFragment();
+					fragmentTransaction
+							.replace(R.id.activity_main_content_fragment,
+									hoFrag, "HOME");
+				}
 
 				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
-				
 				// mainLayout.toggleMenu();
 			}
 		});
@@ -425,8 +450,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		lvMenuItems = getResources().getStringArray(R.array.menu_items);
 		lvMenu = (ListView) findViewById(R.id.activity_main_menu_listview);
-		lvMenu.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.custom_textview, lvMenuItems));
+		lvMenu.setAdapter(new CustomAdapter(this));
 		lvMenu.setDivider(null);
 		lvMenu.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -438,8 +462,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		StoreMenuItems = getResources().getStringArray(R.array.store_items);
 		StoreMenu = (ListView) findViewById(R.id.activity_store_menu_listview);
-		StoreMenu.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.custom_textview, StoreMenuItems));
+		StoreMenu.setAdapter(new CustomStoreAdapter(this));
 		StoreMenu.setDivider(null);
 		StoreMenu.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -487,14 +510,21 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		FragmentManager fm = this.getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 
-		HomeFragment fragment = new HomeFragment();
-		ft.add(R.id.activity_main_content_fragment, fragment);
+		Fragment homeFrag = fm.findFragmentByTag("HOME");
+		if (homeFrag != null) {
+			Log.v("fragment", "got fragement");
+			ft.replace(R.id.activity_main_content_fragment, homeFrag, "HOME");
+		} else {
+			HomeFragment hoFrag = new HomeFragment();
+			ft.replace(R.id.activity_main_content_fragment, hoFrag, "HOME");
+		}
+
 		ft.addToBackStack(null);
 		ft.commit();
-		
+
 		Intent intent = getIntent();
 		if (intent.hasExtra("data")) {
-			Log.v("log"," if intent " + intent.getByteArrayExtra("data"));
+			Log.v("log", " if intent " + intent.getByteArrayExtra("data"));
 			byte[] data = intent.getByteArrayExtra("data");
 			FragmentManager fManager = MarketPlaceActivity.this
 					.getSupportFragmentManager();
@@ -505,15 +535,15 @@ public class MarketPlaceActivity extends FragmentActivity implements
 					setPictureFragment);
 			fTransaction.addToBackStack(null);
 			Bundle bundle = new Bundle();
-			if(intent.hasExtra("image_from"))
-			{
-				bundle.putString("image_from", intent.getStringExtra("image_from"));	
+			if (intent.hasExtra("image_from")) {
+				bundle.putString("image_from",
+						intent.getStringExtra("image_from"));
 			}
 			bundle.putByteArray("data", data);
 			setPictureFragment.setArguments(bundle);
 			fTransaction.commit();
 		}
-		
+
 		edtSearchText.setOnKeyListener(new OnKeyListener() {
 
 			@Override
@@ -522,7 +552,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 				if ((event.getAction() == KeyEvent.ACTION_DOWN)
 						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					
+
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(edtSearchText.getWindowToken(),
 							0);
@@ -591,7 +621,6 @@ public class MarketPlaceActivity extends FragmentActivity implements
 			}
 		});
 
-		
 	}
 
 	public void toggleMenu(View v) {
@@ -617,15 +646,15 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 		Fragment fragment = null;
 
-		
 		if (selectedItem.compareTo("Store Profile") == 0) {
 			fragment = new CreateStoreFragment();
 		} else if (selectedItem.compareTo("Store Gallery") == 0) {
 			fragment = new StoreProfileGridFragment();
 		} else if (selectedItem.compareTo("Add Picture") == 0) {
-			Intent cameraAct = new Intent(MarketPlaceActivity.this,CameraActivity.class);
+			Intent cameraAct = new Intent(MarketPlaceActivity.this,
+					CameraActivity.class);
 			cameraAct.putExtra("ImageType", "AddPicture");
-			startActivity(cameraAct);	
+			startActivity(cameraAct);
 		} else {
 			fragment = new HomeFragment();
 		}
@@ -759,13 +788,13 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		return true;
 	}
 
-	
 	private void savePreferences(String key, String value) {
-	       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-	       Editor editor = sharedPreferences.edit();
-	       editor.putString(key, value);
-	       editor.commit();
-	   }
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		Editor editor = sharedPreferences.edit();
+		editor.putString(key, value);
+		editor.commit();
+	}
 
 	public Bitmap getBitmapFromUrl(String urlStore) {
 		URL url = null;
@@ -777,16 +806,105 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		}
 		Bitmap bmp = null;
 		try {
-			bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+			bmp = BitmapFactory.decodeStream(url.openConnection()
+					.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return bmp;
 	}
-	
-	/*
-	 * @Override public void onBackPressed() { // TODO Auto-generated method
-	 * 	stub android.os.Process.killProcess(android.os.Process.myPid()); }
-	 */
+
+	class CustomAdapter extends BaseAdapter {
+
+		Context context;
+		LayoutInflater inflater;
+
+		public CustomAdapter(Context c) {
+
+			context = c;
+		}
+
+		public int getCount() {
+
+			return lvMenuItems.length;
+		}
+
+		public Object getItem(int arg0) {
+
+			return arg0;
+		}
+
+		public long getItemId(int arg0) {
+
+			return arg0;
+		}
+
+		public View getView(int arg0, View arg1, ViewGroup arg2) {
+			View convertView = arg1;
+
+			if (convertView == null) {
+				inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			}
+			convertView = inflater.inflate(R.layout.custom_textview, arg2,
+					false);
+			TextView mTV_names = (TextView) convertView.findViewById(R.id.tv);
+
+			// typeface used to display the text in different language other
+			// than english
+			// here it is tamil, hindi and telugu.
+
+			// setting the typeface to the particular text
+
+			mTV_names.setTypeface(tf);
+			mTV_names.setText("" + lvMenuItems[arg0]);
+			return convertView;
+
+		}
+
+	}
+
+	class CustomStoreAdapter extends BaseAdapter {
+
+		Context context;
+		LayoutInflater inflater;
+
+		public CustomStoreAdapter(Context c) {
+
+			context = c;
+		}
+
+		public int getCount() {
+
+			return StoreMenuItems.length;
+		}
+
+		public Object getItem(int arg0) {
+
+			return arg0;
+		}
+
+		public long getItemId(int arg0) {
+
+			return arg0;
+		}
+
+		public View getView(int arg0, View arg1, ViewGroup arg2) {
+			View convertView = arg1;
+
+			if (convertView == null) {
+				inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			}
+			convertView = inflater.inflate(R.layout.custom_textview, arg2,
+					false);
+			TextView mTV_names = (TextView) convertView.findViewById(R.id.tv);
+
+			mTV_names.setTypeface(tf);
+			mTV_names.setText("" + StoreMenuItems[arg0]);
+			return convertView;
+
+		}
+	}
 }

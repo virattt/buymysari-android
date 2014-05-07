@@ -1,5 +1,8 @@
 package com.buymysari.fragment;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,27 +10,36 @@ import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -40,11 +52,11 @@ import android.widget.ToggleButton;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
-import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.All_list_home_dto;
 import com.buymysari.dto.Closet_dto;
+import com.buymysari.fragment.StoreProfileGridFragment.DeletDataTask;
 
 public class ClosetFragment extends Fragment {
 
@@ -66,6 +78,8 @@ public class ClosetFragment extends Fragment {
 	int NoMoredataAvailable = 0;
 	TextView txtName, txtWebSite, txt_closet_text;
 
+	int _listposition;
+	
 	CustomGridViewAdapter adtstore;
 	FrameLayout closet_grid_layout;
 	GridView closet_gridView;
@@ -75,7 +89,7 @@ public class ClosetFragment extends Fragment {
 
 	Button btnEditUserProfile;
 	View rootView;
-
+	Typeface tf;
 	int myLastVisiblePos;
 	private int mPreviousTotal = 0;
 
@@ -85,13 +99,14 @@ public class ClosetFragment extends Fragment {
 
 		rootView = inflater.inflate(R.layout.closet, container, false);
 		lv = (ListView) rootView.findViewById(R.id.closet_listview);
-
+		tf = Typeface.createFromAsset(getActivity().getAssets(),
+				"fonts/ITCAvantGardeStd-BkCn.otf");
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
+
 		txtName = (TextView) rootView.findViewById(R.id.txtStoreName);
 		txtWebSite = (TextView) rootView.findViewById(R.id.txtStoreWebsite);
 		txt_closet_text = (TextView) rootView
@@ -142,27 +157,27 @@ public class ClosetFragment extends Fragment {
 
 		String img_url = userImage;
 		imageLoader = new ImageLoader(getActivity());
-		Bitmap bmp =  getBitmapFromUrl(img_url);
+		Bitmap bmp = getBitmapFromUrl(img_url);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			Log.v("log", " Above HoneyComb ");
 
 			CircularImageView Store_ic_img = (CircularImageView) rootView
 					.findViewById(R.id.imgStoreProfileCloset);
-		//	imageLoader.DisplayImage(img_url, Store_ic_img);
+			// imageLoader.DisplayImage(img_url, Store_ic_img);
 			Store_ic_img.setImageBitmap(bmp);
-			Store_ic_img.setBorderColor(getResources().getColor(R.color.GrayLight));
+			Store_ic_img.setBorderColor(getResources().getColor(
+					R.color.GrayLight));
 			Store_ic_img.setBorderWidth(0);
 		} else {
 			Log.v("log", " Below HoneyComb ");
 
-			ImageView imView = (ImageView) rootView.findViewById(R.id.imgStoreProfileCloset);
+			ImageView imView = (ImageView) rootView
+					.findViewById(R.id.imgStoreProfileCloset);
 			imView.setImageBitmap(bmp);
-			//imageLoader.DisplayImage(img_url, imView);
+			// imageLoader.DisplayImage(img_url, imView);
 		}
 
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
-
-		
 
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -174,6 +189,12 @@ public class ClosetFragment extends Fragment {
 				.findViewById(R.id.btnClosetGrid);
 		btnClosetList = (ToggleButton) rootView
 				.findViewById(R.id.btnClosetList);
+
+		txtName.setTypeface(tf);
+		txtWebSite.setTypeface(tf);
+		txt_closet_text.setTypeface(tf);
+		btnEditUserProfile.setTypeface(tf);
+
 		btnClosetGrid.setOnCheckedChangeListener(changeChecker);
 		btnClosetList.setOnCheckedChangeListener(changeChecker);
 
@@ -231,7 +252,7 @@ public class ClosetFragment extends Fragment {
 							" getFirstVisiblePosition "
 									+ view.getFirstVisiblePosition()
 									+ " myLastVisiblePos " + myLastVisiblePos);
-									}
+				}
 			}
 
 			@Override
@@ -239,16 +260,19 @@ public class ClosetFragment extends Fragment {
 					int visibleItemCount, int totalItemCount) {
 				// TODO Auto-generated method stub
 
-				final int currentFirstVisibleItem = view.getFirstVisiblePosition();
+				final int currentFirstVisibleItem = view
+						.getFirstVisiblePosition();
 
-					Log.v("log"," Prev Total " + mPreviousTotal + " total count " + totalItemCount);
-				
-				  if (totalItemCount > mPreviousTotal) {
+				Log.v("log", " Prev Total " + mPreviousTotal + " total count "
+						+ totalItemCount);
 
-					  	mPreviousTotal = totalItemCount;
-					  	Log.v("log"," Prev Total if " + mPreviousTotal + " total count " + totalItemCount);
-				  }
-				
+				if (totalItemCount > mPreviousTotal) {
+
+					mPreviousTotal = totalItemCount;
+					Log.v("log", " Prev Total if " + mPreviousTotal
+							+ " total count " + totalItemCount);
+				}
+
 				if (currentFirstVisibleItem > myLastVisiblePos) {
 					// mIsScrollingUp = false;
 					Log.v("log", " Gridview scrolling down... NOMOreData  "
@@ -256,8 +280,7 @@ public class ClosetFragment extends Fragment {
 
 					if (NoMoredataAvailable != 1) {
 						new loadMoreListView().execute();
-						Log.v("log", " NOMOreData if "
-								+ NoMoredataAvailable);
+						Log.v("log", " NOMOreData if " + NoMoredataAvailable);
 					}
 
 				} else if (currentFirstVisibleItem < myLastVisiblePos) {
@@ -270,6 +293,23 @@ public class ClosetFragment extends Fragment {
 			}
 		});
 
+	/*	closet_gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// TODO Auto-generated method stub
+
+				Log.v("log" ," position grid " + position);
+				
+				_listposition = position;
+
+				return false;
+			}
+		});
+
+		registerForContextMenu(closet_gridView);*/
+		
 		return rootView;
 	}
 
@@ -370,6 +410,50 @@ public class ClosetFragment extends Fragment {
 		// from this one and use your JSONObject as needed
 
 	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.share, menu);
+
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+
+		case R.id.share : {
+			
+			    Log.v("log", " path --> " + list.get(_listposition).image);
+			    
+			    String imgPath = list.get(_listposition).image;
+			    Bitmap bmp = getBitmapFromUrl(imgPath);
+			    
+			    Intent share = new Intent(Intent.ACTION_SEND);
+			    share.setType("image/jpeg");
+			    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			    bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+			     
+		        	  File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpeg");
+					    try {
+					        f.createNewFile();
+					        FileOutputStream fo = new FileOutputStream(f);
+					        fo.write(bytes.toByteArray());
+					    } catch (IOException e1) {                       
+					            e1.printStackTrace();
+					    }
+					    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpeg"));
+			  
+			    startActivity(Intent.createChooser(share, "Share Image"));
+			    break;
+			}
+		}
+		return super.onContextItemSelected(item);
+	}	
 
 	public class JSONTask extends AsyncTask<String, Void, String> {
 
@@ -495,10 +579,7 @@ public class ClosetFragment extends Fragment {
 
 			close_btn.setVisibility(View.INVISIBLE);
 			home_username_txt.setText(list.get(position).getStore_name());
-			Log.v("log", " Closet Item Name In Adater "
-					+ list.get(position).getStore_name());
-			Log.v("log_tag", "Closet Item  image :::: "
-					+ list.get(position).getImage());
+
 			home_view_txt.setText(" "
 					+ list.get(position).getCloseted_item_track());
 
@@ -506,6 +587,10 @@ public class ClosetFragment extends Fragment {
 
 			imageLoader.DisplayImage(list.get(position).getImage(),
 					home_big_img);
+
+			home_username_txt.setTypeface(tf);
+			home_view_txt.setTypeface(tf);
+			itemName_txt.setTypeface(tf);
 
 			return convertView;
 		}
@@ -539,7 +624,8 @@ public class ClosetFragment extends Fragment {
 					.findViewById(R.id.closet_item_image);
 			if (list.get(position).getImage() != "") {
 
-				imageLoader.DisplayImage(list.get(position).getImage(),closet_big_img);
+				imageLoader.DisplayImage(list.get(position).getImage(),
+						closet_big_img);
 
 			} else {
 
@@ -553,6 +639,4 @@ public class ClosetFragment extends Fragment {
 		}
 	}
 
-	
-	
 }

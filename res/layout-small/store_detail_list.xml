@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/list_Store_logo_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp" >
+                android:layout_width="50dp"
+                android:layout_height="50dp" >
             </ImageView>
         </LinearLayout>
 
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/thumbnail_linear"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/thumbnail_linear"
             android:text=""
             android:textSize="18sp"
@@ -124,14 +124,14 @@
     <RelativeLayout
         android:id="@+id/rela_location_store"
         android:layout_width="fill_parent"
-        android:layout_height="40dip"
+        android:layout_height="30dip"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/thumbnail_relative" >
 
         <Button
             android:id="@+id/store_subscribe_btn"
             android:layout_width="150dip"
-            android:layout_height="40dip"
+            android:layout_height="30dip"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dip"
@@ -174,7 +174,7 @@
     <LinearLayout
         android:id="@+id/tab_layout"
         android:layout_width="fill_parent"
-        android:layout_height="65dip"
+        android:layout_height="45dip"
         android:layout_below="@+id/rela_location_store"
         android:layout_marginLeft="20dip"
         android:layout_marginRight="20dip"
@@ -184,8 +184,8 @@
 
         <ToggleButton
             android:id="@+id/btnStoreProfileList"
-            android:layout_width="40dip"
-            android:layout_height="35dip"
+            android:layout_width="30dip"
+            android:layout_height="25dip"
             android:layout_marginLeft="5dip"
             android:background="@drawable/unselected_list"
             android:textOff=""
@@ -195,8 +195,8 @@
 
         <ToggleButton
             android:id="@+id/btnStoreProfileGrid"
-            android:layout_width="40dip"
-            android:layout_height="35dip"
+            android:layout_width="30dip"
+            android:layout_height="25dip"
             android:layout_marginLeft="25dip"
             android:background="@drawable/selected_grid"
             android:checked="true"

@@ -1,13 +1,22 @@
 package com.buymysari;
 
+import java.util.ArrayList;
+
+import com.buymysari.LoginActivity.JSONTask;
+import com.buymysari.dto.UserInfo_dto;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,6 +31,8 @@ public class RegisterActivity extends Activity {
 			str_city_edt, str_mobile_edt, str_state_edt, str_country_edt;
 	String result;
 	private ProgressDialog progress;
+	ArrayList<UserInfo_dto> list = new ArrayList<UserInfo_dto>();
+	MyApplication app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +43,13 @@ public class RegisterActivity extends Activity {
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		progress = new ProgressDialog(RegisterActivity.this);
+		progress.setMessage("Loading...");
 		first_name = (EditText) findViewById(R.id.fristName_edt_lg);
 		last_name = (EditText) findViewById(R.id.lastName_edt_lg);
 		email_edt = (EditText) findViewById(R.id.email_edt_lg);
 		password_edt = (EditText) findViewById(R.id.password_edt_lg);
-
+		app = (MyApplication) RegisterActivity.this.getApplicationContext();
 		register = (Button) findViewById(R.id.register_btn);
 
 		register.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +72,7 @@ public class RegisterActivity extends Activity {
 
 				} else {
 
-					progress = new ProgressDialog(RegisterActivity.this);
-					progress.setMessage("Loading...");
+					
 
 					new PostTask().execute("Home");
 				}
@@ -100,9 +112,12 @@ public class RegisterActivity extends Activity {
 			if (result.equals("success fully Registered")) {
 				Toast.makeText(RegisterActivity.this, result, Toast.LENGTH_LONG)
 						.show();
-				Intent i = new Intent(RegisterActivity.this,
-						LoginActivity.class);
-				startActivity(i);
+				
+				new JSONTask().execute("Home");
+				
+				/*Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+						
+				startActivity(i);*/
 
 			} else {
 				Toast.makeText(RegisterActivity.this, result, Toast.LENGTH_LONG)
@@ -111,4 +126,78 @@ public class RegisterActivity extends Activity {
 			progress.dismiss();
 		}
 	}
+	
+public class JSONTask extends AsyncTask<String, Void, String> {
+		
+		public void onPreExecute() {
+		    progress.show();
+		}
+		
+			
+	    @Override
+	    protected String doInBackground(String... arg) {
+	        String listSize = "";
+	        Log.v("log_tag","list DoinBaCK wwww ");
+	        
+	        list = DBAdpter.getAllUserInfo(str_email_edt, str_password_edt);
+	        
+	       return listSize; // This value will be returned to your onPostExecute(result) method
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        // Create here your JSONObject...
+	    	Log.v("log_tag","list ON Post");
+	    		
+	    	String resultNew = list.get(0).msg;
+			String user_id = list.get(0).user_id;	
+			/*Log.v("log_tag","list DoinBaCK "+user_id);
+			 app.setUserID(user_id);
+			 Log.v("log_tag","list DoinBaCK storeId "+list.get(0).strore_profile_id );*/
+			 
+			if(list.get(0).strore_profile_id != null )
+			{
+				String store_id = list.get(0).strore_profile_id;
+		       
+		        app.setStoreId(store_id);	
+		        app.setUserID("");
+		        savePreferences("store_id" , store_id);
+		        savePreferences("user_id" , "");
+		        
+		        Log.v("log_tag","list DoinBaCK if "+user_id);
+			}
+			else if(user_id != null){
+				app.setStoreId("");	
+		        app.setUserID(user_id);
+		        
+		        savePreferences("user_id" , user_id);
+		        savePreferences("store_id" , "");
+		        
+		        Log.v("log_tag","list DoinBaCK else"+list.get(0).strore_profile_id);
+			}
+			
+	        if (resultNew.equals("success fully login")) {
+				
+	        	Toast.makeText(RegisterActivity.this, resultNew, Toast.LENGTH_LONG).show();
+	        	
+	        	Intent inew = new Intent(RegisterActivity.this, MarketPlaceActivity.class);
+				finish();
+				startActivity(inew);
+
+			} else {
+				Toast.makeText(RegisterActivity.this, resultNew, Toast.LENGTH_LONG).show();
+			}
+	        
+	        if(progress != null)
+	        	progress.dismiss();
+	    	}
+	}
+
+private void savePreferences(String key, String value) {
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    Editor editor = sharedPreferences.edit();
+    editor.putString(key, value);
+    editor.commit();
+}
+
 }

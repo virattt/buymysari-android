@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -96,6 +97,16 @@ public class ProfileFragment extends Fragment{
 		
 		Button btnUpdateProfile = (Button)rootView.findViewById(R.id.btn_update_profile);
 		
+		
+		Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
+		edtFname.setTypeface(tf);
+		edtLname.setTypeface(tf);
+		edtEmailID.setTypeface(tf);
+		edtPassword.setTypeface(tf);
+		btnTakeUserPhoto.setTypeface(tf);
+		btnUpdateProfile.setTypeface(tf);
+		
 		btnUpdateProfile.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -123,8 +134,16 @@ public class ProfileFragment extends Fragment{
 					FragmentManager fm = getFragmentManager();
 					FragmentTransaction fragmentTransaction = fm
 							.beginTransaction();
-					HomeFragment fm2 = new HomeFragment();
-					fragmentTransaction.replace(R.id.relProfileFraLayout,fm2, "HELLO");
+					
+					Fragment homeFrag = fm.findFragmentByTag("HOME");
+					if (homeFrag != null) {
+						Log.v("fragment", "got fragement");
+						fragmentTransaction.replace(R.id.activity_main_content_fragment, homeFrag, "HOME");
+					} else {
+						HomeFragment hoFrag = new HomeFragment();
+						fragmentTransaction.replace(R.id.activity_main_content_fragment, hoFrag, "HOME");
+					}
+
 					fragmentTransaction.addToBackStack(null);
 					fragmentTransaction.commit();
 					

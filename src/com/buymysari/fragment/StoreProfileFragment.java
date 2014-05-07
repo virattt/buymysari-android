@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -298,10 +299,22 @@ public class StoreProfileFragment extends Fragment{
 			TextView store_Name_txt = (TextView) convertView.findViewById(R.id.mystore_list_name);
 			TextView txtClosetnumber = (TextView)convertView.findViewById(R.id.txtClosetnumber);
 			TextView txtAddressSubScribeProfile =(TextView)convertView.findViewById(R.id.txtAddressSubScribeProfile);
+			Button staticbtn = (Button)convertView.findViewById(R.id.button1);
 			
 			store_Name_txt.setText(list.get(position).name);
 			txtClosetnumber.setText(list.get(position).closted_items_count);
 			txtAddressSubScribeProfile.setText(list.get(position).address);
+			
+			
+			Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+				    "fonts/ITCAvantGardeStd-BkCn.otf");
+			store_Name_txt.setTypeface(tf);
+			txtClosetnumber.setTypeface(tf);
+			txtAddressSubScribeProfile.setTypeface(tf);
+			staticbtn.setTypeface(tf);
+			
+			
+			
 			return convertView;
 		}
 	}

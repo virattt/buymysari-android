@@ -34,7 +34,7 @@
                 android:text="Sonya Gill"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/Gray"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:text="Large Text"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#2671b9"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -65,6 +65,7 @@
             android:layout_marginRight="10dip"
             android:background="#a09f9f"
             android:text="EDIT PROFILE"
+             android:textSize="18sp"
             android:textColor="@color/White" />
     </RelativeLayout>
 

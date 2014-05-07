@@ -15,7 +15,8 @@
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"/>
 
     <Button
         android:id="@+id/mystoreitem_close_home_btn"
@@ -51,7 +52,7 @@
         android:textColor="#999592"
         android:textSize="16sp" />
 
-    <View
+   <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:layout_below="@+id/mystoreitem_close_home_btn"

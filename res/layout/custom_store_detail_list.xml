@@ -14,7 +14,8 @@
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/itemName_txt"
@@ -25,7 +26,7 @@
         android:layout_margin="10dip"
         android:text=""
         android:textColor="#466aaf"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/view1"
@@ -44,7 +45,7 @@
         android:layout_alignTop="@+id/itemName_txt"
         android:text=""
         android:textColor="#999592"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/close_home_btn"
@@ -72,6 +73,7 @@
         android:layout_alignBottom="@+id/itemName_txt"
         android:layout_marginLeft="10dip"
         android:layout_toRightOf="@+id/items_view"
+        android:textSize="18sp"
         android:text="" />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public class StoreDetailFragment extends Fragment {
 	ToggleButton btnStoreProfileList, btnStoreProfileGrid;
 	TextView store_url_txt, store_profile_grid_closet_txt,
 			subscribe_store_profile_txt;
-
+	Typeface tf ;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -79,7 +80,8 @@ public class StoreDetailFragment extends Fragment {
 		
 		app = (MyApplication) getActivity().getApplicationContext();
 		imageLoader = new ImageLoader(getActivity().getApplicationContext());
-
+		 tf = Typeface.createFromAsset(getActivity().getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
 		store_subscribe_btn = (Button) rootView
 				.findViewById(R.id.store_subscribe_btn);
 
@@ -140,6 +142,23 @@ public class StoreDetailFragment extends Fragment {
 				.findViewById(R.id.btnStoreProfileGrid);
 		btnStoreProfileList = (ToggleButton) rootView
 				.findViewById(R.id.btnStoreProfileList);
+		
+		store_url_txt.setTypeface(tf);
+		store_profile_grid_closet_txt.setTypeface(tf);
+		subscribe_store_profile_txt.setTypeface(tf);
+		txtStoreProfileGridAddress.setTypeface(tf);
+		storeName.setTypeface(tf);
+		store_subscribe_btn.setTypeface(tf);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		btnStoreProfileGrid.setOnCheckedChangeListener(changeChecker);
 		btnStoreProfileList.setOnCheckedChangeListener(changeChecker);
 		/*btnStoreProfileList
@@ -405,6 +424,16 @@ public class StoreDetailFragment extends Fragment {
 					+ list.get(position).closeted_item_track);
 			store_item_name_txt.setText(list.get(position).name);
 			store_eye_name_txt.setText(" " + list.get(position).views);
+			
+			
+			
+			store_closet_txt.setTypeface(tf);
+			store_item_name_txt.setTypeface(tf);
+			store_eye_name_txt.setTypeface(tf);
+			store_item_close_btn.setTypeface(tf);
+			
+			
+			
 			final String uid = app.getUserID();
 
 			imageLoader.DisplayImage(list.get(position).image, store_item_img);

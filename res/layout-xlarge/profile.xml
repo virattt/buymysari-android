@@ -5,54 +5,7 @@
     android:layout_height="fill_parent"
     android:background="@android:color/white" >
 
-    <!--
-          <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="UserName"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
-    -->
-
-
-    <!--
-    <Button
-        android:id="@+id/btnProfileUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/edtProfilePAssword"
-        android:layout_below="@+id/edtProfilePAssword"
-        android:layout_marginTop="18dp"
-        android:text="Update" />
-
-    <Button
-        android:id="@+id/btnProfileCreateStore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnProfileUpdate"
-        android:layout_alignBottom="@+id/btnProfileUpdate"
-        android:layout_alignRight="@+id/edtProfilePAssword"
-        android:text="Crate Store" />
-    -->
-
+   
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
@@ -61,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dip"
         android:layout_marginRight="40dip"
-        android:layout_marginTop="48dp" >
+        android:layout_marginTop="18dp" >
 
         <com.buymysari.CircularImageView
             android:id="@+id/img_user_image"
@@ -76,12 +29,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="73dp"
+            android:layout_marginLeft="28dp"
             android:layout_toRightOf="@+id/img_user_image"
             android:text="Change Profile Picture"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#2671b9"
-            android:textSize="18sp" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout
@@ -90,7 +44,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/relativeLayout1"
-        android:layout_marginTop="87dp"
+        android:layout_marginTop="39dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -124,6 +78,7 @@
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
                 android:textColor="@android:color/black"
+                android:textColorHint="@color/Black"
                 android:textSize="19sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -156,6 +111,8 @@
                 android:hint="Last name"
                 android:inputType="textPersonName"
                 android:paddingLeft="10dp"
+                android:textColorHint="@color/Black"
+                android:textSize="19sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -185,6 +142,8 @@
                 android:hint="Email address"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
+                android:textColorHint="@color/Black"
+                android:textSize="19sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -218,6 +177,8 @@
                 android:hint="************"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
+                android:textColorHint="@color/Black"
+                android:textSize="19sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -231,7 +192,7 @@
             android:background="#41d845"
             android:text="CONFIRM"
             android:textColor="@android:color/white"
-            android:textSize="17sp"
+            android:textSize="19sp"
             android:textStyle="bold" />
     </LinearLayout>
 

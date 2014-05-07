@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,7 +40,6 @@ import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.Store_profile_dto;
 import com.buymysari.dto.UserInfo_dto;
-import com.buymysari.fragment.ProfileFragment.JSONTask;
 
 public class CreateStoreFragment extends Fragment {
 
@@ -110,6 +110,21 @@ public class CreateStoreFragment extends Fragment {
 		city_edt = (EditText) view.findViewById(R.id.store_address_update_edt);
 		address_edt = (EditText) view.findViewById(R.id.store_city_update_edt);
 		edtStoreProfilePassword = (EditText) view.findViewById(R.id.edtStoreProfilePassword);
+		
+		
+		Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
+		btnTakePicture.setTypeface(tf);
+		btnUpdateStore.setTypeface(tf);
+		first_name.setTypeface(tf);
+		last_name.setTypeface(tf);
+		email_edt.setTypeface(tf);
+		store_name_edt.setTypeface(tf);
+		website_edt.setTypeface(tf);
+		phone_edt.setTypeface(tf);
+		city_edt.setTypeface(tf);
+		address_edt.setTypeface(tf);
+		edtStoreProfilePassword.setTypeface(tf);
 		
 		progress = new ProgressDialog(getActivity());
 		progress.setMessage("Loading...");
@@ -222,6 +237,15 @@ public class CreateStoreFragment extends Fragment {
 		protected String doInBackground(String... arg) {
 			String listSize = "";
 			
+			return listSize; // This value will be returned to your
+								// onPostExecute(result) method
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Create here your JSONObject...
+			Log.v("log_tag", "list ON Post");
+			
 			if (DBAdpter.fetch_UserDetail_data != null) {
 
 				first_name.setText(DBAdpter.fetch_UserDetail_data.get(0)
@@ -244,15 +268,6 @@ public class CreateStoreFragment extends Fragment {
 						.getStrore_profile_mobile());
 
 			}
-			
-			return listSize; // This value will be returned to your
-								// onPostExecute(result) method
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// Create here your JSONObject...
-			Log.v("log_tag", "list ON Post");
 			
 			String img_url = DBAdpter.fetch_UserDetail_data.get(0).getStrore_profile_image().toString().trim();
 			Log.v("log_tag", "img_url  " + img_url);

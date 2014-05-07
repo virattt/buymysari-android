@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -75,6 +76,7 @@ public class StoreProfileGridFragment extends Fragment {
 	MyListAdapter adt;
 	int _listposition;
 	Button btnEditStore;
+	Typeface tf;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +84,9 @@ public class StoreProfileGridFragment extends Fragment {
 
 		View rootView = inflater.inflate(R.layout.store_profile_grid,
 				container, false);
+		
+		 tf = Typeface.createFromAsset(getActivity().getAssets(),
+			    "fonts/ITCAvantGardeStd-BkCn.otf");
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -144,6 +149,14 @@ public class StoreProfileGridFragment extends Fragment {
 				.findViewById(R.id.btnStoreProfileGrid);
 		btnStoreProfileList = (ToggleButton) rootView
 				.findViewById(R.id.btnStoreProfileList);
+		
+		store_profilegrid_name.setTypeface(tf);
+		store_url_txt.setTypeface(tf);
+		store_profile_grid_closet_txt.setTypeface(tf);
+		subscribe_store_profile_txt.setTypeface(tf);
+		btnEditStore.setTypeface(tf);
+		txtStoreProfileGridAddress.setTypeface(tf);
+		
 		btnStoreProfileGrid.setOnCheckedChangeListener(changeChecker);
 		btnStoreProfileList.setOnCheckedChangeListener(changeChecker);
 		/*
@@ -537,6 +550,12 @@ public class StoreProfileGridFragment extends Fragment {
 			 * gridlist.get(position).store_id, uid); } });
 			 */
 
+			
+			store_closet_txt.setTypeface(tf);
+			store_item_name_txt.setTypeface(tf);
+			store_item_close_btn.setTypeface(tf);
+			
+			
 			store_item_img.setOnClickListener(new View.OnClickListener() {
 
 				@Override

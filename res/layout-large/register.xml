@@ -20,9 +20,10 @@
         android:hint="FIRST NAME"
         android:inputType="textPersonName"
         android:textColor="@android:color/black"
-        android:typeface="monospace"
+        android:textColorHint="@color/Black"
         android:textSize="19sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
     <EditText
         android:id="@+id/lastName_edt_lg"
@@ -41,9 +42,10 @@
         android:inputType="textPersonName"
         android:paddingLeft="10dp"
         android:textColor="@android:color/black"
-        android:typeface="monospace"
+        android:textColorHint="@color/Black"
         android:textSize="19sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
     <EditText
         android:id="@+id/email_edt_lg"
@@ -60,10 +62,11 @@
         android:hint="EMAIL ADDRESS"
         android:paddingLeft="10dp"
         android:singleLine="true"
-       android:textColor="@android:color/black"
-        android:typeface="monospace"
+        android:textColor="@android:color/black"
+        android:textColorHint="@color/Black"
         android:textSize="19sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
     <EditText
         android:id="@+id/password_edt_lg"
@@ -82,9 +85,10 @@
         android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:textColor="@android:color/black"
-        android:typeface="monospace"
+        android:textColorHint="@color/Black"
         android:textSize="19sp"
-        android:textStyle="bold"  />
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
     <Button
         android:id="@+id/register_btn"

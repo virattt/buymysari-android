@@ -20,8 +20,7 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="150dip"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="42dp" >
+        android:layout_alignParentBottom="true" >
 
         <Button
             android:id="@+id/conform"
@@ -45,10 +44,10 @@
             android:layout_alignRight="@+id/conform"
             android:layout_marginBottom="24dp"
             android:background="#41d845"
+            android:text="CHANGE PICTURE"
             android:textColor="@android:color/white"
             android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="CHANGE PICTURE" />
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </RelativeLayout>

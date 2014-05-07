@@ -2,9 +2,6 @@ package com.buymysari.fragment;
 
 import java.io.ByteArrayOutputStream;
 
-import com.buymysari.CameraActivity;
-import com.buymysari.R;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +11,7 @@ import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout.LayoutParams;
+
+import com.buymysari.CameraActivity;
+import com.buymysari.R;
 
 public class SetPictureImageFragment extends Fragment {
 
@@ -52,8 +54,7 @@ public class SetPictureImageFragment extends Fragment {
 		path = bundle.getByteArray("data");
 
 		Log.v("log_tag", "SetPictureImageFragment ::: Path :: " + path);
-		img = (ImageView) view
-				.findViewById(R.id.camera_preview_fragment_imageview);
+		img = (ImageView) view.findViewById(R.id.camera_preview_fragment_imageview);
 		chnagepicture = (Button) view.findViewById(R.id.btnChangePicture);
 		conform = (Button) view.findViewById(R.id.conform);
 
@@ -74,22 +75,29 @@ public class SetPictureImageFragment extends Fragment {
 			}
 		});
 
+		
+		
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		
+		int device_width = displaymetrics.widthPixels;
+		
+		Log.v("log", " device width " + device_width);
+		
 		int width = b.getWidth();
 		int height = b.getHeight();
-		int newWidth = 500;
-		int newHeight = 500;
+		
+		int newWidth = 600;
+		int newHeight = 280;
+		
 		float scaleWidth = ((float) newWidth) / width;
-
 		float scaleHeight = ((float) newHeight) / height;
-
+		
 		Matrix matrix = new Matrix();
-
 		matrix.postScale(scaleWidth, scaleHeight);
 		
 		if (this.getArguments().getString("image_from") != null) {
-			Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0, width, height,
-					matrix, true);
-			
+			Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0, width, height,matrix, true);
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			byteArrayimage = stream.toByteArray();
@@ -129,14 +137,16 @@ public class SetPictureImageFragment extends Fragment {
 			}
 
 			matrix.postRotate(finalDegree);
-
+			Log.v("log"," width " + width + " height " + height);
+			
 			Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0, width, height,
 					matrix, true);
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 			byteArrayimage = stream.toByteArray();
 
-			img.setScaleType(ScaleType.CENTER);
+			img.setScaleType(ScaleType.FIT_XY);
+		//	img.setScaleType(ScaleType.CENTER);
 			img.setImageBitmap(resizedBitmap);
 		}
 

@@ -57,5 +57,12 @@
        android:textColor="#6e6a61"
         android:textSize="13sp"
         android:textStyle="bold" />
-
+<ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_home_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dip"
+        android:background="@drawable/mindy_full_illustration" />
 </RelativeLayout>

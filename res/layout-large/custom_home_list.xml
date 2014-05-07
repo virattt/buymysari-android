@@ -39,20 +39,20 @@
             android:layout_toRightOf="@+id/thumbnail"
             android:text=""
             android:textColor="#466aaf"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <ImageButton
         android:id="@+id/sarees_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="240dp"
+        android:layout_height="280dp"
         android:layout_alignLeft="@+id/thumbnail_relative"
         android:layout_alignTop="@+id/thumbnail_relative"
         android:layout_marginTop="80dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <ImageView
         android:id="@+id/list_home_text_view"
@@ -62,6 +62,7 @@
         android:layout_below="@+id/sarees_big_img"
         android:layout_margin="10dip"
         android:background="@drawable/eye"
+        android:adjustViewBounds="true"
         android:scaleType="fitCenter" />
 
     <TextView
@@ -73,7 +74,7 @@
         android:layout_margin="10dip"
         android:text=""
         android:textColor="#999592"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/close_home_btn"
@@ -96,7 +97,7 @@
         android:layout_toRightOf="@+id/list_home_text_view"
         android:text=""
         android:textColor="#999592"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/itemName_txt"
@@ -108,7 +109,7 @@
         android:layout_margin="5dip"
         android:text=""
         android:textColor="#466aaf"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="fill_parent"

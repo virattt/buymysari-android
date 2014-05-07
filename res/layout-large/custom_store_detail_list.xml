@@ -11,10 +11,11 @@
     <ImageButton
         android:id="@+id/store_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="280dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/itemName_txt"
@@ -25,15 +26,16 @@
         android:layout_margin="10dip"
         android:text=""
         android:textColor="#466aaf"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
-  <View
+    <View
         android:id="@+id/view1"
-        android:layout_below="@+id/close_home_btn"
         android:layout_width="fill_parent"
         android:layout_height="2dip"
+        android:layout_below="@+id/close_home_btn"
         android:layout_marginBottom="2dip"
-        android:background="#eae9e9"  />
+        android:background="#eae9e9" />
+
     <TextView
         android:id="@+id/store_closet_txt_view"
         android:layout_width="20dip"
@@ -43,7 +45,7 @@
         android:layout_alignTop="@+id/itemName_txt"
         android:text=""
         android:textColor="#999592"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/close_home_btn"
@@ -59,7 +61,6 @@
         android:id="@+id/items_view"
         android:layout_width="40dip"
         android:layout_height="35dip"
-        
         android:layout_alignTop="@+id/close_home_btn"
         android:layout_marginLeft="14dp"
         android:background="@drawable/eye"
@@ -69,9 +70,10 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
         android:layout_alignBottom="@+id/itemName_txt"
+        android:layout_marginLeft="10dip"
         android:layout_toRightOf="@+id/items_view"
-        android:text="" />
+        android:text=""
+        android:textSize="18sp" />
 
 </RelativeLayout>

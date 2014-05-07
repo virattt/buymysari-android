@@ -11,10 +11,11 @@
     <ImageButton
         android:id="@+id/store_big_img"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/itemName_txt"
@@ -48,8 +49,8 @@
 
     <Button
         android:id="@+id/close_home_btn"
-        android:layout_width="35dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/store_big_img"
         android:layout_margin="10dip"
         android:layout_toLeftOf="@+id/store_closet_txt_view"
@@ -58,9 +59,8 @@
 
     <ImageView
         android:id="@+id/items_view"
-        android:layout_width="40dip"
-        android:layout_height="35dip"
-        
+        android:layout_width="30dip"
+        android:layout_height="25dip"
         android:layout_alignTop="@+id/close_home_btn"
         android:layout_marginLeft="14dp"
         android:background="@drawable/eye"

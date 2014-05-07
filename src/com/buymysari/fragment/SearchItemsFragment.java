@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,12 +37,9 @@ import android.widget.Toast;
 import com.buymysari.CircularImageView;
 import com.buymysari.DBAdpter;
 import com.buymysari.ImageLoader;
-import com.buymysari.MarketPlaceActivity;
 import com.buymysari.MyApplication;
 import com.buymysari.R;
 import com.buymysari.dto.search_items_dto;
-import com.buymysari.fragment.ClosetFragment.loadMoreListView;
-import com.buymysari.fragment.HomeFragment.ClosetTask;
 
 public class SearchItemsFragment extends Fragment {
 
@@ -367,6 +364,7 @@ public class SearchItemsFragment extends Fragment {
 				holder.subscribe_img = (ImageView) convertView
 						.findViewById(R.id.list_home_text_view);
 
+				
 				holder.home_username_txt.setText(list.get(position)
 						.getStore_name().toString());
 				holder.close_txt.setText(" "
@@ -376,6 +374,18 @@ public class SearchItemsFragment extends Fragment {
 						+ list.get(position).getViews().toString());
 				holder.itemName_txt.setText(list.get(position).getItem_name()
 						.toString());
+				
+				Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+					    "fonts/ITCAvantGardeStd-BkCn.otf");
+				holder.home_username_txt.setTypeface(tf);
+				holder.home_view_txt.setTypeface(tf);
+				holder.itemName_txt.setTypeface(tf);
+				holder.close_btn.setTypeface(tf);
+				holder.close_txt.setTypeface(tf);
+				
+				
+				
+				
 				final String uid = app.getUserID();
 
 				if (!app.getUserID().equals("")) {
