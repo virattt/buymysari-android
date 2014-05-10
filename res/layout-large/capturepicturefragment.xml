@@ -51,4 +51,14 @@
         android:layout_marginTop="50dp"
     />
 
+    <ImageView
+        android:id="@+id/crop_select_img"
+        android:layout_width="fill_parent"
+        android:layout_height="280dip"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/transparent_border"
+        android:layout_alignTop="@+id/camera_preview_fragment_imageview"
+        android:layout_marginTop="10dp" >
+    </ImageView>
+
 </RelativeLayout>

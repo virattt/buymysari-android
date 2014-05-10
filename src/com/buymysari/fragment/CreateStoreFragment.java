@@ -1,7 +1,9 @@
 package com.buymysari.fragment;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,6 +60,7 @@ public class CreateStoreFragment extends Fragment {
 	MyApplication app;
 	String base64string = "";
 	byte[] data;
+	byte[] path;
 	byte[] Image_getByte1;
 	byte[] byteArrayimage;
 	String Status = null;
@@ -107,8 +111,8 @@ public class CreateStoreFragment extends Fragment {
 		store_name_edt = (EditText) view.findViewById(R.id.store_name_update_edt);
 		website_edt = (EditText) view.findViewById(R.id.store_website_update_edt);
 		phone_edt = (EditText) view.findViewById(R.id.store_phone_update_edt);
-		city_edt = (EditText) view.findViewById(R.id.store_address_update_edt);
-		address_edt = (EditText) view.findViewById(R.id.store_city_update_edt);
+		city_edt = (EditText) view.findViewById(R.id.store_city_update_edt);
+		address_edt = (EditText) view.findViewById(R.id.store_address_update_edt);
 		edtStoreProfilePassword = (EditText) view.findViewById(R.id.edtStoreProfilePassword);
 		
 		
@@ -303,13 +307,33 @@ public class CreateStoreFragment extends Fragment {
 
 			if (data.hasExtra("data")) {
 
+				if(data.hasExtra("image_from")){
+					Uri imageURI = null;
+					imageURI = Uri.parse(data.getStringExtra("data"));
+					InputStream iStream;
+					try {
+						iStream = getActivity().getContentResolver().openInputStream(imageURI);
+						Log.v("image","parsed uri ");
+						path = getBytes(iStream);
+
+						
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					path = data.getByteArrayExtra("data");
+				}
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inPurgeable = true; // inPurgeable is used to free up
 											// memory while required
 
 				Bitmap b = BitmapFactory.decodeByteArray(
-						data.getByteArrayExtra("data"), 0,
-						data.getByteArrayExtra("data").length, options);
+						path, 0,
+						path.length, options);
 
 				int width = b.getWidth();
 				int height = b.getHeight();
@@ -322,17 +346,7 @@ public class CreateStoreFragment extends Fragment {
 				Matrix matrix = new Matrix();
 
 				matrix.postScale(scaleWidth, scaleHeight);
-				if (data.hasExtra("image_from")) {
-					resizedBitmap = Bitmap.createBitmap(b, 0, 0, width, height,
-							matrix, true);
-					
-					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-					byteArrayimage = stream.toByteArray();
-					
-				}
-				else
-				{
+				
 				int rotation = getActivity().getWindowManager()
 						.getDefaultDisplay().getRotation();
 
@@ -369,7 +383,7 @@ public class CreateStoreFragment extends Fragment {
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 				byteArrayimage = stream.toByteArray();
-			}
+			
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
 					imgStorePicture.setImageBitmap(resizedBitmap);
@@ -407,6 +421,18 @@ public class CreateStoreFragment extends Fragment {
 		}
 		return bmp;
 	}
+	
+	public byte[] getBytes(InputStream inputStream) throws IOException {
+	      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+	      int bufferSize = 1024;
+	      byte[] buffer = new byte[bufferSize];
+
+	      int len = 0;
+	      while ((len = inputStream.read(buffer)) != -1) {
+	        byteBuffer.write(buffer, 0, len);
+	      }
+	      return byteBuffer.toByteArray();
+	    }
 	
 	
 

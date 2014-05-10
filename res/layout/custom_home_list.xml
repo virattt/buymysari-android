@@ -52,8 +52,7 @@
         android:layout_alignTop="@+id/thumbnail_relative"
         android:layout_marginTop="80dp"
         android:background="@android:color/transparent"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
          />
 
     <ImageView

@@ -44,8 +44,8 @@ public class StoreRegister extends Activity {
 		store_name_edt = (EditText) findViewById(R.id.store_name_edt);
 		website_edt = (EditText) findViewById(R.id.store_website_edt);
 		phone_edt = (EditText) findViewById(R.id.store_phone_edt);
-		city_edt = (EditText) findViewById(R.id.store_address_edt);
-		address_edt = (EditText) findViewById(R.id.store_city_edt);
+		city_edt = (EditText) findViewById(R.id.store_city_edt);
+		address_edt = (EditText) findViewById(R.id.store_address_edt);
 
 		
 		progress = new ProgressDialog(StoreRegister.this);

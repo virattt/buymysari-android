@@ -63,8 +63,7 @@
         android:layout_below="@+id/sarees_big_img"
         android:layout_margin="20dip"
         android:background="@drawable/eye"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/closeted_view_txt_view"

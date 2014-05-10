@@ -14,8 +14,7 @@
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/itemName_txt"

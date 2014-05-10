@@ -1605,6 +1605,8 @@ public class DBAdpter {
 		String msg = "";
 		InputStream is = null;
 
+		Log.v("log"," str_city "+ str_city_edt + " str_address_edt " + str_address_edt);
+		
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("id", StoreId));
 		nameValuePairs.add(new BasicNameValuePair("store_name",

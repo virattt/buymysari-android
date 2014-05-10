@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.R.bool;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -280,19 +281,13 @@ public class MarketPlaceActivity extends FragmentActivity implements
 
 		bottom_closet_main_toolbat_btn
 				.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						FragmentManager fm = MarketPlaceActivity.this
-								.getSupportFragmentManager();
-						FragmentTransaction fragmentTransaction = fm
-								.beginTransaction();
+						FragmentManager fm = MarketPlaceActivity.this.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fm.beginTransaction();
 						ClosetFragment fm2 = new ClosetFragment();
-						fragmentTransaction.replace(
-								R.id.activity_main_content_fragment, fm2,
-								"HELLO");
-
+						fragmentTransaction.replace(R.id.activity_main_content_fragment, fm2,"HELLO");
 						fragmentTransaction.addToBackStack(null);
 						fragmentTransaction.commit();
 						// mainLayout.toggleMenu();
@@ -523,9 +518,7 @@ public class MarketPlaceActivity extends FragmentActivity implements
 		ft.commit();
 
 		Intent intent = getIntent();
-		if (intent.hasExtra("data")) {
-			Log.v("log", " if intent " + intent.getByteArrayExtra("data"));
-			byte[] data = intent.getByteArrayExtra("data");
+		if (intent.hasExtra("data")) {			
 			FragmentManager fManager = MarketPlaceActivity.this
 					.getSupportFragmentManager();
 			android.support.v4.app.FragmentTransaction fTransaction = fManager
@@ -535,11 +528,21 @@ public class MarketPlaceActivity extends FragmentActivity implements
 					setPictureFragment);
 			fTransaction.addToBackStack(null);
 			Bundle bundle = new Bundle();
+			boolean isSTringData = false;
 			if (intent.hasExtra("image_from")) {
-				bundle.putString("image_from",
-						intent.getStringExtra("image_from"));
+				Log.v("imagedata","inf if");
+				if(intent.getStringExtra("image_from").equals("Gallary")){
+					isSTringData = true;
+					bundle.putString("image_from",
+							intent.getStringExtra("image_from"));
+					Log.v("image+from", intent.getStringExtra("data"));
+					bundle.putString("data", intent.getStringExtra("data"));
+				}
 			}
-			bundle.putByteArray("data", data);
+			if(!isSTringData){
+				byte[] data = intent.getByteArrayExtra("data");
+				bundle.putByteArray("data", data);
+			}
 			setPictureFragment.setArguments(bundle);
 			fTransaction.commit();
 		}

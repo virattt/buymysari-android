@@ -3,15 +3,12 @@ package com.buymysari;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -291,12 +288,12 @@ public class CameraActivity extends Activity {
             
 			if (ImageType.equals("AddPicture")) {
 				Intent i = new Intent(getBaseContext(),MarketPlaceActivity.class);
-				i.putExtra("data", inputData);
+				i.putExtra("data", selectedImage.toString());
 				i.putExtra("image_from", "Gallary");
 				startActivity(i);
 			} else {
 				Intent returnIntent = new Intent();
-				returnIntent.putExtra("data", inputData);
+				returnIntent.putExtra("data", selectedImage.toString());
 				returnIntent.putExtra("image_from", "Gallary");
 				setResult(RESULT_OK, returnIntent);
 				CameraActivity.this.finish();
