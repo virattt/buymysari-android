@@ -41,6 +41,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	
     <application
+    	android:debuggable="true"
         android:name="com.buymysari.MyApplication"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
